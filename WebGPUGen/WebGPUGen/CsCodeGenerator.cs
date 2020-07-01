@@ -40,19 +40,19 @@ namespace WebGPUGen
 
                 foreach (var command in compilation.Functions)
                 {
-                    string convertedType = Helpers.ConvertToCSharpType(compilation, command.ReturnType, false);
+                    string convertedType = Helpers.ConvertToCSharpType(command.ReturnType, false);
 
                     file.WriteLine("\t\t[UnmanagedFunctionPointer(CallConv)]");
 
                     // Delegate
-                    file.WriteLine($"\t\tprivate delegate {convertedType} {command.Name}Delegate();");
+                    file.WriteLine($"\t\tprivate delegate {convertedType} {command.Name}Delegate({Helpers.GetParametersSignature(command)});");
 
                     // internal function
                     file.WriteLine($"\t\tprivate static {command.Name}Delegate {command.Name}_ptr;");
 
                     // public function
-                    file.WriteLine($"\t\tpublic static {convertedType} {command.Name}()");
-                    file.WriteLine($"\t\t\t=> {command.Name}_ptr();\n");
+                    file.WriteLine($"\t\tpublic static {convertedType} {command.Name}({Helpers.GetParametersSignature(command)})");
+                    file.WriteLine($"\t\t\t=> {command.Name}_ptr({Helpers.GetParametersSignature(command, false)});\n");
                 }
 
                 file.WriteLine($"\n\t\tpublic static void LoadFuncionPointers(Func<string, IntPtr> getProcAddress)");
@@ -104,7 +104,7 @@ namespace WebGPUGen
                     file.WriteLine("\t{");
                     foreach (var member in structure.Fields)
                     {
-                        string type = type = Helpers.ConvertToCSharpType(compilation, member.Type);
+                        string type = type = Helpers.ConvertToCSharpType(member.Type);
 
                         file.WriteLine($"\t\tpublic {type} {member.Name};");
                     }

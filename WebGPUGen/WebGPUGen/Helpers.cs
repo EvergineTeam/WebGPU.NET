@@ -27,7 +27,7 @@ namespace WebGPUGen
             { "DWORD", "uint" },
         };
 
-        public static string ConvertToCSharpType(CppCompilation compilation, CppType type, bool isPointer = false)
+        public static string ConvertToCSharpType(CppType type, bool isPointer = false)
         {
             if (type is CppPrimitiveType primitiveType)
             {
@@ -77,6 +77,25 @@ namespace WebGPUGen
             }
 
             return string.Empty;
+        }
+
+        public static object GetParametersSignature(CppFunction command, bool useTypes = true)
+        {
+            StringBuilder signature = new StringBuilder();
+            foreach (var parameter in command.Parameters)
+            {
+                string convertedType = ConvertToCSharpType(parameter.Type);
+                string convertedName = parameter.Name;
+
+                if (useTypes)
+                    signature.Append($"{convertedType} ");
+
+                signature.Append($"{convertedName}, ");
+            }
+
+            signature.Length -= 2;
+
+            return signature.ToString();
         }
 
         private static string GetCsTypeName(CppPrimitiveType primitiveType, bool isPointer)
