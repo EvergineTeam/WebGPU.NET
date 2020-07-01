@@ -23,7 +23,7 @@ namespace WebGPUGen
             { "int64_t", "long" },
             { "int64_t*", "long*" },
             { "char", "byte" },
-            { "size_t", "VkPointerSize" },
+            { "size_t", "UIntPtr" },
             { "DWORD", "uint" },
         };
 
@@ -239,11 +239,6 @@ namespace WebGPUGen
             }
             
             if (name.StartsWith("PFN"))
-            {
-                return "IntPtr";
-            }
-
-            if (name == "WGPUProc")
             {
                 return "IntPtr";
             }

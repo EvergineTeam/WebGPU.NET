@@ -16,7 +16,7 @@ namespace WebGPUGen
 
         public void Generate(CppCompilation compilation, string outputPath)
         {
-            Helpers.TypedefList = compilation.Classes.Where(c => c.ClassKind == CppClassKind.Struct && c.IsDefinition == false).Select(c => c.GetDisplayName().Remove(c.GetDisplayName().Count() - 4)).ToList();
+            Helpers.TypedefList = compilation.Typedefs.Where(t => t.TypeKind == CppTypeKind.Typedef).Select(t => t.Name).ToList();
 
             GenerateEnums(compilation, outputPath);
             GenerateStructs(compilation, outputPath);
