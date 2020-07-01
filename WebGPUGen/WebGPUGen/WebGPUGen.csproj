@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Headers\stdbool.h" />
+    <None Remove="Headers\stddef.h" />
+    <None Remove="Headers\stdint.h" />
+    <None Remove="Headers\webgpu.h" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Headers\stdbool.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Headers\stddef.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Headers\stdint.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Headers\webgpu.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CppAst" Version="0.7.3" />
+  </ItemGroup>
+
+</Project>
