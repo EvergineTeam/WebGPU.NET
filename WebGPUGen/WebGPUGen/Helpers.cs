@@ -9,6 +9,8 @@ namespace WebGPUGen
 {
     public static class Helpers
     {
+        public static List<string> TypedefList;
+
         private static readonly Dictionary<string, string> s_csNameMappings = new Dictionary<string, string>()
         {
             { "uint8_t", "byte" },
@@ -25,7 +27,7 @@ namespace WebGPUGen
             { "DWORD", "uint" },
         };
 
-        public static string ConvertToCSharpType(CppType type, bool isPointer = false)
+        public static string ConvertToCSharpType(CppCompilation compilation, CppType type, bool isPointer = false)
         {
             if (type is CppPrimitiveType primitiveType)
             {
@@ -216,7 +218,23 @@ namespace WebGPUGen
             {
                 return GetCsCleanName(mappedName);
             }
-            else if (name.StartsWith("PFN"))
+            
+            if (name.StartsWith("PFN"))
+            {
+                return "IntPtr";
+            }
+
+            if (name == "WGPUProc")
+            {
+                return "IntPtr";
+            }
+
+            if (name.Contains("Flags"))
+            {
+                return name.Remove(name.Count() - 5);
+            }
+
+            if (TypedefList.Contains(name))
             {
                 return "IntPtr";
             }

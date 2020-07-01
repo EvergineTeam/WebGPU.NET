@@ -16,6 +16,8 @@ namespace WebGPUGen
 
         public void Generate(CppCompilation compilation, string outputPath)
         {
+            Helpers.TypedefList = compilation.Classes.Where(c => c.ClassKind == CppClassKind.Struct && c.IsDefinition == false).Select(c => c.GetDisplayName().Remove(c.GetDisplayName().Count() - 4)).ToList();
+
             GenerateEnums(compilation, outputPath);
             GenerateStructs(compilation, outputPath);
             GenerateCommmands(compilation, outputPath);
@@ -38,7 +40,7 @@ namespace WebGPUGen
 
                 foreach (var command in compilation.Functions)
                 {
-                    string convertedType = Helpers.ConvertToCSharpType(command.ReturnType, false);
+                    string convertedType = Helpers.ConvertToCSharpType(compilation, command.ReturnType, false);
 
                     file.WriteLine("\t\t[UnmanagedFunctionPointer(CallConv)]");
 
@@ -93,7 +95,8 @@ namespace WebGPUGen
                 file.WriteLine("namespace WaveEngine.Bindings.WebGPU");
                 file.WriteLine("{");
 
-                var structs = compilation.Classes.Where(c => c.ClassKind == CppClassKind.Struct);
+                var structs = compilation.Classes.Where(c => c.ClassKind == CppClassKind.Struct && c.IsDefinition == true);
+                
                 foreach (var structure in structs)
                 {
                     file.WriteLine("\t[StructLayout(LayoutKind.Sequential)]");
@@ -101,7 +104,7 @@ namespace WebGPUGen
                     file.WriteLine("\t{");
                     foreach (var member in structure.Fields)
                     {
-                        var type = Helpers.ConvertToCSharpType(member.Type);
+                        string type = type = Helpers.ConvertToCSharpType(compilation, member.Type);
 
                         file.WriteLine($"\t\tpublic {type} {member.Name};");
                     }
