@@ -2,21 +2,42 @@ using System;
 
 namespace WaveEngine.Bindings.WebGPU
 {
-	public unsafe delegate void WGPUBufferMapReadCallback();
+	public unsafe delegate void WGPUBufferMapReadCallback(
+		 WGPUBufferMapAsyncStatus status,
+		 void* data,
+		 ulong dataLength,
+		 void* userdata);
 
-	public unsafe delegate void WGPUBufferMapWriteCallback();
+	public unsafe delegate void WGPUBufferMapWriteCallback(
+		 WGPUBufferMapAsyncStatus status,
+		 void* data,
+		 ulong dataLength,
+		 void* userdata);
 
-	public unsafe delegate void WGPUDeviceLostCallback();
+	public unsafe delegate void WGPUDeviceLostCallback(
+		 char* message,
+		 void* userdata);
 
-	public unsafe delegate void WGPUErrorCallback();
+	public unsafe delegate void WGPUErrorCallback(
+		 WGPUErrorType type,
+		 char* message,
+		 void* userdata);
 
-	public unsafe delegate void WGPUFenceOnCompletionCallback();
+	public unsafe delegate void WGPUFenceOnCompletionCallback(
+		 WGPUFenceCompletionStatus status,
+		 void* userdata);
 
-	public unsafe delegate void WGPURequestAdapterCallback();
+	public unsafe delegate void WGPURequestAdapterCallback(
+		 IntPtr result,
+		 void* userdata);
 
-	public unsafe delegate void WGPURequestDeviceCallback();
+	public unsafe delegate void WGPURequestDeviceCallback(
+		 IntPtr result,
+		 void* userdata);
 
-	public unsafe delegate void WGPUSurfaceGetPreferredFormatCallback();
+	public unsafe delegate void WGPUSurfaceGetPreferredFormatCallback(
+		 WGPUTextureFormat format,
+		 void* userdata);
 
 	public unsafe delegate void WGPUProc();
 

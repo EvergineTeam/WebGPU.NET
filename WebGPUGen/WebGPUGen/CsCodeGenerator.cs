@@ -49,7 +49,22 @@ namespace WebGPUGen
                     CppFunctionType pointerType = ((CppPointerType)funcPointer.ElementType).ElementType as CppFunctionType;
 
                     file.Write($"\tpublic unsafe delegate {pointerType.ReturnType} {funcPointer.Name}(");
-                    
+
+                    if (pointerType.Parameters.Count > 0)
+                    {
+                        file.Write("\n");
+
+                        for (int i = 0; i < pointerType.Parameters.Count; i++)
+                        {
+                            if (i > 0)
+                                file.Write(",\n");
+
+                            var parameter = pointerType.Parameters[i];
+                            var convertedType = Helpers.ConvertToCSharpType(parameter.Type);
+                            file.Write($"\t\t {convertedType} {parameter.Name}");
+                        }
+                    }
+
                     file.Write(");\n\n");
                 }
 
