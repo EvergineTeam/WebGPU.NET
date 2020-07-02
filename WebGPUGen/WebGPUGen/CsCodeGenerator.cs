@@ -16,11 +16,45 @@ namespace WebGPUGen
 
         public void Generate(CppCompilation compilation, string outputPath)
         {
-            Helpers.TypedefList = compilation.Typedefs.Where(t => t.TypeKind == CppTypeKind.Typedef).Select(t => t.Name).ToList();
+            Helpers.TypedefList = compilation.Typedefs
+                    .Where(t => t.TypeKind == CppTypeKind.Typedef
+                           && t.ElementType is CppPointerType
+                           && ((CppPointerType)t.ElementType).ElementType.TypeKind != CppTypeKind.Function)
+                    .Select(t => t.Name).ToList();
 
+            GenerateDelegates(compilation, outputPath);
             GenerateEnums(compilation, outputPath);
             GenerateStructs(compilation, outputPath);
             GenerateCommmands(compilation, outputPath);
+        }
+
+        private void GenerateDelegates(CppCompilation compilation, string outputPath)
+        {
+            Debug.WriteLine("Generating Delegates...");
+
+            var delegates = compilation.Typedefs
+                .Where(t => t.TypeKind == CppTypeKind.Typedef
+                       && t.ElementType is CppPointerType
+                       && ((CppPointerType)t.ElementType).ElementType.TypeKind == CppTypeKind.Function)
+                .ToList();
+
+            using (StreamWriter file = File.CreateText(Path.Combine(outputPath, "Delegates.cs")))
+            {
+                file.WriteLine("using System;\n");
+                file.WriteLine("namespace WaveEngine.Bindings.WebGPU");
+                file.WriteLine("{");
+
+                foreach (var funcPointer in delegates)
+                {
+                    CppFunctionType pointerType = ((CppPointerType)funcPointer.ElementType).ElementType as CppFunctionType;
+
+                    file.Write($"\tpublic unsafe delegate {pointerType.ReturnType} {funcPointer.Name}(");
+                    
+                    file.Write(");\n\n");
+                }
+
+                file.WriteLine("}");
+            }
         }
 
         private void GenerateCommmands(CppCompilation compilation, string outputPath)
@@ -96,7 +130,7 @@ namespace WebGPUGen
                 file.WriteLine("{");
 
                 var structs = compilation.Classes.Where(c => c.ClassKind == CppClassKind.Struct && c.IsDefinition == true);
-                
+
                 foreach (var structure in structs)
                 {
                     file.WriteLine("\t[StructLayout(LayoutKind.Sequential)]");

@@ -16,7 +16,8 @@ namespace WebGPUGen
                 Defines =
                 {
                     "WGPU_SHARED_LIBRARY",
-                    "_WIN32"
+                    "_WIN32",
+                    "WGPU_SKIP_PROCS"
                 }
             };
 

@@ -16,9 +16,9 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuCreateInstance_ptr(descriptor);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate IntPtr wgpuGetProcAddressDelegate(IntPtr device, char* procName);
+		private delegate WGPUProc wgpuGetProcAddressDelegate(IntPtr device, char* procName);
 		private static wgpuGetProcAddressDelegate wgpuGetProcAddress_ptr;
-		public static IntPtr wgpuGetProcAddress(IntPtr device, char* procName)
+		public static WGPUProc wgpuGetProcAddress(IntPtr device, char* procName)
 			=> wgpuGetProcAddress_ptr(device, procName);
 
 		[UnmanagedFunctionPointer(CallConv)]
@@ -28,9 +28,9 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuAdapterGetProperties_ptr(adapter, properties);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuAdapterRequestDeviceDelegate(IntPtr adapter, WGPUDeviceDescriptor* descriptor, IntPtr callback, void* userdata);
+		private delegate void wgpuAdapterRequestDeviceDelegate(IntPtr adapter, WGPUDeviceDescriptor* descriptor, WGPURequestDeviceCallback callback, void* userdata);
 		private static wgpuAdapterRequestDeviceDelegate wgpuAdapterRequestDevice_ptr;
-		public static void wgpuAdapterRequestDevice(IntPtr adapter, WGPUDeviceDescriptor* descriptor, IntPtr callback, void* userdata)
+		public static void wgpuAdapterRequestDevice(IntPtr adapter, WGPUDeviceDescriptor* descriptor, WGPURequestDeviceCallback callback, void* userdata)
 			=> wgpuAdapterRequestDevice_ptr(adapter, descriptor, callback, userdata);
 
 		[UnmanagedFunctionPointer(CallConv)]
@@ -52,15 +52,15 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuBufferGetMappedRange_ptr(buffer);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuBufferMapReadAsyncDelegate(IntPtr buffer, IntPtr callback, void* userdata);
+		private delegate void wgpuBufferMapReadAsyncDelegate(IntPtr buffer, WGPUBufferMapReadCallback callback, void* userdata);
 		private static wgpuBufferMapReadAsyncDelegate wgpuBufferMapReadAsync_ptr;
-		public static void wgpuBufferMapReadAsync(IntPtr buffer, IntPtr callback, void* userdata)
+		public static void wgpuBufferMapReadAsync(IntPtr buffer, WGPUBufferMapReadCallback callback, void* userdata)
 			=> wgpuBufferMapReadAsync_ptr(buffer, callback, userdata);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuBufferMapWriteAsyncDelegate(IntPtr buffer, IntPtr callback, void* userdata);
+		private delegate void wgpuBufferMapWriteAsyncDelegate(IntPtr buffer, WGPUBufferMapWriteCallback callback, void* userdata);
 		private static wgpuBufferMapWriteAsyncDelegate wgpuBufferMapWriteAsync_ptr;
-		public static void wgpuBufferMapWriteAsync(IntPtr buffer, IntPtr callback, void* userdata)
+		public static void wgpuBufferMapWriteAsync(IntPtr buffer, WGPUBufferMapWriteCallback callback, void* userdata)
 			=> wgpuBufferMapWriteAsync_ptr(buffer, callback, userdata);
 
 		[UnmanagedFunctionPointer(CallConv)]
@@ -274,9 +274,9 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuDeviceGetDefaultQueue_ptr(device);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate bool wgpuDevicePopErrorScopeDelegate(IntPtr device, IntPtr callback, void* userdata);
+		private delegate bool wgpuDevicePopErrorScopeDelegate(IntPtr device, WGPUErrorCallback callback, void* userdata);
 		private static wgpuDevicePopErrorScopeDelegate wgpuDevicePopErrorScope_ptr;
-		public static bool wgpuDevicePopErrorScope(IntPtr device, IntPtr callback, void* userdata)
+		public static bool wgpuDevicePopErrorScope(IntPtr device, WGPUErrorCallback callback, void* userdata)
 			=> wgpuDevicePopErrorScope_ptr(device, callback, userdata);
 
 		[UnmanagedFunctionPointer(CallConv)]
@@ -286,15 +286,15 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuDevicePushErrorScope_ptr(device, filter);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuDeviceSetDeviceLostCallbackDelegate(IntPtr device, IntPtr callback, void* userdata);
+		private delegate void wgpuDeviceSetDeviceLostCallbackDelegate(IntPtr device, WGPUDeviceLostCallback callback, void* userdata);
 		private static wgpuDeviceSetDeviceLostCallbackDelegate wgpuDeviceSetDeviceLostCallback_ptr;
-		public static void wgpuDeviceSetDeviceLostCallback(IntPtr device, IntPtr callback, void* userdata)
+		public static void wgpuDeviceSetDeviceLostCallback(IntPtr device, WGPUDeviceLostCallback callback, void* userdata)
 			=> wgpuDeviceSetDeviceLostCallback_ptr(device, callback, userdata);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuDeviceSetUncapturedErrorCallbackDelegate(IntPtr device, IntPtr callback, void* userdata);
+		private delegate void wgpuDeviceSetUncapturedErrorCallbackDelegate(IntPtr device, WGPUErrorCallback callback, void* userdata);
 		private static wgpuDeviceSetUncapturedErrorCallbackDelegate wgpuDeviceSetUncapturedErrorCallback_ptr;
-		public static void wgpuDeviceSetUncapturedErrorCallback(IntPtr device, IntPtr callback, void* userdata)
+		public static void wgpuDeviceSetUncapturedErrorCallback(IntPtr device, WGPUErrorCallback callback, void* userdata)
 			=> wgpuDeviceSetUncapturedErrorCallback_ptr(device, callback, userdata);
 
 		[UnmanagedFunctionPointer(CallConv)]
@@ -304,9 +304,9 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuFenceGetCompletedValue_ptr(fence);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuFenceOnCompletionDelegate(IntPtr fence, ulong value, IntPtr callback, void* userdata);
+		private delegate void wgpuFenceOnCompletionDelegate(IntPtr fence, ulong value, WGPUFenceOnCompletionCallback callback, void* userdata);
 		private static wgpuFenceOnCompletionDelegate wgpuFenceOnCompletion_ptr;
-		public static void wgpuFenceOnCompletion(IntPtr fence, ulong value, IntPtr callback, void* userdata)
+		public static void wgpuFenceOnCompletion(IntPtr fence, ulong value, WGPUFenceOnCompletionCallback callback, void* userdata)
 			=> wgpuFenceOnCompletion_ptr(fence, value, callback, userdata);
 
 		[UnmanagedFunctionPointer(CallConv)]
@@ -322,9 +322,9 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuInstanceProcessEvents_ptr(instance);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuInstanceRequestAdapterDelegate(IntPtr instance, WGPURequestAdapterOptions* options, IntPtr callback, void* userdata);
+		private delegate void wgpuInstanceRequestAdapterDelegate(IntPtr instance, WGPURequestAdapterOptions* options, WGPURequestAdapterCallback callback, void* userdata);
 		private static wgpuInstanceRequestAdapterDelegate wgpuInstanceRequestAdapter_ptr;
-		public static void wgpuInstanceRequestAdapter(IntPtr instance, WGPURequestAdapterOptions* options, IntPtr callback, void* userdata)
+		public static void wgpuInstanceRequestAdapter(IntPtr instance, WGPURequestAdapterOptions* options, WGPURequestAdapterCallback callback, void* userdata)
 			=> wgpuInstanceRequestAdapter_ptr(instance, options, callback, userdata);
 
 		[UnmanagedFunctionPointer(CallConv)]
@@ -556,9 +556,9 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuRenderPipelineGetBindGroupLayout_ptr(renderPipeline, groupIndex);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuSurfaceGetPreferredFormatDelegate(IntPtr surface, IntPtr adapter, IntPtr callback, void* userdata);
+		private delegate void wgpuSurfaceGetPreferredFormatDelegate(IntPtr surface, IntPtr adapter, WGPUSurfaceGetPreferredFormatCallback callback, void* userdata);
 		private static wgpuSurfaceGetPreferredFormatDelegate wgpuSurfaceGetPreferredFormat_ptr;
-		public static void wgpuSurfaceGetPreferredFormat(IntPtr surface, IntPtr adapter, IntPtr callback, void* userdata)
+		public static void wgpuSurfaceGetPreferredFormat(IntPtr surface, IntPtr adapter, WGPUSurfaceGetPreferredFormatCallback callback, void* userdata)
 			=> wgpuSurfaceGetPreferredFormat_ptr(surface, adapter, callback, userdata);
 
 		[UnmanagedFunctionPointer(CallConv)]
