@@ -1,0 +1,47 @@
+trigger:
+- master
+
+pool:
+  name: WaveEngine
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Check .NETCore SDK'
+  inputs:
+    version: '$(NetCoreSDKVersion)'
+
+- task: NuGetToolInstaller@1
+  displayName: 'Check NuGet client'
+  inputs:
+    versionSpec: '$(NuGetVersion)'
+    checkLatest: true
+
+- task: PowerShell@2
+  displayName: 'Generate NuGet packages'
+  inputs:
+    filePath: './Generate-NuGets.ps1'
+    arguments: '-Version 1.0.$(Build.BuildNumber) -outputfolder $(nugetOutputPath)'
+
+- task: PublishBuildArtifacts@1
+  displayName: "Publish Artifact: NuGets"
+  inputs:
+    PathtoPublish: '$(nugetOutputPath)'
+    ArtifactName: 'NuGets'
+    publishLocation: 'Container'
+
+- task: NuGetCommand@2
+  displayName: 'Push NuGets to internal feed - WaveEngine-nightly'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(nugetOutputPath)/**/*.nupkg;!$(nugetOutputPath)/**/*.symbols.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: '318bbdf3-7e63-4960-8acd-bbaac76b9eea'
+
+- task: NuGetCommand@2
+  displayName: 'Push NuGets to NuGet.org'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(nugetOutputPath)/**/*.nupkg;!$(nugetOutputPath)/**/*.symbols.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'WaveEngine Nuget.org'
+
