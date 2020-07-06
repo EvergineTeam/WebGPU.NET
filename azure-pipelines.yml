@@ -9,6 +9,9 @@ variables:
   - name: 'nugetOutputPath'
     value: '$(Build.StagingDirectory)/nupkgs'
 
+workspace:
+  clean: all
+
 steps:
 
 - task: PowerShell@2
@@ -19,8 +22,8 @@ steps:
           $DaysSinceEpoch = (New-TimeSpan -Start $TimestampEpoch -End $(Get-Date)).Days
           $MinutesSinceMidnight= [int] (New-TimeSpan -Start $(Get-Date -Hour 0 -Minute 00 -Second 00) -End $(Get-Date)).TotalMinutes
           $MinutesSinceMidnightFourDigits = ([string]$minutesSinceMidnight).PadLeft(4,'0')
-          $AppVersionNumericSeparatedByDots = "$Env:VERSIONS.MAJOR.$DaysSinceEpoch.$MinutesSinceMidnight"
-          $AppVersionStringOverlappedAndPadded = "$Env:VERSIONS.MAJOR$DaysSinceEpoch$MinutesSinceMidnightFourDigits"
+          $AppVersionNumericSeparatedByDots = "$Env:APPMAJORVERSION.$DaysSinceEpoch.$MinutesSinceMidnight"
+          $AppVersionStringOverlappedAndPadded = "$Env:APPMAJORVERSION$DaysSinceEpoch$MinutesSinceMidnightFourDigits"
           # Set output variables
           Write-Host "App version -> $AppVersionNumericSeparatedByDots, setting output variable 'appversion'"
           Write-Host "##vso[task.setvariable variable=appversion;isOutput=true]$AppVersionNumericSeparatedByDots"
@@ -46,7 +49,7 @@ steps:
   displayName: 'Generate NuGet packages'
   inputs:
     filePath: './Generate-NuGets.ps1'
-    arguments: '-Version $(appversion) -outputfolder $(nugetOutputPath)'
+    arguments: '-Version $(GetAppVersionTask.appversion) -outputfolder $(nugetOutputPath)'
 
 - task: PublishBuildArtifacts@1
   displayName: "Publish Artifact: NuGets"
@@ -70,4 +73,3 @@ steps:
     packagesToPush: '$(nugetOutputPath)/**/*.nupkg;!$(nugetOutputPath)/**/*.symbols.nupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'WaveEngine Nuget.org'
-
