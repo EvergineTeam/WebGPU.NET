@@ -59,17 +59,17 @@ steps:
     publishLocation: 'Container'
 
 - task: NuGetCommand@2
-  displayName: 'Push NuGets to internal feed - WaveEngine-nightly'
-  inputs:
-    command: 'push'
-    packagesToPush: '$(nugetOutputPath)/**/*.nupkg;!$(nugetOutputPath)/**/*.symbols.nupkg'
-    nuGetFeedType: 'internal'
-    publishVstsFeed: '318bbdf3-7e63-4960-8acd-bbaac76b9eea'
-
-- task: NuGetCommand@2
   displayName: 'Push NuGets to NuGet.org'
   inputs:
     command: 'push'
     packagesToPush: '$(nugetOutputPath)/**/*.nupkg;!$(nugetOutputPath)/**/*.symbols.nupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'WaveEngine Nuget.org'
+
+- task: NuGetCommand@2
+  displayName: 'Push NuGets to internal feed - WaveEngine-nightly'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(nugetOutputPath)/**/*.nupkg;!$(nugetOutputPath)/**/*.symbols.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: '318bbdf3-7e63-4960-8acd-bbaac76b9eea'
