@@ -10,6 +10,27 @@ variables:
     value: '$(Build.StagingDirectory)/nupkgs'
 
 steps:
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $TimestampEpoch = Get-Date -Date '2018-01-01'
+          $DaysSinceEpoch = (New-TimeSpan -Start $TimestampEpoch -End $(Get-Date)).Days
+          $MinutesSinceMidnight= [int] (New-TimeSpan -Start $(Get-Date -Hour 0 -Minute 00 -Second 00) -End $(Get-Date)).TotalMinutes
+          $MinutesSinceMidnightFourDigits = ([string]$minutesSinceMidnight).PadLeft(4,'0')
+          $AppVersionNumericSeparatedByDots = "$Env:VERSIONS.MAJOR.$DaysSinceEpoch.$MinutesSinceMidnight"
+          $AppVersionStringOverlappedAndPadded = "$Env:VERSIONS.MAJOR$DaysSinceEpoch$MinutesSinceMidnightFourDigits"
+          # Set output variables
+          Write-Host "App version -> $AppVersionNumericSeparatedByDots, setting output variable 'appversion'"
+          Write-Host "##vso[task.setvariable variable=appversion;isOutput=true]$AppVersionNumericSeparatedByDots"
+          Write-Host "String app version -> $AppVersionStringOverlappedAndPadded, setting output variable 'stringappversion'"
+          Write-Host "##vso[task.setvariable variable=stringappversion;isOutput=true]$AppVersionStringOverlappedAndPadded"
+          # Update build name
+          Write-Host "##vso[build.updatebuildnumber]$AppVersionNumericSeparatedByDots"
+  name: GetAppVersionTask
+  displayName: 'Get app version, set BuildName'
+
 - task: UseDotNet@2
   displayName: 'Check .NETCore SDK'
   inputs:
@@ -25,7 +46,7 @@ steps:
   displayName: 'Generate NuGet packages'
   inputs:
     filePath: './Generate-NuGets.ps1'
-    arguments: '-Version 1.0.$(Build.BuildNumber) -outputfolder $(nugetOutputPath)'
+    arguments: '-Version $(appversion) -outputfolder $(nugetOutputPath)'
 
 - task: PublishBuildArtifacts@1
   displayName: "Publish Artifact: NuGets"
