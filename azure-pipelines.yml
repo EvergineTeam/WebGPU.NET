@@ -4,6 +4,9 @@ trigger:
 pool:
   name: WaveEngine
 
+variables:
+  - group: Versions  
+
 steps:
 - task: UseDotNet@2
   displayName: 'Check .NETCore SDK'
