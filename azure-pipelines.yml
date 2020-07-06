@@ -5,7 +5,9 @@ pool:
   name: WaveEngine
 
 variables:
-  - group: Versions  
+  - group: Versions
+  - name: 'nugetOutputPath'
+    value: '$(Build.StagingDirectory)/nupkgs'
 
 steps:
 - task: UseDotNet@2
