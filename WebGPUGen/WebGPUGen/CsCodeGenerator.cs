@@ -48,7 +48,8 @@ namespace WebGPUGen
                 {
                     CppFunctionType pointerType = ((CppPointerType)funcPointer.ElementType).ElementType as CppFunctionType;
 
-                    file.Write($"\tpublic unsafe delegate {pointerType.ReturnType} {funcPointer.Name}(");
+                    var returnType = Helpers.ConvertToCSharpType(pointerType.ReturnType);
+                    file.Write($"\tpublic unsafe delegate {returnType} {funcPointer.Name}(");
 
                     if (pointerType.Parameters.Count > 0)
                     {
@@ -153,7 +154,7 @@ namespace WebGPUGen
                     file.WriteLine("\t{");
                     foreach (var member in structure.Fields)
                     {
-                        string type = type = Helpers.ConvertToCSharpType(member.Type);
+                        string type = Helpers.ConvertToCSharpType(member.Type);
 
                         file.WriteLine($"\t\tpublic {type} {member.Name};");
                     }
