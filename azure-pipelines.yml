@@ -1,0 +1,75 @@
+trigger:
+- master
+
+pool:
+  name: WaveEngine
+
+variables:
+  - group: Versions
+  - name: 'nugetOutputPath'
+    value: '$(Build.StagingDirectory)/nupkgs'
+
+workspace:
+  clean: all
+
+steps:
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $TimestampEpoch = Get-Date -Date '2018-01-01'
+          $DaysSinceEpoch = (New-TimeSpan -Start $TimestampEpoch -End $(Get-Date)).Days
+          $MinutesSinceMidnight= [int] (New-TimeSpan -Start $(Get-Date -Hour 0 -Minute 00 -Second 00) -End $(Get-Date)).TotalMinutes
+          $MinutesSinceMidnightFourDigits = ([string]$minutesSinceMidnight).PadLeft(4,'0')
+          $AppVersionNumericSeparatedByDots = "$Env:APPMAJORVERSION.$DaysSinceEpoch.$MinutesSinceMidnight"
+          $AppVersionStringOverlappedAndPadded = "$Env:APPMAJORVERSION$DaysSinceEpoch$MinutesSinceMidnightFourDigits"
+          # Set output variables
+          Write-Host "App version -> $AppVersionNumericSeparatedByDots, setting output variable 'appversion'"
+          Write-Host "##vso[task.setvariable variable=appversion;isOutput=true]$AppVersionNumericSeparatedByDots"
+          Write-Host "String app version -> $AppVersionStringOverlappedAndPadded, setting output variable 'stringappversion'"
+          Write-Host "##vso[task.setvariable variable=stringappversion;isOutput=true]$AppVersionStringOverlappedAndPadded"
+          # Update build name
+          Write-Host "##vso[build.updatebuildnumber]$AppVersionNumericSeparatedByDots"
+  name: GetAppVersionTask
+  displayName: 'Get app version, set BuildName'
+
+- task: UseDotNet@2
+  displayName: 'Check .NETCore SDK'
+  inputs:
+    version: '$(NetCoreSDKVersion)'
+
+- task: NuGetToolInstaller@1
+  displayName: 'Check NuGet client'
+  inputs:
+    versionSpec: '$(NuGetVersion)'
+    checkLatest: true
+
+- task: PowerShell@2
+  displayName: 'Generate NuGet packages'
+  inputs:
+    filePath: './Generate-NuGets.ps1'
+    arguments: '-Version $(GetAppVersionTask.appversion) -outputfolder $(nugetOutputPath)'
+
+- task: PublishBuildArtifacts@1
+  displayName: "Publish Artifact: NuGets"
+  inputs:
+    PathtoPublish: '$(nugetOutputPath)'
+    ArtifactName: 'NuGets'
+    publishLocation: 'Container'
+
+- task: NuGetCommand@2
+  displayName: 'Push NuGets to NuGet.org'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(nugetOutputPath)/**/*.nupkg;!$(nugetOutputPath)/**/*.symbols.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'WaveEngine Nuget.org'
+
+- task: NuGetCommand@2
+  displayName: 'Push NuGets to internal feed - WaveEngine-nightly'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(nugetOutputPath)/**/*.nupkg;!$(nugetOutputPath)/**/*.symbols.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: '318bbdf3-7e63-4960-8acd-bbaac76b9eea'
