@@ -7,7 +7,7 @@ This binding is generated from WebGPU headers https://github.com/webgpu-native/w
 ## Features
 
 - WebGPU Draft
-- Raw low level binding using usafe c# code.
+- Raw low level binding using unsafe c# code.
 
 ## Nuget Packages
 
