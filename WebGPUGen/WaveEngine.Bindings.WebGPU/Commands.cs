@@ -1,11 +1,14 @@
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace WaveEngine.Bindings.WebGPU
 {
 	public static unsafe partial class WebGPUNative
 	{
-		private static Func<string, IntPtr> s_getProcAddress;
+		private static Func<IntPtr, string, IntPtr> s_getProcAddress;
+
+		private static IntPtr p_device;
 
 		private const CallingConvention CallConv = CallingConvention.Winapi;
 
@@ -202,10 +205,10 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuDeviceCreateBindGroupLayout_ptr(device, descriptor);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate IntPtr wgpuDeviceCreateBufferDelegate(IntPtr device, WGPUBufferDescriptor* descriptor);
+		private delegate IntPtr wgpuDeviceCreateBufferDelegate(IntPtr device, ref WGPUBufferDescriptor descriptor);
 		private static wgpuDeviceCreateBufferDelegate wgpuDeviceCreateBuffer_ptr;
-		public static IntPtr wgpuDeviceCreateBuffer(IntPtr device, WGPUBufferDescriptor* descriptor)
-			=> wgpuDeviceCreateBuffer_ptr(device, descriptor);
+		public static IntPtr wgpuDeviceCreateBuffer(IntPtr device, ref WGPUBufferDescriptor descriptor)
+			=> wgpuDeviceCreateBuffer_ptr(device, ref descriptor);
 
 		[UnmanagedFunctionPointer(CallConv)]
 		private delegate IntPtr wgpuDeviceCreateCommandEncoderDelegate(IntPtr device, WGPUCommandEncoderDescriptor* descriptor);
@@ -238,10 +241,10 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuDeviceCreateRenderBundleEncoder_ptr(device, descriptor);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate IntPtr wgpuDeviceCreateRenderPipelineDelegate(IntPtr device, WGPURenderPipelineDescriptor* descriptor);
+		private delegate IntPtr wgpuDeviceCreateRenderPipelineDelegate(IntPtr device, ref WGPURenderPipelineDescriptor descriptor);
 		private static wgpuDeviceCreateRenderPipelineDelegate wgpuDeviceCreateRenderPipeline_ptr;
-		public static IntPtr wgpuDeviceCreateRenderPipeline(IntPtr device, WGPURenderPipelineDescriptor* descriptor)
-			=> wgpuDeviceCreateRenderPipeline_ptr(device, descriptor);
+		public static IntPtr wgpuDeviceCreateRenderPipeline(IntPtr device, ref WGPURenderPipelineDescriptor descriptor)
+			=> wgpuDeviceCreateRenderPipeline_ptr(device, ref descriptor);
 
 		[UnmanagedFunctionPointer(CallConv)]
 		private delegate IntPtr wgpuDeviceCreateSamplerDelegate(IntPtr device, WGPUSamplerDescriptor* descriptor);
@@ -586,9 +589,11 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuTextureDestroy_ptr(texture);
 
 
-		public static void LoadFuncionPointers(Func<string, IntPtr> getProcAddress)
+		public static void LoadFuncionPointers(IntPtr device, Func<IntPtr, string, IntPtr> getProcAddress)
 		{
 			s_getProcAddress = getProcAddress;
+
+			p_device = device;
 
 			LoadFunction("wgpuCreateInstance",  out wgpuCreateInstance_ptr);
 			LoadFunction("wgpuGetProcAddress",  out wgpuGetProcAddress_ptr);
@@ -690,13 +695,14 @@ namespace WaveEngine.Bindings.WebGPU
 
 		private static void LoadFunction<T>(string name, out T field)
 		{
-			IntPtr funcPtr = s_getProcAddress(name);
+			IntPtr funcPtr = s_getProcAddress(p_device, name);
 			if (funcPtr != IntPtr.Zero)
 			{
 				field = Marshal.GetDelegateForFunctionPointer<T>(funcPtr);
 			}
 			else
 			{
+				Debug.WriteLine($"WARING: Function { name} not found in WebGPU implementation.");
 				field = default(T);
 			}
 		}

@@ -85,6 +85,17 @@ namespace WebGPUGen
             foreach (var parameter in command.Parameters)
             {
                 string convertedType = ConvertToCSharpType(parameter.Type);
+                // Hack for structs that cannot be marshaled as pointers
+                if (convertedType == "WGPUBufferDescriptor*")
+                {
+                    signature.Append("ref ");
+                    convertedType = "WGPUBufferDescriptor";
+                }
+                else if (convertedType == "WGPURenderPipelineDescriptor*")
+                {
+                    signature.Append("ref ");
+                    convertedType = "WGPURenderPipelineDescriptor";
+                }
                 string convertedName = parameter.Name;
 
                 if (useTypes)

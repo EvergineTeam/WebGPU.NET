@@ -80,12 +80,14 @@ namespace WebGPUGen
             using (StreamWriter file = File.CreateText(Path.Combine(outputPath, "Commands.cs")))
             {
                 file.WriteLine("using System;");
+                file.WriteLine("using System.Diagnostics;");
                 file.WriteLine("using System.Runtime.InteropServices;\n");
                 file.WriteLine("namespace WaveEngine.Bindings.WebGPU");
                 file.WriteLine("{");
                 file.WriteLine("\tpublic static unsafe partial class WebGPUNative");
                 file.WriteLine("\t{");
-                file.WriteLine("\t\tprivate static Func<string, IntPtr> s_getProcAddress;\n");
+                file.WriteLine("\t\tprivate static Func<IntPtr, string, IntPtr> s_getProcAddress;\n");
+                file.WriteLine("\t\tprivate static IntPtr p_device;\n");
                 file.WriteLine("\t\tprivate const CallingConvention CallConv = CallingConvention.Winapi;\n");
 
                 foreach (var command in compilation.Functions)
@@ -105,9 +107,10 @@ namespace WebGPUGen
                     file.WriteLine($"\t\t\t=> {command.Name}_ptr({Helpers.GetParametersSignature(command, false)});\n");
                 }
 
-                file.WriteLine($"\n\t\tpublic static void LoadFuncionPointers(Func<string, IntPtr> getProcAddress)");
+                file.WriteLine($"\n\t\tpublic static void LoadFuncionPointers(IntPtr device, Func<IntPtr, string, IntPtr> getProcAddress)");
                 file.WriteLine("\t\t{");
                 file.WriteLine("\t\t\ts_getProcAddress = getProcAddress;\n");
+                file.WriteLine("\t\t\tp_device = device;\n");
 
                 foreach (var command in compilation.Functions)
                 {
@@ -118,13 +121,14 @@ namespace WebGPUGen
 
                 file.WriteLine("\t\tprivate static void LoadFunction<T>(string name, out T field)");
                 file.WriteLine("\t\t{");
-                file.WriteLine("\t\t\tIntPtr funcPtr = s_getProcAddress(name);");
+                file.WriteLine("\t\t\tIntPtr funcPtr = s_getProcAddress(p_device, name);");
                 file.WriteLine("\t\t\tif (funcPtr != IntPtr.Zero)");
                 file.WriteLine("\t\t\t{");
                 file.WriteLine("\t\t\t\tfield = Marshal.GetDelegateForFunctionPointer<T>(funcPtr);");
                 file.WriteLine("\t\t\t}");
                 file.WriteLine("\t\t\telse");
                 file.WriteLine("\t\t\t{");
+                file.WriteLine("\t\t\t\tDebug.WriteLine($\"WARING: Function { name} not found in WebGPU implementation.\");");
                 file.WriteLine("\t\t\t\tfield = default(T);");
                 file.WriteLine("\t\t\t}");
                 file.WriteLine("\t\t}");
