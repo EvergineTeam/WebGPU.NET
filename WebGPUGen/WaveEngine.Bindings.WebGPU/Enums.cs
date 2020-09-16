@@ -39,8 +39,9 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPUBindingType_Sampler = 3,
 		WGPUBindingType_ComparisonSampler = 4,
 		WGPUBindingType_SampledTexture = 5,
-		WGPUBindingType_ReadonlyStorageTexture = 6,
-		WGPUBindingType_WriteonlyStorageTexture = 7,
+		WGPUBindingType_StorageTexture = 6,
+		WGPUBindingType_ReadonlyStorageTexture = 7,
+		WGPUBindingType_WriteonlyStorageTexture = 8,
 		WGPUBindingType_Force32 = 2147483647,
 	}
 
@@ -165,6 +166,16 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPULoadOp_Force32 = 2147483647,
 	}
 
+	public enum WGPUPipelineStatisticsName
+	{
+		WGPUPipelineStatisticsName_VertexShaderInvocations = 0,
+		WGPUPipelineStatisticsName_ClipperInvocations = 1,
+		WGPUPipelineStatisticsName_ClipperPrimitivesOut = 2,
+		WGPUPipelineStatisticsName_FragmentShaderInvocations = 3,
+		WGPUPipelineStatisticsName_ComputeShaderInvocations = 4,
+		WGPUPipelineStatisticsName_Force32 = 2147483647,
+	}
+
 	public enum WGPUPresentMode
 	{
 		WGPUPresentMode_Immediate = 0,
@@ -186,6 +197,8 @@ namespace WaveEngine.Bindings.WebGPU
 	public enum WGPUQueryType
 	{
 		WGPUQueryType_Occlusion = 0,
+		WGPUQueryType_PipelineStatistics = 1,
+		WGPUQueryType_Timestamp = 2,
 		WGPUQueryType_Force32 = 2147483647,
 	}
 
@@ -198,6 +211,8 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPUSType_SurfaceDescriptorFromHTMLCanvasId = 4,
 		WGPUSType_ShaderModuleSPIRVDescriptor = 5,
 		WGPUSType_ShaderModuleWGSLDescriptor = 6,
+		WGPUSType_SamplerDescriptorDummyAnisotropicFiltering = 7,
+		WGPUSType_RenderPipelineDescriptorDummyExtension = 8,
 		WGPUSType_Force32 = 2147483647,
 	}
 
@@ -363,7 +378,6 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPUBufferUsage_Uniform = 64,
 		WGPUBufferUsage_Storage = 128,
 		WGPUBufferUsage_Indirect = 256,
-		WGPUBufferUsage_QueryResolve = 512,
 		WGPUBufferUsage_Force32 = 2147483647,
 	}
 
@@ -398,6 +412,7 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPUTextureUsage_Sampled = 4,
 		WGPUTextureUsage_Storage = 8,
 		WGPUTextureUsage_OutputAttachment = 16,
+		WGPUTextureUsage_Present = 32,
 		WGPUTextureUsage_Force32 = 2147483647,
 	}
 

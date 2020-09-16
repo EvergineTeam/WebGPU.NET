@@ -25,16 +25,28 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuGetProcAddress_ptr(device, procName);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuAdapterGetPropertiesDelegate(IntPtr adapter, WGPUAdapterProperties* properties);
-		private static wgpuAdapterGetPropertiesDelegate wgpuAdapterGetProperties_ptr;
-		public static void wgpuAdapterGetProperties(IntPtr adapter, WGPUAdapterProperties* properties)
-			=> wgpuAdapterGetProperties_ptr(adapter, properties);
+		private delegate void wgpuBindGroupReferenceDelegate(IntPtr bindGroup);
+		private static wgpuBindGroupReferenceDelegate wgpuBindGroupReference_ptr;
+		public static void wgpuBindGroupReference(IntPtr bindGroup)
+			=> wgpuBindGroupReference_ptr(bindGroup);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuAdapterRequestDeviceDelegate(IntPtr adapter, WGPUDeviceDescriptor* descriptor, WGPURequestDeviceCallback callback, void* userdata);
-		private static wgpuAdapterRequestDeviceDelegate wgpuAdapterRequestDevice_ptr;
-		public static void wgpuAdapterRequestDevice(IntPtr adapter, WGPUDeviceDescriptor* descriptor, WGPURequestDeviceCallback callback, void* userdata)
-			=> wgpuAdapterRequestDevice_ptr(adapter, descriptor, callback, userdata);
+		private delegate void wgpuBindGroupReleaseDelegate(IntPtr bindGroup);
+		private static wgpuBindGroupReleaseDelegate wgpuBindGroupRelease_ptr;
+		public static void wgpuBindGroupRelease(IntPtr bindGroup)
+			=> wgpuBindGroupRelease_ptr(bindGroup);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuBindGroupLayoutReferenceDelegate(IntPtr bindGroupLayout);
+		private static wgpuBindGroupLayoutReferenceDelegate wgpuBindGroupLayoutReference_ptr;
+		public static void wgpuBindGroupLayoutReference(IntPtr bindGroupLayout)
+			=> wgpuBindGroupLayoutReference_ptr(bindGroupLayout);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuBindGroupLayoutReleaseDelegate(IntPtr bindGroupLayout);
+		private static wgpuBindGroupLayoutReleaseDelegate wgpuBindGroupLayoutRelease_ptr;
+		public static void wgpuBindGroupLayoutRelease(IntPtr bindGroupLayout)
+			=> wgpuBindGroupLayoutRelease_ptr(bindGroupLayout);
 
 		[UnmanagedFunctionPointer(CallConv)]
 		private delegate void wgpuBufferDestroyDelegate(IntPtr buffer);
@@ -67,10 +79,40 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuBufferMapWriteAsync_ptr(buffer, callback, userdata);
 
 		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuBufferSetSubDataDelegate(IntPtr buffer, ulong start, ulong count, void* data);
+		private static wgpuBufferSetSubDataDelegate wgpuBufferSetSubData_ptr;
+		public static void wgpuBufferSetSubData(IntPtr buffer, ulong start, ulong count, void* data)
+			=> wgpuBufferSetSubData_ptr(buffer, start, count, data);
+
+		[UnmanagedFunctionPointer(CallConv)]
 		private delegate void wgpuBufferUnmapDelegate(IntPtr buffer);
 		private static wgpuBufferUnmapDelegate wgpuBufferUnmap_ptr;
 		public static void wgpuBufferUnmap(IntPtr buffer)
 			=> wgpuBufferUnmap_ptr(buffer);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuBufferReferenceDelegate(IntPtr buffer);
+		private static wgpuBufferReferenceDelegate wgpuBufferReference_ptr;
+		public static void wgpuBufferReference(IntPtr buffer)
+			=> wgpuBufferReference_ptr(buffer);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuBufferReleaseDelegate(IntPtr buffer);
+		private static wgpuBufferReleaseDelegate wgpuBufferRelease_ptr;
+		public static void wgpuBufferRelease(IntPtr buffer)
+			=> wgpuBufferRelease_ptr(buffer);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuCommandBufferReferenceDelegate(IntPtr commandBuffer);
+		private static wgpuCommandBufferReferenceDelegate wgpuCommandBufferReference_ptr;
+		public static void wgpuCommandBufferReference(IntPtr commandBuffer)
+			=> wgpuCommandBufferReference_ptr(commandBuffer);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuCommandBufferReleaseDelegate(IntPtr commandBuffer);
+		private static wgpuCommandBufferReleaseDelegate wgpuCommandBufferRelease_ptr;
+		public static void wgpuCommandBufferRelease(IntPtr commandBuffer)
+			=> wgpuCommandBufferRelease_ptr(commandBuffer);
 
 		[UnmanagedFunctionPointer(CallConv)]
 		private delegate IntPtr wgpuCommandEncoderBeginComputePassDelegate(IntPtr commandEncoder, WGPUComputePassDescriptor* descriptor);
@@ -133,10 +175,22 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuCommandEncoderPushDebugGroup_ptr(commandEncoder, groupLabel);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuCommandEncoderResolveQuerySetDelegate(IntPtr commandEncoder, IntPtr querySet, uint firstQuery, uint queryCount, IntPtr destination, ulong destinationOffset);
-		private static wgpuCommandEncoderResolveQuerySetDelegate wgpuCommandEncoderResolveQuerySet_ptr;
-		public static void wgpuCommandEncoderResolveQuerySet(IntPtr commandEncoder, IntPtr querySet, uint firstQuery, uint queryCount, IntPtr destination, ulong destinationOffset)
-			=> wgpuCommandEncoderResolveQuerySet_ptr(commandEncoder, querySet, firstQuery, queryCount, destination, destinationOffset);
+		private delegate void wgpuCommandEncoderWriteTimestampDelegate(IntPtr commandEncoder, IntPtr querySet, uint queryIndex);
+		private static wgpuCommandEncoderWriteTimestampDelegate wgpuCommandEncoderWriteTimestamp_ptr;
+		public static void wgpuCommandEncoderWriteTimestamp(IntPtr commandEncoder, IntPtr querySet, uint queryIndex)
+			=> wgpuCommandEncoderWriteTimestamp_ptr(commandEncoder, querySet, queryIndex);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuCommandEncoderReferenceDelegate(IntPtr commandEncoder);
+		private static wgpuCommandEncoderReferenceDelegate wgpuCommandEncoderReference_ptr;
+		public static void wgpuCommandEncoderReference(IntPtr commandEncoder)
+			=> wgpuCommandEncoderReference_ptr(commandEncoder);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuCommandEncoderReleaseDelegate(IntPtr commandEncoder);
+		private static wgpuCommandEncoderReleaseDelegate wgpuCommandEncoderRelease_ptr;
+		public static void wgpuCommandEncoderRelease(IntPtr commandEncoder)
+			=> wgpuCommandEncoderRelease_ptr(commandEncoder);
 
 		[UnmanagedFunctionPointer(CallConv)]
 		private delegate void wgpuComputePassEncoderDispatchDelegate(IntPtr computePassEncoder, uint x, uint y, uint z);
@@ -187,10 +241,40 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuComputePassEncoderSetPipeline_ptr(computePassEncoder, pipeline);
 
 		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuComputePassEncoderWriteTimestampDelegate(IntPtr computePassEncoder, IntPtr querySet, uint queryIndex);
+		private static wgpuComputePassEncoderWriteTimestampDelegate wgpuComputePassEncoderWriteTimestamp_ptr;
+		public static void wgpuComputePassEncoderWriteTimestamp(IntPtr computePassEncoder, IntPtr querySet, uint queryIndex)
+			=> wgpuComputePassEncoderWriteTimestamp_ptr(computePassEncoder, querySet, queryIndex);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuComputePassEncoderReferenceDelegate(IntPtr computePassEncoder);
+		private static wgpuComputePassEncoderReferenceDelegate wgpuComputePassEncoderReference_ptr;
+		public static void wgpuComputePassEncoderReference(IntPtr computePassEncoder)
+			=> wgpuComputePassEncoderReference_ptr(computePassEncoder);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuComputePassEncoderReleaseDelegate(IntPtr computePassEncoder);
+		private static wgpuComputePassEncoderReleaseDelegate wgpuComputePassEncoderRelease_ptr;
+		public static void wgpuComputePassEncoderRelease(IntPtr computePassEncoder)
+			=> wgpuComputePassEncoderRelease_ptr(computePassEncoder);
+
+		[UnmanagedFunctionPointer(CallConv)]
 		private delegate IntPtr wgpuComputePipelineGetBindGroupLayoutDelegate(IntPtr computePipeline, uint groupIndex);
 		private static wgpuComputePipelineGetBindGroupLayoutDelegate wgpuComputePipelineGetBindGroupLayout_ptr;
 		public static IntPtr wgpuComputePipelineGetBindGroupLayout(IntPtr computePipeline, uint groupIndex)
 			=> wgpuComputePipelineGetBindGroupLayout_ptr(computePipeline, groupIndex);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuComputePipelineReferenceDelegate(IntPtr computePipeline);
+		private static wgpuComputePipelineReferenceDelegate wgpuComputePipelineReference_ptr;
+		public static void wgpuComputePipelineReference(IntPtr computePipeline)
+			=> wgpuComputePipelineReference_ptr(computePipeline);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuComputePipelineReleaseDelegate(IntPtr computePipeline);
+		private static wgpuComputePipelineReleaseDelegate wgpuComputePipelineRelease_ptr;
+		public static void wgpuComputePipelineRelease(IntPtr computePipeline)
+			=> wgpuComputePipelineRelease_ptr(computePipeline);
 
 		[UnmanagedFunctionPointer(CallConv)]
 		private delegate IntPtr wgpuDeviceCreateBindGroupDelegate(IntPtr device, WGPUBindGroupDescriptor* descriptor);
@@ -205,10 +289,16 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuDeviceCreateBindGroupLayout_ptr(device, descriptor);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate IntPtr wgpuDeviceCreateBufferDelegate(IntPtr device, ref WGPUBufferDescriptor descriptor);
+		private delegate IntPtr wgpuDeviceCreateBufferDelegate(IntPtr device, WGPUBufferDescriptor* descriptor);
 		private static wgpuDeviceCreateBufferDelegate wgpuDeviceCreateBuffer_ptr;
-		public static IntPtr wgpuDeviceCreateBuffer(IntPtr device, ref WGPUBufferDescriptor descriptor)
-			=> wgpuDeviceCreateBuffer_ptr(device, ref descriptor);
+		public static IntPtr wgpuDeviceCreateBuffer(IntPtr device, WGPUBufferDescriptor* descriptor)
+			=> wgpuDeviceCreateBuffer_ptr(device, descriptor);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate WGPUCreateBufferMappedResult wgpuDeviceCreateBufferMappedDelegate(IntPtr device, WGPUBufferDescriptor* descriptor);
+		private static wgpuDeviceCreateBufferMappedDelegate wgpuDeviceCreateBufferMapped_ptr;
+		public static WGPUCreateBufferMappedResult wgpuDeviceCreateBufferMapped(IntPtr device, WGPUBufferDescriptor* descriptor)
+			=> wgpuDeviceCreateBufferMapped_ptr(device, descriptor);
 
 		[UnmanagedFunctionPointer(CallConv)]
 		private delegate IntPtr wgpuDeviceCreateCommandEncoderDelegate(IntPtr device, WGPUCommandEncoderDescriptor* descriptor);
@@ -221,6 +311,12 @@ namespace WaveEngine.Bindings.WebGPU
 		private static wgpuDeviceCreateComputePipelineDelegate wgpuDeviceCreateComputePipeline_ptr;
 		public static IntPtr wgpuDeviceCreateComputePipeline(IntPtr device, WGPUComputePipelineDescriptor* descriptor)
 			=> wgpuDeviceCreateComputePipeline_ptr(device, descriptor);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate IntPtr wgpuDeviceCreateErrorBufferDelegate(IntPtr device);
+		private static wgpuDeviceCreateErrorBufferDelegate wgpuDeviceCreateErrorBuffer_ptr;
+		public static IntPtr wgpuDeviceCreateErrorBuffer(IntPtr device)
+			=> wgpuDeviceCreateErrorBuffer_ptr(device);
 
 		[UnmanagedFunctionPointer(CallConv)]
 		private delegate IntPtr wgpuDeviceCreatePipelineLayoutDelegate(IntPtr device, WGPUPipelineLayoutDescriptor* descriptor);
@@ -277,6 +373,18 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuDeviceGetDefaultQueue_ptr(device);
 
 		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuDeviceInjectErrorDelegate(IntPtr device, WGPUErrorType type, char* message);
+		private static wgpuDeviceInjectErrorDelegate wgpuDeviceInjectError_ptr;
+		public static void wgpuDeviceInjectError(IntPtr device, WGPUErrorType type, char* message)
+			=> wgpuDeviceInjectError_ptr(device, type, message);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuDeviceLoseForTestingDelegate(IntPtr device);
+		private static wgpuDeviceLoseForTestingDelegate wgpuDeviceLoseForTesting_ptr;
+		public static void wgpuDeviceLoseForTesting(IntPtr device)
+			=> wgpuDeviceLoseForTesting_ptr(device);
+
+		[UnmanagedFunctionPointer(CallConv)]
 		private delegate bool wgpuDevicePopErrorScopeDelegate(IntPtr device, WGPUErrorCallback callback, void* userdata);
 		private static wgpuDevicePopErrorScopeDelegate wgpuDevicePopErrorScope_ptr;
 		public static bool wgpuDevicePopErrorScope(IntPtr device, WGPUErrorCallback callback, void* userdata)
@@ -301,6 +409,24 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuDeviceSetUncapturedErrorCallback_ptr(device, callback, userdata);
 
 		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuDeviceTickDelegate(IntPtr device);
+		private static wgpuDeviceTickDelegate wgpuDeviceTick_ptr;
+		public static void wgpuDeviceTick(IntPtr device)
+			=> wgpuDeviceTick_ptr(device);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuDeviceReferenceDelegate(IntPtr device);
+		private static wgpuDeviceReferenceDelegate wgpuDeviceReference_ptr;
+		public static void wgpuDeviceReference(IntPtr device)
+			=> wgpuDeviceReference_ptr(device);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuDeviceReleaseDelegate(IntPtr device);
+		private static wgpuDeviceReleaseDelegate wgpuDeviceRelease_ptr;
+		public static void wgpuDeviceRelease(IntPtr device)
+			=> wgpuDeviceRelease_ptr(device);
+
+		[UnmanagedFunctionPointer(CallConv)]
 		private delegate ulong wgpuFenceGetCompletedValueDelegate(IntPtr fence);
 		private static wgpuFenceGetCompletedValueDelegate wgpuFenceGetCompletedValue_ptr;
 		public static ulong wgpuFenceGetCompletedValue(IntPtr fence)
@@ -313,28 +439,64 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuFenceOnCompletion_ptr(fence, value, callback, userdata);
 
 		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuFenceReferenceDelegate(IntPtr fence);
+		private static wgpuFenceReferenceDelegate wgpuFenceReference_ptr;
+		public static void wgpuFenceReference(IntPtr fence)
+			=> wgpuFenceReference_ptr(fence);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuFenceReleaseDelegate(IntPtr fence);
+		private static wgpuFenceReleaseDelegate wgpuFenceRelease_ptr;
+		public static void wgpuFenceRelease(IntPtr fence)
+			=> wgpuFenceRelease_ptr(fence);
+
+		[UnmanagedFunctionPointer(CallConv)]
 		private delegate IntPtr wgpuInstanceCreateSurfaceDelegate(IntPtr instance, WGPUSurfaceDescriptor* descriptor);
 		private static wgpuInstanceCreateSurfaceDelegate wgpuInstanceCreateSurface_ptr;
 		public static IntPtr wgpuInstanceCreateSurface(IntPtr instance, WGPUSurfaceDescriptor* descriptor)
 			=> wgpuInstanceCreateSurface_ptr(instance, descriptor);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuInstanceProcessEventsDelegate(IntPtr instance);
-		private static wgpuInstanceProcessEventsDelegate wgpuInstanceProcessEvents_ptr;
-		public static void wgpuInstanceProcessEvents(IntPtr instance)
-			=> wgpuInstanceProcessEvents_ptr(instance);
+		private delegate void wgpuInstanceReferenceDelegate(IntPtr instance);
+		private static wgpuInstanceReferenceDelegate wgpuInstanceReference_ptr;
+		public static void wgpuInstanceReference(IntPtr instance)
+			=> wgpuInstanceReference_ptr(instance);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuInstanceRequestAdapterDelegate(IntPtr instance, WGPURequestAdapterOptions* options, WGPURequestAdapterCallback callback, void* userdata);
-		private static wgpuInstanceRequestAdapterDelegate wgpuInstanceRequestAdapter_ptr;
-		public static void wgpuInstanceRequestAdapter(IntPtr instance, WGPURequestAdapterOptions* options, WGPURequestAdapterCallback callback, void* userdata)
-			=> wgpuInstanceRequestAdapter_ptr(instance, options, callback, userdata);
+		private delegate void wgpuInstanceReleaseDelegate(IntPtr instance);
+		private static wgpuInstanceReleaseDelegate wgpuInstanceRelease_ptr;
+		public static void wgpuInstanceRelease(IntPtr instance)
+			=> wgpuInstanceRelease_ptr(instance);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuPipelineLayoutReferenceDelegate(IntPtr pipelineLayout);
+		private static wgpuPipelineLayoutReferenceDelegate wgpuPipelineLayoutReference_ptr;
+		public static void wgpuPipelineLayoutReference(IntPtr pipelineLayout)
+			=> wgpuPipelineLayoutReference_ptr(pipelineLayout);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuPipelineLayoutReleaseDelegate(IntPtr pipelineLayout);
+		private static wgpuPipelineLayoutReleaseDelegate wgpuPipelineLayoutRelease_ptr;
+		public static void wgpuPipelineLayoutRelease(IntPtr pipelineLayout)
+			=> wgpuPipelineLayoutRelease_ptr(pipelineLayout);
 
 		[UnmanagedFunctionPointer(CallConv)]
 		private delegate void wgpuQuerySetDestroyDelegate(IntPtr querySet);
 		private static wgpuQuerySetDestroyDelegate wgpuQuerySetDestroy_ptr;
 		public static void wgpuQuerySetDestroy(IntPtr querySet)
 			=> wgpuQuerySetDestroy_ptr(querySet);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuQuerySetReferenceDelegate(IntPtr querySet);
+		private static wgpuQuerySetReferenceDelegate wgpuQuerySetReference_ptr;
+		public static void wgpuQuerySetReference(IntPtr querySet)
+			=> wgpuQuerySetReference_ptr(querySet);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuQuerySetReleaseDelegate(IntPtr querySet);
+		private static wgpuQuerySetReleaseDelegate wgpuQuerySetRelease_ptr;
+		public static void wgpuQuerySetRelease(IntPtr querySet)
+			=> wgpuQuerySetRelease_ptr(querySet);
 
 		[UnmanagedFunctionPointer(CallConv)]
 		private delegate IntPtr wgpuQueueCreateFenceDelegate(IntPtr queue, WGPUFenceDescriptor* descriptor);
@@ -355,16 +517,34 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuQueueSubmit_ptr(queue, commandCount, commands);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuQueueWriteBufferDelegate(IntPtr queue, IntPtr buffer, ulong bufferOffset, void* data, UIntPtr size);
+		private delegate void wgpuQueueWriteBufferDelegate(IntPtr queue, IntPtr buffer, ulong bufferOffset, void* data, ulong size);
 		private static wgpuQueueWriteBufferDelegate wgpuQueueWriteBuffer_ptr;
-		public static void wgpuQueueWriteBuffer(IntPtr queue, IntPtr buffer, ulong bufferOffset, void* data, UIntPtr size)
+		public static void wgpuQueueWriteBuffer(IntPtr queue, IntPtr buffer, ulong bufferOffset, void* data, ulong size)
 			=> wgpuQueueWriteBuffer_ptr(queue, buffer, bufferOffset, data, size);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuQueueWriteTextureDelegate(IntPtr queue, WGPUTextureCopyView destination, void* data, UIntPtr dataSize, WGPUTextureDataLayout* dataLayout, WGPUExtent3D* writeSize);
-		private static wgpuQueueWriteTextureDelegate wgpuQueueWriteTexture_ptr;
-		public static void wgpuQueueWriteTexture(IntPtr queue, WGPUTextureCopyView destination, void* data, UIntPtr dataSize, WGPUTextureDataLayout* dataLayout, WGPUExtent3D* writeSize)
-			=> wgpuQueueWriteTexture_ptr(queue, destination, data, dataSize, dataLayout, writeSize);
+		private delegate void wgpuQueueReferenceDelegate(IntPtr queue);
+		private static wgpuQueueReferenceDelegate wgpuQueueReference_ptr;
+		public static void wgpuQueueReference(IntPtr queue)
+			=> wgpuQueueReference_ptr(queue);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuQueueReleaseDelegate(IntPtr queue);
+		private static wgpuQueueReleaseDelegate wgpuQueueRelease_ptr;
+		public static void wgpuQueueRelease(IntPtr queue)
+			=> wgpuQueueRelease_ptr(queue);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuRenderBundleReferenceDelegate(IntPtr renderBundle);
+		private static wgpuRenderBundleReferenceDelegate wgpuRenderBundleReference_ptr;
+		public static void wgpuRenderBundleReference(IntPtr renderBundle)
+			=> wgpuRenderBundleReference_ptr(renderBundle);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuRenderBundleReleaseDelegate(IntPtr renderBundle);
+		private static wgpuRenderBundleReleaseDelegate wgpuRenderBundleRelease_ptr;
+		public static void wgpuRenderBundleRelease(IntPtr renderBundle)
+			=> wgpuRenderBundleRelease_ptr(renderBundle);
 
 		[UnmanagedFunctionPointer(CallConv)]
 		private delegate void wgpuRenderBundleEncoderDrawDelegate(IntPtr renderBundleEncoder, uint vertexCount, uint instanceCount, uint firstVertex, uint firstInstance);
@@ -439,10 +619,16 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuRenderBundleEncoderSetVertexBuffer_ptr(renderBundleEncoder, slot, buffer, offset, size);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuRenderPassEncoderBeginOcclusionQueryDelegate(IntPtr renderPassEncoder, uint queryIndex);
-		private static wgpuRenderPassEncoderBeginOcclusionQueryDelegate wgpuRenderPassEncoderBeginOcclusionQuery_ptr;
-		public static void wgpuRenderPassEncoderBeginOcclusionQuery(IntPtr renderPassEncoder, uint queryIndex)
-			=> wgpuRenderPassEncoderBeginOcclusionQuery_ptr(renderPassEncoder, queryIndex);
+		private delegate void wgpuRenderBundleEncoderReferenceDelegate(IntPtr renderBundleEncoder);
+		private static wgpuRenderBundleEncoderReferenceDelegate wgpuRenderBundleEncoderReference_ptr;
+		public static void wgpuRenderBundleEncoderReference(IntPtr renderBundleEncoder)
+			=> wgpuRenderBundleEncoderReference_ptr(renderBundleEncoder);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuRenderBundleEncoderReleaseDelegate(IntPtr renderBundleEncoder);
+		private static wgpuRenderBundleEncoderReleaseDelegate wgpuRenderBundleEncoderRelease_ptr;
+		public static void wgpuRenderBundleEncoderRelease(IntPtr renderBundleEncoder)
+			=> wgpuRenderBundleEncoderRelease_ptr(renderBundleEncoder);
 
 		[UnmanagedFunctionPointer(CallConv)]
 		private delegate void wgpuRenderPassEncoderDrawDelegate(IntPtr renderPassEncoder, uint vertexCount, uint instanceCount, uint firstVertex, uint firstInstance);
@@ -467,12 +653,6 @@ namespace WaveEngine.Bindings.WebGPU
 		private static wgpuRenderPassEncoderDrawIndirectDelegate wgpuRenderPassEncoderDrawIndirect_ptr;
 		public static void wgpuRenderPassEncoderDrawIndirect(IntPtr renderPassEncoder, IntPtr indirectBuffer, ulong indirectOffset)
 			=> wgpuRenderPassEncoderDrawIndirect_ptr(renderPassEncoder, indirectBuffer, indirectOffset);
-
-		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuRenderPassEncoderEndOcclusionQueryDelegate(IntPtr renderPassEncoder, uint queryIndex);
-		private static wgpuRenderPassEncoderEndOcclusionQueryDelegate wgpuRenderPassEncoderEndOcclusionQuery_ptr;
-		public static void wgpuRenderPassEncoderEndOcclusionQuery(IntPtr renderPassEncoder, uint queryIndex)
-			=> wgpuRenderPassEncoderEndOcclusionQuery_ptr(renderPassEncoder, queryIndex);
 
 		[UnmanagedFunctionPointer(CallConv)]
 		private delegate void wgpuRenderPassEncoderEndPassDelegate(IntPtr renderPassEncoder);
@@ -553,16 +733,82 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuRenderPassEncoderSetViewport_ptr(renderPassEncoder, x, y, width, height, minDepth, maxDepth);
 
 		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuRenderPassEncoderWriteTimestampDelegate(IntPtr renderPassEncoder, IntPtr querySet, uint queryIndex);
+		private static wgpuRenderPassEncoderWriteTimestampDelegate wgpuRenderPassEncoderWriteTimestamp_ptr;
+		public static void wgpuRenderPassEncoderWriteTimestamp(IntPtr renderPassEncoder, IntPtr querySet, uint queryIndex)
+			=> wgpuRenderPassEncoderWriteTimestamp_ptr(renderPassEncoder, querySet, queryIndex);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuRenderPassEncoderReferenceDelegate(IntPtr renderPassEncoder);
+		private static wgpuRenderPassEncoderReferenceDelegate wgpuRenderPassEncoderReference_ptr;
+		public static void wgpuRenderPassEncoderReference(IntPtr renderPassEncoder)
+			=> wgpuRenderPassEncoderReference_ptr(renderPassEncoder);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuRenderPassEncoderReleaseDelegate(IntPtr renderPassEncoder);
+		private static wgpuRenderPassEncoderReleaseDelegate wgpuRenderPassEncoderRelease_ptr;
+		public static void wgpuRenderPassEncoderRelease(IntPtr renderPassEncoder)
+			=> wgpuRenderPassEncoderRelease_ptr(renderPassEncoder);
+
+		[UnmanagedFunctionPointer(CallConv)]
 		private delegate IntPtr wgpuRenderPipelineGetBindGroupLayoutDelegate(IntPtr renderPipeline, uint groupIndex);
 		private static wgpuRenderPipelineGetBindGroupLayoutDelegate wgpuRenderPipelineGetBindGroupLayout_ptr;
 		public static IntPtr wgpuRenderPipelineGetBindGroupLayout(IntPtr renderPipeline, uint groupIndex)
 			=> wgpuRenderPipelineGetBindGroupLayout_ptr(renderPipeline, groupIndex);
 
 		[UnmanagedFunctionPointer(CallConv)]
-		private delegate void wgpuSurfaceGetPreferredFormatDelegate(IntPtr surface, IntPtr adapter, WGPUSurfaceGetPreferredFormatCallback callback, void* userdata);
-		private static wgpuSurfaceGetPreferredFormatDelegate wgpuSurfaceGetPreferredFormat_ptr;
-		public static void wgpuSurfaceGetPreferredFormat(IntPtr surface, IntPtr adapter, WGPUSurfaceGetPreferredFormatCallback callback, void* userdata)
-			=> wgpuSurfaceGetPreferredFormat_ptr(surface, adapter, callback, userdata);
+		private delegate void wgpuRenderPipelineReferenceDelegate(IntPtr renderPipeline);
+		private static wgpuRenderPipelineReferenceDelegate wgpuRenderPipelineReference_ptr;
+		public static void wgpuRenderPipelineReference(IntPtr renderPipeline)
+			=> wgpuRenderPipelineReference_ptr(renderPipeline);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuRenderPipelineReleaseDelegate(IntPtr renderPipeline);
+		private static wgpuRenderPipelineReleaseDelegate wgpuRenderPipelineRelease_ptr;
+		public static void wgpuRenderPipelineRelease(IntPtr renderPipeline)
+			=> wgpuRenderPipelineRelease_ptr(renderPipeline);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuSamplerReferenceDelegate(IntPtr sampler);
+		private static wgpuSamplerReferenceDelegate wgpuSamplerReference_ptr;
+		public static void wgpuSamplerReference(IntPtr sampler)
+			=> wgpuSamplerReference_ptr(sampler);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuSamplerReleaseDelegate(IntPtr sampler);
+		private static wgpuSamplerReleaseDelegate wgpuSamplerRelease_ptr;
+		public static void wgpuSamplerRelease(IntPtr sampler)
+			=> wgpuSamplerRelease_ptr(sampler);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuShaderModuleReferenceDelegate(IntPtr shaderModule);
+		private static wgpuShaderModuleReferenceDelegate wgpuShaderModuleReference_ptr;
+		public static void wgpuShaderModuleReference(IntPtr shaderModule)
+			=> wgpuShaderModuleReference_ptr(shaderModule);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuShaderModuleReleaseDelegate(IntPtr shaderModule);
+		private static wgpuShaderModuleReleaseDelegate wgpuShaderModuleRelease_ptr;
+		public static void wgpuShaderModuleRelease(IntPtr shaderModule)
+			=> wgpuShaderModuleRelease_ptr(shaderModule);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuSurfaceReferenceDelegate(IntPtr surface);
+		private static wgpuSurfaceReferenceDelegate wgpuSurfaceReference_ptr;
+		public static void wgpuSurfaceReference(IntPtr surface)
+			=> wgpuSurfaceReference_ptr(surface);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuSurfaceReleaseDelegate(IntPtr surface);
+		private static wgpuSurfaceReleaseDelegate wgpuSurfaceRelease_ptr;
+		public static void wgpuSurfaceRelease(IntPtr surface)
+			=> wgpuSurfaceRelease_ptr(surface);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuSwapChainConfigureDelegate(IntPtr swapChain, WGPUTextureFormat format, WGPUTextureUsage allowedUsage, uint width, uint height);
+		private static wgpuSwapChainConfigureDelegate wgpuSwapChainConfigure_ptr;
+		public static void wgpuSwapChainConfigure(IntPtr swapChain, WGPUTextureFormat format, WGPUTextureUsage allowedUsage, uint width, uint height)
+			=> wgpuSwapChainConfigure_ptr(swapChain, format, allowedUsage, width, height);
 
 		[UnmanagedFunctionPointer(CallConv)]
 		private delegate IntPtr wgpuSwapChainGetCurrentTextureViewDelegate(IntPtr swapChain);
@@ -577,6 +823,18 @@ namespace WaveEngine.Bindings.WebGPU
 			=> wgpuSwapChainPresent_ptr(swapChain);
 
 		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuSwapChainReferenceDelegate(IntPtr swapChain);
+		private static wgpuSwapChainReferenceDelegate wgpuSwapChainReference_ptr;
+		public static void wgpuSwapChainReference(IntPtr swapChain)
+			=> wgpuSwapChainReference_ptr(swapChain);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuSwapChainReleaseDelegate(IntPtr swapChain);
+		private static wgpuSwapChainReleaseDelegate wgpuSwapChainRelease_ptr;
+		public static void wgpuSwapChainRelease(IntPtr swapChain)
+			=> wgpuSwapChainRelease_ptr(swapChain);
+
+		[UnmanagedFunctionPointer(CallConv)]
 		private delegate IntPtr wgpuTextureCreateViewDelegate(IntPtr texture, WGPUTextureViewDescriptor* descriptor);
 		private static wgpuTextureCreateViewDelegate wgpuTextureCreateView_ptr;
 		public static IntPtr wgpuTextureCreateView(IntPtr texture, WGPUTextureViewDescriptor* descriptor)
@@ -588,6 +846,30 @@ namespace WaveEngine.Bindings.WebGPU
 		public static void wgpuTextureDestroy(IntPtr texture)
 			=> wgpuTextureDestroy_ptr(texture);
 
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuTextureReferenceDelegate(IntPtr texture);
+		private static wgpuTextureReferenceDelegate wgpuTextureReference_ptr;
+		public static void wgpuTextureReference(IntPtr texture)
+			=> wgpuTextureReference_ptr(texture);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuTextureReleaseDelegate(IntPtr texture);
+		private static wgpuTextureReleaseDelegate wgpuTextureRelease_ptr;
+		public static void wgpuTextureRelease(IntPtr texture)
+			=> wgpuTextureRelease_ptr(texture);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuTextureViewReferenceDelegate(IntPtr textureView);
+		private static wgpuTextureViewReferenceDelegate wgpuTextureViewReference_ptr;
+		public static void wgpuTextureViewReference(IntPtr textureView)
+			=> wgpuTextureViewReference_ptr(textureView);
+
+		[UnmanagedFunctionPointer(CallConv)]
+		private delegate void wgpuTextureViewReleaseDelegate(IntPtr textureView);
+		private static wgpuTextureViewReleaseDelegate wgpuTextureViewRelease_ptr;
+		public static void wgpuTextureViewRelease(IntPtr textureView)
+			=> wgpuTextureViewRelease_ptr(textureView);
+
 
 		public static void LoadFuncionPointers(IntPtr device, Func<IntPtr, string, IntPtr> getProcAddress)
 		{
@@ -597,14 +879,21 @@ namespace WaveEngine.Bindings.WebGPU
 
 			LoadFunction("wgpuCreateInstance",  out wgpuCreateInstance_ptr);
 			LoadFunction("wgpuGetProcAddress",  out wgpuGetProcAddress_ptr);
-			LoadFunction("wgpuAdapterGetProperties",  out wgpuAdapterGetProperties_ptr);
-			LoadFunction("wgpuAdapterRequestDevice",  out wgpuAdapterRequestDevice_ptr);
+			LoadFunction("wgpuBindGroupReference",  out wgpuBindGroupReference_ptr);
+			LoadFunction("wgpuBindGroupRelease",  out wgpuBindGroupRelease_ptr);
+			LoadFunction("wgpuBindGroupLayoutReference",  out wgpuBindGroupLayoutReference_ptr);
+			LoadFunction("wgpuBindGroupLayoutRelease",  out wgpuBindGroupLayoutRelease_ptr);
 			LoadFunction("wgpuBufferDestroy",  out wgpuBufferDestroy_ptr);
 			LoadFunction("wgpuBufferGetConstMappedRange",  out wgpuBufferGetConstMappedRange_ptr);
 			LoadFunction("wgpuBufferGetMappedRange",  out wgpuBufferGetMappedRange_ptr);
 			LoadFunction("wgpuBufferMapReadAsync",  out wgpuBufferMapReadAsync_ptr);
 			LoadFunction("wgpuBufferMapWriteAsync",  out wgpuBufferMapWriteAsync_ptr);
+			LoadFunction("wgpuBufferSetSubData",  out wgpuBufferSetSubData_ptr);
 			LoadFunction("wgpuBufferUnmap",  out wgpuBufferUnmap_ptr);
+			LoadFunction("wgpuBufferReference",  out wgpuBufferReference_ptr);
+			LoadFunction("wgpuBufferRelease",  out wgpuBufferRelease_ptr);
+			LoadFunction("wgpuCommandBufferReference",  out wgpuCommandBufferReference_ptr);
+			LoadFunction("wgpuCommandBufferRelease",  out wgpuCommandBufferRelease_ptr);
 			LoadFunction("wgpuCommandEncoderBeginComputePass",  out wgpuCommandEncoderBeginComputePass_ptr);
 			LoadFunction("wgpuCommandEncoderBeginRenderPass",  out wgpuCommandEncoderBeginRenderPass_ptr);
 			LoadFunction("wgpuCommandEncoderCopyBufferToBuffer",  out wgpuCommandEncoderCopyBufferToBuffer_ptr);
@@ -615,7 +904,9 @@ namespace WaveEngine.Bindings.WebGPU
 			LoadFunction("wgpuCommandEncoderInsertDebugMarker",  out wgpuCommandEncoderInsertDebugMarker_ptr);
 			LoadFunction("wgpuCommandEncoderPopDebugGroup",  out wgpuCommandEncoderPopDebugGroup_ptr);
 			LoadFunction("wgpuCommandEncoderPushDebugGroup",  out wgpuCommandEncoderPushDebugGroup_ptr);
-			LoadFunction("wgpuCommandEncoderResolveQuerySet",  out wgpuCommandEncoderResolveQuerySet_ptr);
+			LoadFunction("wgpuCommandEncoderWriteTimestamp",  out wgpuCommandEncoderWriteTimestamp_ptr);
+			LoadFunction("wgpuCommandEncoderReference",  out wgpuCommandEncoderReference_ptr);
+			LoadFunction("wgpuCommandEncoderRelease",  out wgpuCommandEncoderRelease_ptr);
 			LoadFunction("wgpuComputePassEncoderDispatch",  out wgpuComputePassEncoderDispatch_ptr);
 			LoadFunction("wgpuComputePassEncoderDispatchIndirect",  out wgpuComputePassEncoderDispatchIndirect_ptr);
 			LoadFunction("wgpuComputePassEncoderEndPass",  out wgpuComputePassEncoderEndPass_ptr);
@@ -624,12 +915,19 @@ namespace WaveEngine.Bindings.WebGPU
 			LoadFunction("wgpuComputePassEncoderPushDebugGroup",  out wgpuComputePassEncoderPushDebugGroup_ptr);
 			LoadFunction("wgpuComputePassEncoderSetBindGroup",  out wgpuComputePassEncoderSetBindGroup_ptr);
 			LoadFunction("wgpuComputePassEncoderSetPipeline",  out wgpuComputePassEncoderSetPipeline_ptr);
+			LoadFunction("wgpuComputePassEncoderWriteTimestamp",  out wgpuComputePassEncoderWriteTimestamp_ptr);
+			LoadFunction("wgpuComputePassEncoderReference",  out wgpuComputePassEncoderReference_ptr);
+			LoadFunction("wgpuComputePassEncoderRelease",  out wgpuComputePassEncoderRelease_ptr);
 			LoadFunction("wgpuComputePipelineGetBindGroupLayout",  out wgpuComputePipelineGetBindGroupLayout_ptr);
+			LoadFunction("wgpuComputePipelineReference",  out wgpuComputePipelineReference_ptr);
+			LoadFunction("wgpuComputePipelineRelease",  out wgpuComputePipelineRelease_ptr);
 			LoadFunction("wgpuDeviceCreateBindGroup",  out wgpuDeviceCreateBindGroup_ptr);
 			LoadFunction("wgpuDeviceCreateBindGroupLayout",  out wgpuDeviceCreateBindGroupLayout_ptr);
 			LoadFunction("wgpuDeviceCreateBuffer",  out wgpuDeviceCreateBuffer_ptr);
+			LoadFunction("wgpuDeviceCreateBufferMapped",  out wgpuDeviceCreateBufferMapped_ptr);
 			LoadFunction("wgpuDeviceCreateCommandEncoder",  out wgpuDeviceCreateCommandEncoder_ptr);
 			LoadFunction("wgpuDeviceCreateComputePipeline",  out wgpuDeviceCreateComputePipeline_ptr);
+			LoadFunction("wgpuDeviceCreateErrorBuffer",  out wgpuDeviceCreateErrorBuffer_ptr);
 			LoadFunction("wgpuDeviceCreatePipelineLayout",  out wgpuDeviceCreatePipelineLayout_ptr);
 			LoadFunction("wgpuDeviceCreateQuerySet",  out wgpuDeviceCreateQuerySet_ptr);
 			LoadFunction("wgpuDeviceCreateRenderBundleEncoder",  out wgpuDeviceCreateRenderBundleEncoder_ptr);
@@ -639,21 +937,35 @@ namespace WaveEngine.Bindings.WebGPU
 			LoadFunction("wgpuDeviceCreateSwapChain",  out wgpuDeviceCreateSwapChain_ptr);
 			LoadFunction("wgpuDeviceCreateTexture",  out wgpuDeviceCreateTexture_ptr);
 			LoadFunction("wgpuDeviceGetDefaultQueue",  out wgpuDeviceGetDefaultQueue_ptr);
+			LoadFunction("wgpuDeviceInjectError",  out wgpuDeviceInjectError_ptr);
+			LoadFunction("wgpuDeviceLoseForTesting",  out wgpuDeviceLoseForTesting_ptr);
 			LoadFunction("wgpuDevicePopErrorScope",  out wgpuDevicePopErrorScope_ptr);
 			LoadFunction("wgpuDevicePushErrorScope",  out wgpuDevicePushErrorScope_ptr);
 			LoadFunction("wgpuDeviceSetDeviceLostCallback",  out wgpuDeviceSetDeviceLostCallback_ptr);
 			LoadFunction("wgpuDeviceSetUncapturedErrorCallback",  out wgpuDeviceSetUncapturedErrorCallback_ptr);
+			LoadFunction("wgpuDeviceTick",  out wgpuDeviceTick_ptr);
+			LoadFunction("wgpuDeviceReference",  out wgpuDeviceReference_ptr);
+			LoadFunction("wgpuDeviceRelease",  out wgpuDeviceRelease_ptr);
 			LoadFunction("wgpuFenceGetCompletedValue",  out wgpuFenceGetCompletedValue_ptr);
 			LoadFunction("wgpuFenceOnCompletion",  out wgpuFenceOnCompletion_ptr);
+			LoadFunction("wgpuFenceReference",  out wgpuFenceReference_ptr);
+			LoadFunction("wgpuFenceRelease",  out wgpuFenceRelease_ptr);
 			LoadFunction("wgpuInstanceCreateSurface",  out wgpuInstanceCreateSurface_ptr);
-			LoadFunction("wgpuInstanceProcessEvents",  out wgpuInstanceProcessEvents_ptr);
-			LoadFunction("wgpuInstanceRequestAdapter",  out wgpuInstanceRequestAdapter_ptr);
+			LoadFunction("wgpuInstanceReference",  out wgpuInstanceReference_ptr);
+			LoadFunction("wgpuInstanceRelease",  out wgpuInstanceRelease_ptr);
+			LoadFunction("wgpuPipelineLayoutReference",  out wgpuPipelineLayoutReference_ptr);
+			LoadFunction("wgpuPipelineLayoutRelease",  out wgpuPipelineLayoutRelease_ptr);
 			LoadFunction("wgpuQuerySetDestroy",  out wgpuQuerySetDestroy_ptr);
+			LoadFunction("wgpuQuerySetReference",  out wgpuQuerySetReference_ptr);
+			LoadFunction("wgpuQuerySetRelease",  out wgpuQuerySetRelease_ptr);
 			LoadFunction("wgpuQueueCreateFence",  out wgpuQueueCreateFence_ptr);
 			LoadFunction("wgpuQueueSignal",  out wgpuQueueSignal_ptr);
 			LoadFunction("wgpuQueueSubmit",  out wgpuQueueSubmit_ptr);
 			LoadFunction("wgpuQueueWriteBuffer",  out wgpuQueueWriteBuffer_ptr);
-			LoadFunction("wgpuQueueWriteTexture",  out wgpuQueueWriteTexture_ptr);
+			LoadFunction("wgpuQueueReference",  out wgpuQueueReference_ptr);
+			LoadFunction("wgpuQueueRelease",  out wgpuQueueRelease_ptr);
+			LoadFunction("wgpuRenderBundleReference",  out wgpuRenderBundleReference_ptr);
+			LoadFunction("wgpuRenderBundleRelease",  out wgpuRenderBundleRelease_ptr);
 			LoadFunction("wgpuRenderBundleEncoderDraw",  out wgpuRenderBundleEncoderDraw_ptr);
 			LoadFunction("wgpuRenderBundleEncoderDrawIndexed",  out wgpuRenderBundleEncoderDrawIndexed_ptr);
 			LoadFunction("wgpuRenderBundleEncoderDrawIndexedIndirect",  out wgpuRenderBundleEncoderDrawIndexedIndirect_ptr);
@@ -666,12 +978,12 @@ namespace WaveEngine.Bindings.WebGPU
 			LoadFunction("wgpuRenderBundleEncoderSetIndexBuffer",  out wgpuRenderBundleEncoderSetIndexBuffer_ptr);
 			LoadFunction("wgpuRenderBundleEncoderSetPipeline",  out wgpuRenderBundleEncoderSetPipeline_ptr);
 			LoadFunction("wgpuRenderBundleEncoderSetVertexBuffer",  out wgpuRenderBundleEncoderSetVertexBuffer_ptr);
-			LoadFunction("wgpuRenderPassEncoderBeginOcclusionQuery",  out wgpuRenderPassEncoderBeginOcclusionQuery_ptr);
+			LoadFunction("wgpuRenderBundleEncoderReference",  out wgpuRenderBundleEncoderReference_ptr);
+			LoadFunction("wgpuRenderBundleEncoderRelease",  out wgpuRenderBundleEncoderRelease_ptr);
 			LoadFunction("wgpuRenderPassEncoderDraw",  out wgpuRenderPassEncoderDraw_ptr);
 			LoadFunction("wgpuRenderPassEncoderDrawIndexed",  out wgpuRenderPassEncoderDrawIndexed_ptr);
 			LoadFunction("wgpuRenderPassEncoderDrawIndexedIndirect",  out wgpuRenderPassEncoderDrawIndexedIndirect_ptr);
 			LoadFunction("wgpuRenderPassEncoderDrawIndirect",  out wgpuRenderPassEncoderDrawIndirect_ptr);
-			LoadFunction("wgpuRenderPassEncoderEndOcclusionQuery",  out wgpuRenderPassEncoderEndOcclusionQuery_ptr);
 			LoadFunction("wgpuRenderPassEncoderEndPass",  out wgpuRenderPassEncoderEndPass_ptr);
 			LoadFunction("wgpuRenderPassEncoderExecuteBundles",  out wgpuRenderPassEncoderExecuteBundles_ptr);
 			LoadFunction("wgpuRenderPassEncoderInsertDebugMarker",  out wgpuRenderPassEncoderInsertDebugMarker_ptr);
@@ -685,12 +997,29 @@ namespace WaveEngine.Bindings.WebGPU
 			LoadFunction("wgpuRenderPassEncoderSetStencilReference",  out wgpuRenderPassEncoderSetStencilReference_ptr);
 			LoadFunction("wgpuRenderPassEncoderSetVertexBuffer",  out wgpuRenderPassEncoderSetVertexBuffer_ptr);
 			LoadFunction("wgpuRenderPassEncoderSetViewport",  out wgpuRenderPassEncoderSetViewport_ptr);
+			LoadFunction("wgpuRenderPassEncoderWriteTimestamp",  out wgpuRenderPassEncoderWriteTimestamp_ptr);
+			LoadFunction("wgpuRenderPassEncoderReference",  out wgpuRenderPassEncoderReference_ptr);
+			LoadFunction("wgpuRenderPassEncoderRelease",  out wgpuRenderPassEncoderRelease_ptr);
 			LoadFunction("wgpuRenderPipelineGetBindGroupLayout",  out wgpuRenderPipelineGetBindGroupLayout_ptr);
-			LoadFunction("wgpuSurfaceGetPreferredFormat",  out wgpuSurfaceGetPreferredFormat_ptr);
+			LoadFunction("wgpuRenderPipelineReference",  out wgpuRenderPipelineReference_ptr);
+			LoadFunction("wgpuRenderPipelineRelease",  out wgpuRenderPipelineRelease_ptr);
+			LoadFunction("wgpuSamplerReference",  out wgpuSamplerReference_ptr);
+			LoadFunction("wgpuSamplerRelease",  out wgpuSamplerRelease_ptr);
+			LoadFunction("wgpuShaderModuleReference",  out wgpuShaderModuleReference_ptr);
+			LoadFunction("wgpuShaderModuleRelease",  out wgpuShaderModuleRelease_ptr);
+			LoadFunction("wgpuSurfaceReference",  out wgpuSurfaceReference_ptr);
+			LoadFunction("wgpuSurfaceRelease",  out wgpuSurfaceRelease_ptr);
+			LoadFunction("wgpuSwapChainConfigure",  out wgpuSwapChainConfigure_ptr);
 			LoadFunction("wgpuSwapChainGetCurrentTextureView",  out wgpuSwapChainGetCurrentTextureView_ptr);
 			LoadFunction("wgpuSwapChainPresent",  out wgpuSwapChainPresent_ptr);
+			LoadFunction("wgpuSwapChainReference",  out wgpuSwapChainReference_ptr);
+			LoadFunction("wgpuSwapChainRelease",  out wgpuSwapChainRelease_ptr);
 			LoadFunction("wgpuTextureCreateView",  out wgpuTextureCreateView_ptr);
 			LoadFunction("wgpuTextureDestroy",  out wgpuTextureDestroy_ptr);
+			LoadFunction("wgpuTextureReference",  out wgpuTextureReference_ptr);
+			LoadFunction("wgpuTextureRelease",  out wgpuTextureRelease_ptr);
+			LoadFunction("wgpuTextureViewReference",  out wgpuTextureViewReference_ptr);
+			LoadFunction("wgpuTextureViewRelease",  out wgpuTextureViewRelease_ptr);
 		}
 
 		private static void LoadFunction<T>(string name, out T field)
