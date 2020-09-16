@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-	Wave Engine bindings NuGet Packages generator script, (c) 2020 Javier Cantón Ferrero
+	Wave Engine bindings NuGet Packages generator script, (c) 2020 Wave Engine
 .DESCRIPTION
 	This script generates NuGet packages for the low-level WebGPU bindings used in Wave Engine
 	It's meant to have the same behavior when executed locally as when it's executed in a CI pipeline.
