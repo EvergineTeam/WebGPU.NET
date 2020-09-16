@@ -2,6 +2,10 @@ using System;
 
 namespace WaveEngine.Bindings.WebGPU
 {
+	public unsafe delegate void WGPUBufferMapCallback(
+		 WGPUBufferMapAsyncStatus status,
+		 void* userdata);
+
 	public unsafe delegate void WGPUBufferMapReadCallback(
 		 WGPUBufferMapAsyncStatus status,
 		 void* data,
