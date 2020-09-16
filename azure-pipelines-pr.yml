@@ -1,3 +1,4 @@
+# This pipeline is meant only to be executed when a PR is created
 pr:
 - master
 
