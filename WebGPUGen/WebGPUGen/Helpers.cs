@@ -23,7 +23,7 @@ namespace WebGPUGen
             { "int64_t", "long" },
             { "int64_t*", "long*" },
             { "char", "byte" },
-            { "size_t", "UIntPtr" },
+            { "size_t", "ulong" },
             { "DWORD", "uint" },
         };
 
@@ -85,13 +85,9 @@ namespace WebGPUGen
             foreach (var parameter in command.Parameters)
             {
                 string convertedType = ConvertToCSharpType(parameter.Type);
-                // Hack for structs that cannot be marshaled as pointers
-                if (convertedType == "WGPUBufferDescriptor*")
-                {
-                    signature.Append("ref ");
-                    convertedType = "WGPUBufferDescriptor";
-                }
-                else if (convertedType == "WGPURenderPipelineDescriptor*")
+                // Hack for structs that are not bittable
+                // https://stackoverflow.com/questions/32110152/c-sharp-marshalling-bool
+                if (convertedType == "WGPURenderPipelineDescriptor*")
                 {
                     signature.Append("ref ");
                     convertedType = "WGPURenderPipelineDescriptor";

@@ -38,11 +38,14 @@ namespace WaveEngine.Bindings.WebGPU
 		public uint binding;
 		public WGPUShaderStage visibility;
 		public WGPUBindingType type;
+		[MarshalAs(UnmanagedType.I1)]
 		public bool hasDynamicOffset;
+		[MarshalAs(UnmanagedType.I1)]
 		public bool multisampled;
 		public WGPUTextureViewDimension viewDimension;
 		public WGPUTextureComponentType textureComponentType;
 		public WGPUTextureFormat storageTextureFormat;
+		public ulong minBufferBindingSize;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -54,13 +57,22 @@ namespace WaveEngine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUBufferCopyView
+	{
+		public WGPUChainedStruct* nextInChain;
+		public IntPtr buffer;
+		public ulong offset;
+		public uint bytesPerRow;
+		public uint rowsPerImage;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUBufferDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
 		public char* label;
 		public WGPUBufferUsage usage;
 		public ulong size;
-		public bool mappedAtCreation;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -94,9 +106,24 @@ namespace WaveEngine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUDeviceDescriptor
+	public unsafe struct WGPUCreateBufferMappedResult
 	{
-		public WGPUChainedStruct* nextInChain;
+		public IntPtr buffer;
+		public ulong dataLength;
+		public void* data;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUDeviceProperties
+	{
+		[MarshalAs(UnmanagedType.I1)]
+		public bool textureCompressionBC;
+		[MarshalAs(UnmanagedType.I1)]
+		public bool shaderFloat16;
+		[MarshalAs(UnmanagedType.I1)]
+		public bool pipelineStatisticsQuery;
+		[MarshalAs(UnmanagedType.I1)]
+		public bool timestampQuery;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -153,6 +180,8 @@ namespace WaveEngine.Bindings.WebGPU
 		public char* label;
 		public WGPUQueryType type;
 		public uint count;
+		public uint pipelineStatisticsCount;
+		public WGPUPipelineStatisticsName* pipelineStatistics;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -191,18 +220,9 @@ namespace WaveEngine.Bindings.WebGPU
 		public WGPULoadOp depthLoadOp;
 		public WGPUStoreOp depthStoreOp;
 		public float clearDepth;
-		public bool depthReadOnly;
 		public WGPULoadOp stencilLoadOp;
 		public WGPUStoreOp stencilStoreOp;
 		public uint clearStencil;
-		public bool stencilReadOnly;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPURequestAdapterOptions
-	{
-		public WGPUChainedStruct* nextInChain;
-		public IntPtr compatibleSurface;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -219,6 +239,13 @@ namespace WaveEngine.Bindings.WebGPU
 		public float lodMinClamp;
 		public float lodMaxClamp;
 		public WGPUCompareFunction compare;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUSamplerDescriptorDummyAnisotropicFiltering
+	{
+		public WGPUChainedStruct chain;
+		public float maxAnisotropy;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -299,15 +326,7 @@ namespace WaveEngine.Bindings.WebGPU
 		public uint width;
 		public uint height;
 		public WGPUPresentMode presentMode;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUTextureDataLayout
-	{
-		public WGPUChainedStruct* nextInChain;
-		public ulong offset;
-		public uint bytesPerRow;
-		public uint rowsPerImage;
+		public ulong implementation;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -352,14 +371,6 @@ namespace WaveEngine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUBufferCopyView
-	{
-		public WGPUChainedStruct* nextInChain;
-		public WGPUTextureDataLayout layout;
-		public IntPtr buffer;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUColorStateDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
@@ -383,6 +394,7 @@ namespace WaveEngine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct* nextInChain;
 		public WGPUTextureFormat format;
+		[MarshalAs(UnmanagedType.I1)]
 		public bool depthWriteEnabled;
 		public WGPUCompareFunction depthCompare;
 		public WGPUStencilStateFaceDescriptor stencilFront;
@@ -402,11 +414,19 @@ namespace WaveEngine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPURenderPipelineDescriptorDummyExtension
+	{
+		public WGPUChainedStruct chain;
+		public WGPUProgrammableStageDescriptor dummyStage;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUTextureCopyView
 	{
 		public WGPUChainedStruct* nextInChain;
 		public IntPtr texture;
 		public uint mipLevel;
+		public uint arrayLayer;
 		public WGPUOrigin3D origin;
 	}
 
@@ -418,6 +438,7 @@ namespace WaveEngine.Bindings.WebGPU
 		public WGPUTextureUsage usage;
 		public WGPUTextureDimension dimension;
 		public WGPUExtent3D size;
+		public uint arrayLayerCount;
 		public WGPUTextureFormat format;
 		public uint mipLevelCount;
 		public uint sampleCount;
@@ -440,7 +461,6 @@ namespace WaveEngine.Bindings.WebGPU
 		public uint colorAttachmentCount;
 		public WGPURenderPassColorAttachmentDescriptor* colorAttachments;
 		public WGPURenderPassDepthStencilAttachmentDescriptor* depthStencilAttachment;
-		public IntPtr occlusionQuerySet;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -468,6 +488,7 @@ namespace WaveEngine.Bindings.WebGPU
 		public uint colorStateCount;
 		public WGPUColorStateDescriptor* colorStates;
 		public uint sampleMask;
+		[MarshalAs(UnmanagedType.I1)]
 		public bool alphaToCoverageEnabled;
 	}
 

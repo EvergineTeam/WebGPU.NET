@@ -160,6 +160,14 @@ namespace WebGPUGen
                     {
                         string type = Helpers.ConvertToCSharpType(member.Type);
 
+                        if (type == "bool")
+                        {
+                            // This is to marshal bool as one byte
+                            // https://stackoverflow.com/questions/28514373/what-is-the-size-of-a-boolean-in-c-does-it-really-take-4-bytes/28515361
+                            // https://stackoverflow.com/questions/11416433/marshalling-non-blittable-structs-from-c-sharp-to-c
+                            // https://stackoverflow.com/questions/32110152/c-sharp-marshalling-bool
+                            file.WriteLine($"\t\t[MarshalAs(UnmanagedType.I1)]");
+                        }
                         file.WriteLine($"\t\tpublic {type} {member.Name};");
                     }
 
