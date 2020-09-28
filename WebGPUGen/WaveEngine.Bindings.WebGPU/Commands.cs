@@ -9,7 +9,7 @@ namespace WaveEngine.Bindings.WebGPU
 		private static IntPtr p_device;
 
 #if (__EMSCRIPTEN__)
-		private const string dllName = "dawn_proc.dll";
+		private const string dllName = "libWebGPU";
 #else
 		private const string dllName = "dawn_proc.dll";
 #endif
