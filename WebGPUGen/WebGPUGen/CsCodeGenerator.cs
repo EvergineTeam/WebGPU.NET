@@ -86,9 +86,8 @@ namespace WebGPUGen
                 file.WriteLine("{");
                 file.WriteLine("\tpublic static unsafe partial class WebGPUNative");
                 file.WriteLine("\t{");
-                file.WriteLine("\t\tprivate static IntPtr p_device;\n");
                 file.WriteLine("#if (__EMSCRIPTEN__)");
-                file.WriteLine("\t\tprivate const string dllName = \"dawn_proc.dll\";");
+                file.WriteLine("\t\tprivate const string dllName = \"libWebGPU\";");
                 file.WriteLine("#else");
                 file.WriteLine("\t\tprivate const string dllName = \"dawn_proc.dll\";");
                 file.WriteLine("#endif\n");

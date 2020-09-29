@@ -39,9 +39,8 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPUBindingType_Sampler = 3,
 		WGPUBindingType_ComparisonSampler = 4,
 		WGPUBindingType_SampledTexture = 5,
-		WGPUBindingType_StorageTexture = 6,
-		WGPUBindingType_ReadonlyStorageTexture = 7,
-		WGPUBindingType_WriteonlyStorageTexture = 8,
+		WGPUBindingType_ReadonlyStorageTexture = 6,
+		WGPUBindingType_WriteonlyStorageTexture = 7,
 		WGPUBindingType_Force32 = 2147483647,
 	}
 
@@ -166,6 +165,16 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPULoadOp_Force32 = 2147483647,
 	}
 
+	public enum WGPUPipelineStatisticName
+	{
+		WGPUPipelineStatisticName_VertexShaderInvocations = 0,
+		WGPUPipelineStatisticName_ClipperInvocations = 1,
+		WGPUPipelineStatisticName_ClipperPrimitivesOut = 2,
+		WGPUPipelineStatisticName_FragmentShaderInvocations = 3,
+		WGPUPipelineStatisticName_ComputeShaderInvocations = 4,
+		WGPUPipelineStatisticName_Force32 = 2147483647,
+	}
+
 	public enum WGPUPresentMode
 	{
 		WGPUPresentMode_Immediate = 0,
@@ -184,13 +193,21 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPUPrimitiveTopology_Force32 = 2147483647,
 	}
 
+	public enum WGPUQueryType
+	{
+		WGPUQueryType_Occlusion = 0,
+		WGPUQueryType_PipelineStatistics = 1,
+		WGPUQueryType_Timestamp = 2,
+		WGPUQueryType_Force32 = 2147483647,
+	}
+
 	public enum WGPUSType
 	{
 		WGPUSType_Invalid = 0,
 		WGPUSType_SurfaceDescriptorFromMetalLayer = 1,
 		WGPUSType_SurfaceDescriptorFromWindowsHWND = 2,
 		WGPUSType_SurfaceDescriptorFromXlib = 3,
-		WGPUSType_SurfaceDescriptorFromHTMLCanvasId = 4,
+		WGPUSType_SurfaceDescriptorFromCanvasHTMLSelector = 4,
 		WGPUSType_ShaderModuleSPIRVDescriptor = 5,
 		WGPUSType_ShaderModuleWGSLDescriptor = 6,
 		WGPUSType_Force32 = 2147483647,
@@ -358,6 +375,7 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPUBufferUsage_Uniform = 64,
 		WGPUBufferUsage_Storage = 128,
 		WGPUBufferUsage_Indirect = 256,
+		WGPUBufferUsage_QueryResolve = 512,
 		WGPUBufferUsage_Force32 = 2147483647,
 	}
 
@@ -371,6 +389,14 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPUColorWriteMask_Alpha = 8,
 		WGPUColorWriteMask_All = 15,
 		WGPUColorWriteMask_Force32 = 2147483647,
+	}
+
+	[Flags]
+	public enum WGPUMapMode
+	{
+		WGPUMapMode_Read = 1,
+		WGPUMapMode_Write = 2,
+		WGPUMapMode_Force32 = 2147483647,
 	}
 
 	[Flags]
@@ -392,7 +418,6 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPUTextureUsage_Sampled = 4,
 		WGPUTextureUsage_Storage = 8,
 		WGPUTextureUsage_OutputAttachment = 16,
-		WGPUTextureUsage_Present = 32,
 		WGPUTextureUsage_Force32 = 2147483647,
 	}
 

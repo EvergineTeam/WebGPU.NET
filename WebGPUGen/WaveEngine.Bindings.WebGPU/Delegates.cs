@@ -2,16 +2,8 @@ using System;
 
 namespace WaveEngine.Bindings.WebGPU
 {
-	public unsafe delegate void WGPUBufferMapReadCallback(
+	public unsafe delegate void WGPUBufferMapCallback(
 		 WGPUBufferMapAsyncStatus status,
-		 void* data,
-		 ulong dataLength,
-		 void* userdata);
-
-	public unsafe delegate void WGPUBufferMapWriteCallback(
-		 WGPUBufferMapAsyncStatus status,
-		 void* data,
-		 ulong dataLength,
 		 void* userdata);
 
 	public unsafe delegate void WGPUDeviceLostCallback(
@@ -25,6 +17,18 @@ namespace WaveEngine.Bindings.WebGPU
 
 	public unsafe delegate void WGPUFenceOnCompletionCallback(
 		 WGPUFenceCompletionStatus status,
+		 void* userdata);
+
+	public unsafe delegate void WGPURequestAdapterCallback(
+		 IntPtr result,
+		 void* userdata);
+
+	public unsafe delegate void WGPURequestDeviceCallback(
+		 IntPtr result,
+		 void* userdata);
+
+	public unsafe delegate void WGPUSurfaceGetPreferredFormatCallback(
+		 WGPUTextureFormat format,
 		 void* userdata);
 
 	public unsafe delegate void WGPUProc();
