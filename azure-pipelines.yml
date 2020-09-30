@@ -1,8 +1,7 @@
 # We have a dedicated pipeline for PR builds. This must only execute when changes get merged.
 trigger:
 - master
-pr:
-- none
+pr: none
 
 pool:
   name: WaveEngine
