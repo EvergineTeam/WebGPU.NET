@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaveEngine.Bindings.WebGPU.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{66704B13-9A43-452D-9048-87CA2141B725}"
 	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
 		..\azure-pipelines-pr.yml = ..\azure-pipelines-pr.yml
 		..\azure-pipelines.yml = ..\azure-pipelines.yml
 		..\Generate-NuGets.ps1 = ..\Generate-NuGets.ps1
