@@ -87,10 +87,10 @@ namespace WebGPUGen
                 string convertedType = ConvertToCSharpType(parameter.Type);
                 // Hack for structs that are not bittable
                 // https://stackoverflow.com/questions/32110152/c-sharp-marshalling-bool
-                if (convertedType == "WGPURenderPipelineDescriptor*")
+                if (convertedType == "WGPURenderPipelineDescriptor*" || convertedType == "WGPUBufferDescriptor*")
                 {
                     signature.Append("ref ");
-                    convertedType = "WGPURenderPipelineDescriptor";
+                    convertedType = convertedType.Remove(convertedType.Length-1);
                 }
                 string convertedName = parameter.Name;
 

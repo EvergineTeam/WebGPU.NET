@@ -1,50 +1,38 @@
-/* Copyright (C) 1998, 1999, 2000, 2009 Free Software Foundation, Inc.
+// -*- C++ -*-
+//===--------------------------- stdbool.h --------------------------------===//
+//
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+#ifndef _LIBCPP_STDBOOL_H
+#define _LIBCPP_STDBOOL_H
 
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
 
 /*
- * ISO C Standard:  7.16  Boolean type and values  <stdbool.h>
- */
+    stdbool.h synopsis
 
-#ifndef _STDBOOL_H
-#define _STDBOOL_H
+Macros:
 
-#ifndef __cplusplus
+    __bool_true_false_are_defined
 
-#define bool	_Bool
-#define true	1
-#define false	0
+*/
 
-#else /* __cplusplus */
+#include <__config>
 
-/* Supporting <stdbool.h> in C++ is a GCC extension.  */
-#define _Bool	bool
-#define bool	bool
-#define false	false
-#define true	true
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#pragma GCC system_header
+#endif
 
-#endif /* __cplusplus */
+#include_next <stdbool.h>
 
-/* Signal that all the definitions are present.  */
-#define __bool_true_false_are_defined	1
+#ifdef __cplusplus
+#undef bool
+#undef true
+#undef false
+#undef __bool_true_false_are_defined
+#define __bool_true_false_are_defined 1
+#endif
 
-#endif	/* stdbool.h */
+#endif  // _LIBCPP_STDBOOL_H

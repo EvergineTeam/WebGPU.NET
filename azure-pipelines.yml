@@ -1,8 +1,7 @@
 # We have a dedicated pipeline for PR builds. This must only execute when changes get merged.
 trigger:
 - master
-pr:
-- none
+pr: none
 
 pool:
   name: WaveEngine
@@ -49,10 +48,16 @@ steps:
     checkLatest: true
 
 - task: PowerShell@2
-  displayName: 'Generate NuGet packages'
+  displayName: 'Generate Dawn NuGet packages'
   inputs:
     filePath: './Generate-NuGets.ps1'
-    arguments: '-Version $(GetAppVersionTask.appversion) -outputfolder $(nugetOutputPath)'
+    arguments: '-Version $(GetAppVersionTask.appversion) -outputfolder $(nugetOutputPath) -flavour "Dawn"'
+
+- task: PowerShell@2
+  displayName: 'Generate Browser NuGet packages'
+  inputs:
+    filePath: './Generate-NuGets.ps1'
+    arguments: '-Version $(GetAppVersionTask.appversion) -outputfolder $(nugetOutputPath) -flavour "Browser"'
 
 - task: PublishBuildArtifacts@1
   displayName: "Publish Artifact: NuGets"
@@ -68,11 +73,3 @@ steps:
     packagesToPush: '$(nugetOutputPath)/**/*.nupkg;!$(nugetOutputPath)/**/*.symbols.nupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'WaveEngine Nuget.org'
-
-- task: NuGetCommand@2
-  displayName: 'Push NuGets to internal feed - WaveEngine-nightly'
-  inputs:
-    command: 'push'
-    packagesToPush: '$(nugetOutputPath)/**/*.nupkg;!$(nugetOutputPath)/**/*.symbols.nupkg'
-    nuGetFeedType: 'internal'
-    publishVstsFeed: '318bbdf3-7e63-4960-8acd-bbaac76b9eea'

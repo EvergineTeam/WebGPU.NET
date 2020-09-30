@@ -15,8 +15,11 @@ param (
 	[string]$outputFolderBase = "nupkgs",
 	[string]$buildVerbosity = "normal",
 	[string]$buildConfiguration = "Release",
-	[string]$bindingsCsprojPath = "WebGPUGen\WaveEngine.Bindings.WebGPU\WaveEngine.Bindings.WebGPU.csproj"
+	[string]$flavour = "Browser"
 )
+
+# Set csproj path
+$bindingsCsprojPath = "WebGPUGen\WaveEngine.Bindings.WebGPU.$flavour\WaveEngine.Bindings.WebGPU.$flavour.csproj"
 
 # Utility functions
 function LogDebug($line) { Write-Host "##[debug] $line" -Foreground Blue -Background Black }
