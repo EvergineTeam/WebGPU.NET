@@ -6,12 +6,7 @@ namespace WaveEngine.Bindings.WebGPU
 {
 	public static unsafe partial class WebGPUNative
 	{
-#if (__EMSCRIPTEN__)
 		private const string dllName = "libWebGPU";
-#else
-		private const string dllName = "dawn_proc.dll";
-#endif
-
 		[DllImport(dllName)]
 		public static extern IntPtr wgpuCreateInstance(WGPUInstanceDescriptor* descriptor);
 		[DllImport(dllName)]
@@ -134,20 +129,12 @@ namespace WaveEngine.Bindings.WebGPU
 		public static extern IntPtr wgpuDeviceCreateTexture(IntPtr device, WGPUTextureDescriptor* descriptor);
 		[DllImport(dllName)]
 		public static extern IntPtr wgpuDeviceGetDefaultQueue(IntPtr device);
-		//[DllImport(dllName)]
-		//public static extern bool wgpuDevicePopErrorScope(IntPtr device, WGPUErrorCallback callback, void* userdata);
-		//[DllImport(dllName)]
-		//public static extern void wgpuDevicePushErrorScope(IntPtr device, WGPUErrorFilter filter);
-		//[DllImport(dllName)]
-		//public static extern void wgpuDeviceSetDeviceLostCallback(IntPtr device, WGPUDeviceLostCallback callback, void* userdata);
 		[DllImport(dllName)]
 		public static extern void wgpuDeviceSetUncapturedErrorCallback(IntPtr device, WGPUErrorCallback callback, void* userdata);
 		[DllImport(dllName)]
 		public static extern void wgpuDeviceReference(IntPtr device);
 		[DllImport(dllName)]
 		public static extern void wgpuDeviceRelease(IntPtr device);
-		//[DllImport(dllName)]
-		//public static extern ulong wgpuFenceGetCompletedValue(IntPtr fence);
 		[DllImport(dllName)]
 		public static extern void wgpuFenceOnCompletion(IntPtr fence, ulong value, WGPUFenceOnCompletionCallback callback, void* userdata);
 		[DllImport(dllName)]
@@ -196,10 +183,6 @@ namespace WaveEngine.Bindings.WebGPU
 		public static extern void wgpuRenderBundleEncoderDraw(IntPtr renderBundleEncoder, uint vertexCount, uint instanceCount, uint firstVertex, uint firstInstance);
 		[DllImport(dllName)]
 		public static extern void wgpuRenderBundleEncoderDrawIndexed(IntPtr renderBundleEncoder, uint indexCount, uint instanceCount, uint firstIndex, int baseVertex, uint firstInstance);
-		//[DllImport(dllName)]
-		//public static extern void wgpuRenderBundleEncoderDrawIndexedIndirect(IntPtr renderBundleEncoder, IntPtr indirectBuffer, ulong indirectOffset);
-		//[DllImport(dllName)]
-		//public static extern void wgpuRenderBundleEncoderDrawIndirect(IntPtr renderBundleEncoder, IntPtr indirectBuffer, ulong indirectOffset);
 		[DllImport(dllName)]
 		public static extern IntPtr wgpuRenderBundleEncoderFinish(IntPtr renderBundleEncoder, WGPURenderBundleDescriptor* descriptor);
 		[DllImport(dllName)]

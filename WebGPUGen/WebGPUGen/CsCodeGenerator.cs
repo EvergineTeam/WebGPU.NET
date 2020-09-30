@@ -1,5 +1,7 @@
 ﻿using CppAst;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -8,27 +10,38 @@ namespace WebGPUGen
 {
     public class CsCodeGenerator
     {
+        private static readonly IList<String> emscriptenUnsupportedCommands = new ReadOnlyCollection<string>
+            (new List<String> {
+                 "wgpuDevicePopErrorScope",
+                 "wgpuDevicePushErrorScope",
+                 "wgpuDeviceSetDeviceLostCallback",
+                 "wgpuFenceGetCompletedValue",
+                 "wgpuRenderBundleEncoderDrawIndexedIndirect",
+                 "wgpuRenderBundleEncoderDrawIndirect"
+            });
+
         private CsCodeGenerator()
         {
         }
 
         public static CsCodeGenerator Instance { get; } = new CsCodeGenerator();
 
-        public void Generate(CppCompilation compilation, string outputPath)
+        public void Generate(CppCompilation compilation, string basePath, string flavour)
         {
+            string outputPath = basePath + "." + flavour;
             Helpers.TypedefList = compilation.Typedefs
                     .Where(t => t.TypeKind == CppTypeKind.Typedef
                            && t.ElementType is CppPointerType
                            && ((CppPointerType)t.ElementType).ElementType.TypeKind != CppTypeKind.Function)
                     .Select(t => t.Name).ToList();
 
-            GenerateDelegates(compilation, outputPath);
-            GenerateEnums(compilation, outputPath);
-            GenerateStructs(compilation, outputPath);
-            GenerateCommmands(compilation, outputPath);
+            GenerateDelegates(compilation, outputPath, flavour);
+            GenerateEnums(compilation, outputPath, flavour);
+            GenerateStructs(compilation, outputPath, flavour);
+            GenerateCommmands(compilation, outputPath, flavour);
         }
 
-        private void GenerateDelegates(CppCompilation compilation, string outputPath)
+        private void GenerateDelegates(CppCompilation compilation, string outputPath, string flavour)
         {
             Debug.WriteLine("Generating Delegates...");
 
@@ -73,9 +86,25 @@ namespace WebGPUGen
             }
         }
 
-        private void GenerateCommmands(CppCompilation compilation, string outputPath)
+        private void GenerateCommmands(CppCompilation compilation, string outputPath, string flavour)
         {
             Debug.WriteLine("Generating Commands...");
+
+            bool isBrowser = false;
+            string dllName;
+            if (flavour == "Browser")
+            {
+                isBrowser = true;
+                dllName="libWebGPU";
+            }
+            else if (flavour == "Dawn")
+            {
+                dllName = "dawn_proc.dll";
+            }
+            else
+            {
+                throw new Exception($"Flavour ${flavour} not supported");
+            }
 
             using (StreamWriter file = File.CreateText(Path.Combine(outputPath, "Commands.cs")))
             {
@@ -86,18 +115,17 @@ namespace WebGPUGen
                 file.WriteLine("{");
                 file.WriteLine("\tpublic static unsafe partial class WebGPUNative");
                 file.WriteLine("\t{");
-                file.WriteLine("#if (__EMSCRIPTEN__)");
-                file.WriteLine("\t\tprivate const string dllName = \"libWebGPU\";");
-                file.WriteLine("#else");
-                file.WriteLine("\t\tprivate const string dllName = \"dawn_proc.dll\";");
-                file.WriteLine("#endif\n");
+                file.WriteLine($"\t\tprivate const string dllName = \"{dllName}\";");
 
                 foreach (var command in compilation.Functions)
                 {
                     string convertedType = Helpers.ConvertToCSharpType(command.ReturnType, false);
 
-                    file.WriteLine("\t\t[DllImport(dllName)]");
-                    file.WriteLine($"\t\tpublic static extern {convertedType} {command.Name}({Helpers.GetParametersSignature(command)});");
+                    if (!isBrowser || !emscriptenUnsupportedCommands.Contains(command.Name))
+                    {
+                        file.WriteLine("\t\t[DllImport(dllName)]");
+                        file.WriteLine($"\t\tpublic static extern {convertedType} {command.Name}({Helpers.GetParametersSignature(command)});");
+                    }
                 }
 
                 file.WriteLine("\t}");
@@ -105,7 +133,7 @@ namespace WebGPUGen
             }
         }
 
-        private void GenerateStructs(CppCompilation compilation, string outputPath)
+        private void GenerateStructs(CppCompilation compilation, string outputPath, string flavour)
         {
             Debug.WriteLine("Generating Structs...");
 
@@ -144,7 +172,7 @@ namespace WebGPUGen
             }
         }
 
-        public void GenerateEnums(CppCompilation compilation, string outputPath)
+        public void GenerateEnums(CppCompilation compilation, string outputPath, string flavour)
         {
             Debug.WriteLine("Generating Enums...");
 

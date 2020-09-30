@@ -33,8 +33,9 @@ namespace WebGPUGen
             }
             else
             {
-                string outputPath = "..\\..\\..\\..\\WaveEngine.Bindings.WebGPU";
-                CsCodeGenerator.Instance.Generate(compilation, outputPath);
+                string basePath = "..\\..\\..\\..\\WaveEngine.Bindings.WebGPU";
+                CsCodeGenerator.Instance.Generate(compilation, basePath, "Dawn");
+                CsCodeGenerator.Instance.Generate(compilation, basePath, "Browser");
             }
         }
     }

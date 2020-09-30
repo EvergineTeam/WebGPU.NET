@@ -49,10 +49,16 @@ steps:
     checkLatest: true
 
 - task: PowerShell@2
-  displayName: 'Generate NuGet packages'
+  displayName: 'Generate Dawn NuGet packages'
   inputs:
     filePath: './Generate-NuGets.ps1'
-    arguments: '-Version $(GetAppVersionTask.appversion) -outputfolder $(nugetOutputPath)'
+    arguments: '-Version $(GetAppVersionTask.appversion) -outputfolder $(nugetOutputPath)' -flavour "Dawn"
+
+- task: PowerShell@2
+  displayName: 'Generate Browser NuGet packages'
+  inputs:
+    filePath: './Generate-NuGets.ps1'
+    arguments: '-Version $(GetAppVersionTask.appversion) -outputfolder $(nugetOutputPath) -flavour "Browser"
 
 - task: PublishBuildArtifacts@1
   displayName: "Publish Artifact: NuGets"
