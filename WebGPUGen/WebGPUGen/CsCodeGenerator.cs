@@ -123,7 +123,7 @@ namespace WebGPUGen
 
                     if (!isBrowser || !emscriptenUnsupportedCommands.Contains(command.Name))
                     {
-                        file.WriteLine("\t\t[DllImport(dllName)]");
+                        file.WriteLine("\n\t\t[DllImport(dllName)]");
                         file.WriteLine($"\t\tpublic static extern {convertedType} {command.Name}({Helpers.GetParametersSignature(command)});");
                     }
                 }
