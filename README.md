@@ -16,7 +16,7 @@ Check an source code example at [HelloWebGPU.Net](https://github.com/emepetres/H
 
 - [Browser version (Chrome/Edge Canary and Firefox Nightly)](https://www.nuget.org/packages/WaveEngine.Bindings.WebGPU.Browser)
 
-  [https://www.nuget.org/packages/WaveEngine.Bindings.WebGPU](https://www.nuget.org/packages/WaveEngine.Bindings.WebGPU.Browser)
+  [https://www.nuget.org/packages/WaveEngine.Bindings.WebGPU.Browser](https://www.nuget.org/packages/WaveEngine.Bindings.WebGPU.Browser)
 
 - [Windows - Dawn version:](https://www.nuget.org/packages/WaveEngine.Bindings.WebGPU.Dawn)
 
