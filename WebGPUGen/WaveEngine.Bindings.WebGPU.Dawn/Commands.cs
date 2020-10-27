@@ -15,12 +15,6 @@ namespace WaveEngine.Bindings.WebGPU
 		public static extern WGPUProc wgpuGetProcAddress(IntPtr device, char* procName);
 
 		[DllImport(dllName)]
-		public static extern void wgpuAdapterGetProperties(IntPtr adapter, WGPUAdapterProperties* properties);
-
-		[DllImport(dllName)]
-		public static extern void wgpuAdapterRequestDevice(IntPtr adapter, WGPUDeviceDescriptor* descriptor, WGPURequestDeviceCallback callback, void* userdata);
-
-		[DllImport(dllName)]
 		public static extern void wgpuBindGroupReference(IntPtr bindGroup);
 
 		[DllImport(dllName)]
@@ -102,9 +96,6 @@ namespace WaveEngine.Bindings.WebGPU
 		public static extern void wgpuCommandEncoderRelease(IntPtr commandEncoder);
 
 		[DllImport(dllName)]
-		public static extern void wgpuComputePassEncoderBeginPipelineStatisticsQuery(IntPtr computePassEncoder, IntPtr querySet, uint queryIndex);
-
-		[DllImport(dllName)]
 		public static extern void wgpuComputePassEncoderDispatch(IntPtr computePassEncoder, uint x, uint y, uint z);
 
 		[DllImport(dllName)]
@@ -112,9 +103,6 @@ namespace WaveEngine.Bindings.WebGPU
 
 		[DllImport(dllName)]
 		public static extern void wgpuComputePassEncoderEndPass(IntPtr computePassEncoder);
-
-		[DllImport(dllName)]
-		public static extern void wgpuComputePassEncoderEndPipelineStatisticsQuery(IntPtr computePassEncoder);
 
 		[DllImport(dllName)]
 		public static extern void wgpuComputePassEncoderInsertDebugMarker(IntPtr computePassEncoder, char* markerLabel);
@@ -165,6 +153,9 @@ namespace WaveEngine.Bindings.WebGPU
 		public static extern IntPtr wgpuDeviceCreateComputePipeline(IntPtr device, WGPUComputePipelineDescriptor* descriptor);
 
 		[DllImport(dllName)]
+		public static extern IntPtr wgpuDeviceCreateErrorBuffer(IntPtr device);
+
+		[DllImport(dllName)]
 		public static extern IntPtr wgpuDeviceCreatePipelineLayout(IntPtr device, WGPUPipelineLayoutDescriptor* descriptor);
 
 		[DllImport(dllName)]
@@ -192,6 +183,12 @@ namespace WaveEngine.Bindings.WebGPU
 		public static extern IntPtr wgpuDeviceGetDefaultQueue(IntPtr device);
 
 		[DllImport(dllName)]
+		public static extern void wgpuDeviceInjectError(IntPtr device, WGPUErrorType type, char* message);
+
+		[DllImport(dllName)]
+		public static extern void wgpuDeviceLoseForTesting(IntPtr device);
+
+		[DllImport(dllName)]
 		public static extern bool wgpuDevicePopErrorScope(IntPtr device, WGPUErrorCallback callback, void* userdata);
 
 		[DllImport(dllName)]
@@ -202,6 +199,9 @@ namespace WaveEngine.Bindings.WebGPU
 
 		[DllImport(dllName)]
 		public static extern void wgpuDeviceSetUncapturedErrorCallback(IntPtr device, WGPUErrorCallback callback, void* userdata);
+
+		[DllImport(dllName)]
+		public static extern void wgpuDeviceTick(IntPtr device);
 
 		[DllImport(dllName)]
 		public static extern void wgpuDeviceReference(IntPtr device);
@@ -223,12 +223,6 @@ namespace WaveEngine.Bindings.WebGPU
 
 		[DllImport(dllName)]
 		public static extern IntPtr wgpuInstanceCreateSurface(IntPtr instance, WGPUSurfaceDescriptor* descriptor);
-
-		[DllImport(dllName)]
-		public static extern void wgpuInstanceProcessEvents(IntPtr instance);
-
-		[DllImport(dllName)]
-		public static extern void wgpuInstanceRequestAdapter(IntPtr instance, WGPURequestAdapterOptions* options, WGPURequestAdapterCallback callback, void* userdata);
 
 		[DllImport(dllName)]
 		public static extern void wgpuInstanceReference(IntPtr instance);
@@ -309,6 +303,9 @@ namespace WaveEngine.Bindings.WebGPU
 		public static extern void wgpuRenderBundleEncoderSetIndexBuffer(IntPtr renderBundleEncoder, IntPtr buffer, ulong offset, ulong size);
 
 		[DllImport(dllName)]
+		public static extern void wgpuRenderBundleEncoderSetIndexBufferWithFormat(IntPtr renderBundleEncoder, IntPtr buffer, WGPUIndexFormat format, ulong offset, ulong size);
+
+		[DllImport(dllName)]
 		public static extern void wgpuRenderBundleEncoderSetPipeline(IntPtr renderBundleEncoder, IntPtr pipeline);
 
 		[DllImport(dllName)]
@@ -319,12 +316,6 @@ namespace WaveEngine.Bindings.WebGPU
 
 		[DllImport(dllName)]
 		public static extern void wgpuRenderBundleEncoderRelease(IntPtr renderBundleEncoder);
-
-		[DllImport(dllName)]
-		public static extern void wgpuRenderPassEncoderBeginOcclusionQuery(IntPtr renderPassEncoder, uint queryIndex);
-
-		[DllImport(dllName)]
-		public static extern void wgpuRenderPassEncoderBeginPipelineStatisticsQuery(IntPtr renderPassEncoder, IntPtr querySet, uint queryIndex);
 
 		[DllImport(dllName)]
 		public static extern void wgpuRenderPassEncoderDraw(IntPtr renderPassEncoder, uint vertexCount, uint instanceCount, uint firstVertex, uint firstInstance);
@@ -339,13 +330,7 @@ namespace WaveEngine.Bindings.WebGPU
 		public static extern void wgpuRenderPassEncoderDrawIndirect(IntPtr renderPassEncoder, IntPtr indirectBuffer, ulong indirectOffset);
 
 		[DllImport(dllName)]
-		public static extern void wgpuRenderPassEncoderEndOcclusionQuery(IntPtr renderPassEncoder);
-
-		[DllImport(dllName)]
 		public static extern void wgpuRenderPassEncoderEndPass(IntPtr renderPassEncoder);
-
-		[DllImport(dllName)]
-		public static extern void wgpuRenderPassEncoderEndPipelineStatisticsQuery(IntPtr renderPassEncoder);
 
 		[DllImport(dllName)]
 		public static extern void wgpuRenderPassEncoderExecuteBundles(IntPtr renderPassEncoder, uint bundlesCount, IntPtr* bundles);
@@ -367,6 +352,9 @@ namespace WaveEngine.Bindings.WebGPU
 
 		[DllImport(dllName)]
 		public static extern void wgpuRenderPassEncoderSetIndexBuffer(IntPtr renderPassEncoder, IntPtr buffer, ulong offset, ulong size);
+
+		[DllImport(dllName)]
+		public static extern void wgpuRenderPassEncoderSetIndexBufferWithFormat(IntPtr renderPassEncoder, IntPtr buffer, WGPUIndexFormat format, ulong offset, ulong size);
 
 		[DllImport(dllName)]
 		public static extern void wgpuRenderPassEncoderSetPipeline(IntPtr renderPassEncoder, IntPtr pipeline);
@@ -414,13 +402,13 @@ namespace WaveEngine.Bindings.WebGPU
 		public static extern void wgpuShaderModuleRelease(IntPtr shaderModule);
 
 		[DllImport(dllName)]
-		public static extern void wgpuSurfaceGetPreferredFormat(IntPtr surface, IntPtr adapter, WGPUSurfaceGetPreferredFormatCallback callback, void* userdata);
-
-		[DllImport(dllName)]
 		public static extern void wgpuSurfaceReference(IntPtr surface);
 
 		[DllImport(dllName)]
 		public static extern void wgpuSurfaceRelease(IntPtr surface);
+
+		[DllImport(dllName)]
+		public static extern void wgpuSwapChainConfigure(IntPtr swapChain, WGPUTextureFormat format, WGPUTextureUsage allowedUsage, uint width, uint height);
 
 		[DllImport(dllName)]
 		public static extern IntPtr wgpuSwapChainGetCurrentTextureView(IntPtr swapChain);

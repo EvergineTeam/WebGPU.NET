@@ -39,8 +39,9 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPUBindingType_Sampler = 3,
 		WGPUBindingType_ComparisonSampler = 4,
 		WGPUBindingType_SampledTexture = 5,
-		WGPUBindingType_ReadonlyStorageTexture = 6,
-		WGPUBindingType_WriteonlyStorageTexture = 7,
+		WGPUBindingType_MultisampledTexture = 6,
+		WGPUBindingType_ReadonlyStorageTexture = 7,
+		WGPUBindingType_WriteonlyStorageTexture = 8,
 		WGPUBindingType_Force32 = 2147483647,
 	}
 
@@ -78,6 +79,8 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPUBufferMapAsyncStatus_Error = 1,
 		WGPUBufferMapAsyncStatus_Unknown = 2,
 		WGPUBufferMapAsyncStatus_DeviceLost = 3,
+		WGPUBufferMapAsyncStatus_DestroyedBeforeCallback = 4,
+		WGPUBufferMapAsyncStatus_UnmappedBeforeCallback = 5,
 		WGPUBufferMapAsyncStatus_Force32 = 2147483647,
 	}
 
@@ -146,8 +149,9 @@ namespace WaveEngine.Bindings.WebGPU
 
 	public enum WGPUIndexFormat
 	{
-		WGPUIndexFormat_Uint16 = 0,
-		WGPUIndexFormat_Uint32 = 1,
+		WGPUIndexFormat_Undefined = 0,
+		WGPUIndexFormat_Uint16 = 1,
+		WGPUIndexFormat_Uint32 = 2,
 		WGPUIndexFormat_Force32 = 2147483647,
 	}
 
@@ -210,6 +214,8 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPUSType_SurfaceDescriptorFromCanvasHTMLSelector = 4,
 		WGPUSType_ShaderModuleSPIRVDescriptor = 5,
 		WGPUSType_ShaderModuleWGSLDescriptor = 6,
+		WGPUSType_SamplerDescriptorDummyAnisotropicFiltering = 7,
+		WGPUSType_RenderPipelineDescriptorDummyExtension = 8,
 		WGPUSType_Force32 = 2147483647,
 	}
 
@@ -285,33 +291,34 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPUTextureFormat_BGRA8Unorm = 23,
 		WGPUTextureFormat_BGRA8UnormSrgb = 24,
 		WGPUTextureFormat_RGB10A2Unorm = 25,
-		WGPUTextureFormat_RG11B10Float = 26,
-		WGPUTextureFormat_RG32Float = 27,
-		WGPUTextureFormat_RG32Uint = 28,
-		WGPUTextureFormat_RG32Sint = 29,
-		WGPUTextureFormat_RGBA16Uint = 30,
-		WGPUTextureFormat_RGBA16Sint = 31,
-		WGPUTextureFormat_RGBA16Float = 32,
-		WGPUTextureFormat_RGBA32Float = 33,
-		WGPUTextureFormat_RGBA32Uint = 34,
-		WGPUTextureFormat_RGBA32Sint = 35,
-		WGPUTextureFormat_Depth32Float = 36,
-		WGPUTextureFormat_Depth24Plus = 37,
-		WGPUTextureFormat_Depth24PlusStencil8 = 38,
-		WGPUTextureFormat_BC1RGBAUnorm = 39,
-		WGPUTextureFormat_BC1RGBAUnormSrgb = 40,
-		WGPUTextureFormat_BC2RGBAUnorm = 41,
-		WGPUTextureFormat_BC2RGBAUnormSrgb = 42,
-		WGPUTextureFormat_BC3RGBAUnorm = 43,
-		WGPUTextureFormat_BC3RGBAUnormSrgb = 44,
-		WGPUTextureFormat_BC4RUnorm = 45,
-		WGPUTextureFormat_BC4RSnorm = 46,
-		WGPUTextureFormat_BC5RGUnorm = 47,
-		WGPUTextureFormat_BC5RGSnorm = 48,
-		WGPUTextureFormat_BC6HRGBUfloat = 49,
-		WGPUTextureFormat_BC6HRGBSfloat = 50,
-		WGPUTextureFormat_BC7RGBAUnorm = 51,
-		WGPUTextureFormat_BC7RGBAUnormSrgb = 52,
+		WGPUTextureFormat_RG11B10Ufloat = 26,
+		WGPUTextureFormat_RGB9E5Ufloat = 27,
+		WGPUTextureFormat_RG32Float = 28,
+		WGPUTextureFormat_RG32Uint = 29,
+		WGPUTextureFormat_RG32Sint = 30,
+		WGPUTextureFormat_RGBA16Uint = 31,
+		WGPUTextureFormat_RGBA16Sint = 32,
+		WGPUTextureFormat_RGBA16Float = 33,
+		WGPUTextureFormat_RGBA32Float = 34,
+		WGPUTextureFormat_RGBA32Uint = 35,
+		WGPUTextureFormat_RGBA32Sint = 36,
+		WGPUTextureFormat_Depth32Float = 37,
+		WGPUTextureFormat_Depth24Plus = 38,
+		WGPUTextureFormat_Depth24PlusStencil8 = 39,
+		WGPUTextureFormat_BC1RGBAUnorm = 40,
+		WGPUTextureFormat_BC1RGBAUnormSrgb = 41,
+		WGPUTextureFormat_BC2RGBAUnorm = 42,
+		WGPUTextureFormat_BC2RGBAUnormSrgb = 43,
+		WGPUTextureFormat_BC3RGBAUnorm = 44,
+		WGPUTextureFormat_BC3RGBAUnormSrgb = 45,
+		WGPUTextureFormat_BC4RUnorm = 46,
+		WGPUTextureFormat_BC4RSnorm = 47,
+		WGPUTextureFormat_BC5RGUnorm = 48,
+		WGPUTextureFormat_BC5RGSnorm = 49,
+		WGPUTextureFormat_BC6HRGBUfloat = 50,
+		WGPUTextureFormat_BC6HRGBFloat = 51,
+		WGPUTextureFormat_BC7RGBAUnorm = 52,
+		WGPUTextureFormat_BC7RGBAUnormSrgb = 53,
 		WGPUTextureFormat_Force32 = 2147483647,
 	}
 
@@ -394,6 +401,7 @@ namespace WaveEngine.Bindings.WebGPU
 	[Flags]
 	public enum WGPUMapMode
 	{
+		WGPUMapMode_None = 0,
 		WGPUMapMode_Read = 1,
 		WGPUMapMode_Write = 2,
 		WGPUMapMode_Force32 = 2147483647,
@@ -418,6 +426,7 @@ namespace WaveEngine.Bindings.WebGPU
 		WGPUTextureUsage_Sampled = 4,
 		WGPUTextureUsage_Storage = 8,
 		WGPUTextureUsage_OutputAttachment = 16,
+		WGPUTextureUsage_Present = 32,
 		WGPUTextureUsage_Force32 = 2147483647,
 	}
 
