@@ -70,10 +70,10 @@ namespace WaveEngine.Bindings.WebGPU
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUColor
 	{
-		public float r;
-		public float g;
-		public float b;
-		public float a;
+		public double r;
+		public double g;
+		public double b;
+		public double a;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -98,9 +98,16 @@ namespace WaveEngine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUDeviceDescriptor
+	public unsafe struct WGPUDeviceProperties
 	{
-		public WGPUChainedStruct* nextInChain;
+		[MarshalAs(UnmanagedType.I1)]
+		public bool textureCompressionBC;
+		[MarshalAs(UnmanagedType.I1)]
+		public bool shaderFloat16;
+		[MarshalAs(UnmanagedType.I1)]
+		public bool pipelineStatisticsQuery;
+		[MarshalAs(UnmanagedType.I1)]
+		public bool timestampQuery;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -207,13 +214,6 @@ namespace WaveEngine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPURequestAdapterOptions
-	{
-		public WGPUChainedStruct* nextInChain;
-		public IntPtr compatibleSurface;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUSamplerDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
@@ -227,6 +227,13 @@ namespace WaveEngine.Bindings.WebGPU
 		public float lodMinClamp;
 		public float lodMaxClamp;
 		public WGPUCompareFunction compare;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUSamplerDescriptorDummyAnisotropicFiltering
+	{
+		public WGPUChainedStruct chain;
+		public float maxAnisotropy;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -307,6 +314,7 @@ namespace WaveEngine.Bindings.WebGPU
 		public uint width;
 		public uint height;
 		public WGPUPresentMode presentMode;
+		public ulong implementation;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -411,12 +419,20 @@ namespace WaveEngine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPURenderPipelineDescriptorDummyExtension
+	{
+		public WGPUChainedStruct chain;
+		public WGPUProgrammableStageDescriptor dummyStage;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUTextureCopyView
 	{
 		public WGPUChainedStruct* nextInChain;
 		public IntPtr texture;
 		public uint mipLevel;
 		public WGPUOrigin3D origin;
+		public WGPUTextureAspect aspect;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]

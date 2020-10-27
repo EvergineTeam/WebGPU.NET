@@ -9,33 +9,36 @@ namespace WebGPUGen
     {
         static void Main(string[] args)
         {
-            var headerFile = Path.Combine(AppContext.BaseDirectory, "Headers", "webgpu.h");
-            var options = new CppParserOptions
+            var flavors = new string[] { "Dawn", "Browser" };
+            foreach (var flavor in flavors)
             {
-                ParseMacros = true,
-                Defines =
+                var headerFile = Path.Combine(AppContext.BaseDirectory, "Headers", flavor, "webgpu.h");
+                var options = new CppParserOptions
+                {
+                    ParseMacros = true,
+                    Defines =
                 {
                     "WGPU_SHARED_LIBRARY",
                     "_WIN32",
                     "WGPU_SKIP_PROCS"
                 }
-            };
+                };
 
-            var compilation = CppParser.ParseFile(headerFile, options);
+                var compilation = CppParser.ParseFile(headerFile, options);
 
-            // Print diagnostic messages
-            if (compilation.HasErrors)
-            {
-                foreach (var message in compilation.Diagnostics.Messages)
+                // Print diagnostic messages
+                if (compilation.HasErrors)
                 {
-                    Debug.WriteLine(message);
+                    foreach (var message in compilation.Diagnostics.Messages)
+                    {
+                        Debug.WriteLine(message);
+                    }
                 }
-            }
-            else
-            {
-                string basePath = "..\\..\\..\\..\\WaveEngine.Bindings.WebGPU";
-                CsCodeGenerator.Instance.Generate(compilation, basePath, "Dawn");
-                CsCodeGenerator.Instance.Generate(compilation, basePath, "Browser");
+                else
+                {
+                    string basePath = "..\\..\\..\\..\\WaveEngine.Bindings.WebGPU";
+                    CsCodeGenerator.Instance.Generate(compilation, basePath, flavor);
+                }
             }
         }
     }

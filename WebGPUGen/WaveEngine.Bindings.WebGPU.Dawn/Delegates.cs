@@ -19,18 +19,6 @@ namespace WaveEngine.Bindings.WebGPU
 		 WGPUFenceCompletionStatus status,
 		 void* userdata);
 
-	public unsafe delegate void WGPURequestAdapterCallback(
-		 IntPtr result,
-		 void* userdata);
-
-	public unsafe delegate void WGPURequestDeviceCallback(
-		 IntPtr result,
-		 void* userdata);
-
-	public unsafe delegate void WGPUSurfaceGetPreferredFormatCallback(
-		 WGPUTextureFormat format,
-		 void* userdata);
-
 	public unsafe delegate void WGPUProc();
 
 }
