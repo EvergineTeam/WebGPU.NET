@@ -9,36 +9,32 @@ namespace WebGPUGen
     {
         static void Main(string[] args)
         {
-            var flavors = new string[] { "Dawn", "Browser" };
-            foreach (var flavor in flavors)
+            var headerFile = Path.Combine(AppContext.BaseDirectory, "Headers", "webgpu.h");
+            var options = new CppParserOptions
             {
-                var headerFile = Path.Combine(AppContext.BaseDirectory, "Headers", flavor, "webgpu.h");
-                var options = new CppParserOptions
-                {
-                    ParseMacros = true,
-                    Defines =
+                ParseMacros = true,
+                Defines =
                 {
                     "WGPU_SHARED_LIBRARY",
                     "_WIN32",
                     "WGPU_SKIP_PROCS"
                 }
-                };
+            };
 
-                var compilation = CppParser.ParseFile(headerFile, options);
+            var compilation = CppParser.ParseFile(headerFile, options);
 
-                // Print diagnostic messages
-                if (compilation.HasErrors)
+            // Print diagnostic messages
+            if (compilation.HasErrors)
+            {
+                foreach (var message in compilation.Diagnostics.Messages)
                 {
-                    foreach (var message in compilation.Diagnostics.Messages)
-                    {
-                        Debug.WriteLine(message);
-                    }
+                    Debug.WriteLine(message);
                 }
-                else
-                {
-                    string basePath = "..\\..\\..\\..\\WaveEngine.Bindings.WebGPU";
-                    CsCodeGenerator.Instance.Generate(compilation, basePath, flavor);
-                }
+            }
+            else
+            {
+                string basePath = "..\\..\\..\\..\\WaveEngine.Bindings.WebGPU";
+                CsCodeGenerator.Instance.Generate(compilation, basePath);
             }
         }
     }

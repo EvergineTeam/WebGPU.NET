@@ -26,22 +26,22 @@ namespace WebGPUGen
 
         public static CsCodeGenerator Instance { get; } = new CsCodeGenerator();
 
-        public void Generate(CppCompilation compilation, string basePath, string flavour)
+        public void Generate(CppCompilation compilation, string basePath)
         {
-            string outputPath = basePath + "." + flavour;
+            string outputPath = basePath;
             Helpers.TypedefList = compilation.Typedefs
                     .Where(t => t.TypeKind == CppTypeKind.Typedef
                            && t.ElementType is CppPointerType
                            && ((CppPointerType)t.ElementType).ElementType.TypeKind != CppTypeKind.Function)
                     .Select(t => t.Name).ToList();
 
-            GenerateDelegates(compilation, outputPath, flavour);
-            GenerateEnums(compilation, outputPath, flavour);
-            GenerateStructs(compilation, outputPath, flavour);
-            GenerateCommmands(compilation, outputPath, flavour);
+            GenerateDelegates(compilation, outputPath);
+            GenerateEnums(compilation, outputPath);
+            GenerateStructs(compilation, outputPath);
+            GenerateCommmands(compilation, outputPath);
         }
 
-        private void GenerateDelegates(CppCompilation compilation, string outputPath, string flavour)
+        private void GenerateDelegates(CppCompilation compilation, string outputPath)
         {
             Debug.WriteLine("Generating Delegates...");
 
@@ -86,25 +86,11 @@ namespace WebGPUGen
             }
         }
 
-        private void GenerateCommmands(CppCompilation compilation, string outputPath, string flavour)
+        private void GenerateCommmands(CppCompilation compilation, string outputPath)
         {
             Debug.WriteLine("Generating Commands...");
 
-            bool isBrowser = false;
-            string dllName;
-            if (flavour == "Browser")
-            {
-                isBrowser = true;
-                dllName="libWebGPU";
-            }
-            else if (flavour == "Dawn")
-            {
-                dllName = "dawn_proc.dll";
-            }
-            else
-            {
-                throw new Exception($"Flavour ${flavour} not supported");
-            }
+            string dllName = "libWebGPU";
 
             using (StreamWriter file = File.CreateText(Path.Combine(outputPath, "Commands.cs")))
             {
@@ -121,7 +107,7 @@ namespace WebGPUGen
                 {
                     string convertedType = Helpers.ConvertToCSharpType(command.ReturnType, false);
 
-                    if (!isBrowser || !emscriptenUnsupportedCommands.Contains(command.Name))
+                    if (!emscriptenUnsupportedCommands.Contains(command.Name))
                     {
                         file.WriteLine("\n\t\t[DllImport(dllName)]");
                         file.WriteLine($"\t\tpublic static extern {convertedType} {command.Name}({Helpers.GetParametersSignature(command)});");
@@ -133,7 +119,7 @@ namespace WebGPUGen
             }
         }
 
-        private void GenerateStructs(CppCompilation compilation, string outputPath, string flavour)
+        private void GenerateStructs(CppCompilation compilation, string outputPath)
         {
             Debug.WriteLine("Generating Structs...");
 
@@ -172,7 +158,7 @@ namespace WebGPUGen
             }
         }
 
-        public void GenerateEnums(CppCompilation compilation, string outputPath, string flavour)
+        public void GenerateEnums(CppCompilation compilation, string outputPath)
         {
             Debug.WriteLine("Generating Enums...");
 
