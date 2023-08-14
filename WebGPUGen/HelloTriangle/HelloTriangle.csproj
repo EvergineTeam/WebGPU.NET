@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Evergine.Bindings.WebGPU\Evergine.Bindings.WebGPU.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\Evergine.Bindings.WebGPU\runtimes\win-x64\native\wgpu_native.dll" Link="wgpu_native.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+</Project>

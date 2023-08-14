@@ -9,7 +9,7 @@ namespace WebGPUGen
     {
         static void Main(string[] args)
         {
-            var headerFile = Path.Combine(AppContext.BaseDirectory, "Headers", "webgpu.h");
+            var headerFile = Path.Combine(AppContext.BaseDirectory, "Headers", "wgpu.h");
             var options = new CppParserOptions
             {
                 ParseMacros = true,
@@ -28,12 +28,18 @@ namespace WebGPUGen
             {
                 foreach (var message in compilation.Diagnostics.Messages)
                 {
-                    Debug.WriteLine(message);
+                    Console.WriteLine(message);
                 }
             }
             else
             {
-                string basePath = "..\\..\\..\\..\\WaveEngine.Bindings.WebGPU";
+                string basePath = "..\\..\\..\\..\\Evergine.Bindings.WebGPU\\Generated";
+
+                if (!Directory.Exists(basePath))
+                {
+                    Directory.CreateDirectory(basePath);
+                }
+
                 CsCodeGenerator.Instance.Generate(compilation, basePath);
             }
         }

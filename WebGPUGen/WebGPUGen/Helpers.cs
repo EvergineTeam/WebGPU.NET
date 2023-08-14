@@ -9,7 +9,7 @@ namespace WebGPUGen
 {
     public static class Helpers
     {
-        public static List<string> TypedefList;
+        //public static List<string> TypedefList;
 
         private static readonly Dictionary<string, string> s_csNameMappings = new Dictionary<string, string>()
         {
@@ -25,6 +25,8 @@ namespace WebGPUGen
             { "char", "byte" },
             { "size_t", "ulong" },
             { "DWORD", "uint" },
+
+            { "WGPUSubmissionIndex", "ulong" },
         };
 
         public static string ConvertToCSharpType(CppType type, bool isPointer = false)
@@ -100,7 +102,8 @@ namespace WebGPUGen
                 signature.Append($"{convertedName}, ");
             }
 
-            signature.Length -= 2;
+            if(signature.Length > 0)
+                signature.Length -= 2;
 
             return signature.ToString();
         }
@@ -255,10 +258,10 @@ namespace WebGPUGen
                 return name.Remove(name.Count() - 5);
             }
 
-            if (TypedefList.Contains(name))
-            {
-                return "IntPtr";
-            }
+            //if (TypedefList.Contains(name))
+            //{
+            //    return "IntPtr";
+            //}
 
             return name;
         }

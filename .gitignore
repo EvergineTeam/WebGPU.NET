@@ -1,7 +1,9 @@
 ﻿WebGPUGen/.vs
-WebGPUGen/WaveEngine.Bindings.WebGPU.*/obj
+WebGPUGen/Evergine.Bindings.WebGPU.*/obj
 WebGPUGen/WebGPUGen/bin
 WebGPUGen/WebGPUGen/obj
-WebGPUGen/WaveEngine.Bindings.WebGPU.*/bin
-WebGPUGen/WaveEngine.Bindings.WebGPU/bin
-WebGPUGen/WaveEngine.Bindings.WebGPU/obj
+WebGPUGen/Evergine.Bindings.WebGPU.*/bin
+WebGPUGen/Evergine.Bindings.WebGPU/bin
+WebGPUGen/Evergine.Bindings.WebGPU/obj
+WebGPUGen/HelloTriangle/bin
+WebGPUGen/HelloTriangle/obj

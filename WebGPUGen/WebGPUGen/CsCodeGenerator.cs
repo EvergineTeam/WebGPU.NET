@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 
 namespace WebGPUGen
 {
@@ -29,16 +30,17 @@ namespace WebGPUGen
         public void Generate(CppCompilation compilation, string basePath)
         {
             string outputPath = basePath;
-            Helpers.TypedefList = compilation.Typedefs
-                    .Where(t => t.TypeKind == CppTypeKind.Typedef
-                           && t.ElementType is CppPointerType
-                           && ((CppPointerType)t.ElementType).ElementType.TypeKind != CppTypeKind.Function)
-                    .Select(t => t.Name).ToList();
+            //Helpers.TypedefList = compilation.Typedefs
+            //        .Where(t => t.TypeKind == CppTypeKind.Typedef
+            //               && t.ElementType is CppPointerType
+            //               && ((CppPointerType)t.ElementType).ElementType.TypeKind != CppTypeKind.Function)
+            //        .Select(t => t.Name).ToList();
 
             GenerateDelegates(compilation, outputPath);
             GenerateEnums(compilation, outputPath);
             GenerateStructs(compilation, outputPath);
             GenerateCommmands(compilation, outputPath);
+            GeneratedHandles(compilation, outputPath);
         }
 
         private void GenerateDelegates(CppCompilation compilation, string outputPath)
@@ -54,7 +56,7 @@ namespace WebGPUGen
             using (StreamWriter file = File.CreateText(Path.Combine(outputPath, "Delegates.cs")))
             {
                 file.WriteLine("using System;\n");
-                file.WriteLine("namespace WaveEngine.Bindings.WebGPU");
+                file.WriteLine("namespace Evergine.Bindings.WebGPU");
                 file.WriteLine("{");
 
                 foreach (var funcPointer in delegates)
@@ -97,11 +99,10 @@ namespace WebGPUGen
                 file.WriteLine("using System;");
                 file.WriteLine("using System.Diagnostics;");
                 file.WriteLine("using System.Runtime.InteropServices;\n");
-                file.WriteLine("namespace WaveEngine.Bindings.WebGPU");
+                file.WriteLine("namespace Evergine.Bindings.WebGPU");
                 file.WriteLine("{");
                 file.WriteLine("\tpublic static unsafe partial class WebGPUNative");
                 file.WriteLine("\t{");
-                file.WriteLine($"\t\tprivate const string dllName = \"{dllName}\";");
 
                 foreach (var command in compilation.Functions)
                 {
@@ -109,12 +110,61 @@ namespace WebGPUGen
 
                     if (!emscriptenUnsupportedCommands.Contains(command.Name))
                     {
-                        file.WriteLine("\n\t\t[DllImport(dllName)]");
+                        file.WriteLine($"\n\t\t[DllImport(\"wgpu_native\", CallingConvention = CallingConvention.Cdecl, EntryPoint = \"{command.Name}\")]");
                         file.WriteLine($"\t\tpublic static extern {convertedType} {command.Name}({Helpers.GetParametersSignature(command)});");
                     }
                 }
 
                 file.WriteLine("\t}");
+                file.WriteLine("}");
+            }
+        }
+
+        private void GeneratedHandles(CppCompilation compilation, string outputPath)
+        {
+            Debug.WriteLine("Generating Handles...");
+
+            using (StreamWriter file = File.CreateText(Path.Combine(outputPath, "Handles.cs")))
+            {
+                file.WriteLine("using System;");
+                file.WriteLine("using System.Diagnostics;");
+                file.WriteLine("using System.Runtime.InteropServices;\n");
+                file.WriteLine("namespace Evergine.Bindings.WebGPU");
+                file.WriteLine("{");
+
+                foreach (CppTypedef typedef in compilation.Typedefs)
+                {
+                    if (typedef.Name.StartsWith("WGPUProc") ||
+                    typedef.Name.EndsWith("Callback"))
+                    {
+                        continue;
+                    }
+
+                    if (typedef.ElementType is not CppPointerType)
+                    {
+                        continue;
+                    }
+
+                    file.WriteLine($"\tpublic partial struct {typedef.Name} : IEquatable<{typedef.Name}>");
+                    file.WriteLine("\t{");
+                    string handleType = "IntPtr";
+                    string nullValue = "IntPtr.Zero";
+
+                    file.WriteLine($"\tpublic readonly {handleType} Handle;");
+
+                    file.WriteLine($"\tpublic {typedef.Name}({handleType} existingHandle) {{ Handle = existingHandle; }}");
+                    file.WriteLine($"\tpublic static {typedef.Name} Null => new {typedef.Name}({nullValue});");
+                    file.WriteLine($"\tpublic static implicit operator {typedef.Name}({handleType} handle) => new {typedef.Name}(handle);");
+                    file.WriteLine($"\tpublic static bool operator ==({typedef.Name} left, {typedef.Name} right) => left.Handle == right.Handle;");
+                    file.WriteLine($"\tpublic static bool operator !=({typedef.Name} left, {typedef.Name} right) => left.Handle != right.Handle;");
+                    file.WriteLine($"\tpublic static bool operator ==({typedef.Name} left, {handleType} right) => left.Handle == right;");
+                    file.WriteLine($"\tpublic static bool operator !=({typedef.Name} left, {handleType} right) => left.Handle != right;");
+                    file.WriteLine($"\tpublic bool Equals({typedef.Name} h) => Handle == h.Handle;");
+                    file.WriteLine($"\tpublic override bool Equals(object o) => o is {typedef.Name} h && Equals(h);");
+                    file.WriteLine($"\tpublic override int GetHashCode() => Handle.GetHashCode();");
+                    file.WriteLine("\t}\n");
+                }
+
                 file.WriteLine("}");
             }
         }
@@ -127,7 +177,7 @@ namespace WebGPUGen
             {
                 file.WriteLine("using System;");
                 file.WriteLine("using System.Runtime.InteropServices;\n");
-                file.WriteLine("namespace WaveEngine.Bindings.WebGPU");
+                file.WriteLine("namespace Evergine.Bindings.WebGPU");
                 file.WriteLine("{");
 
                 var structs = compilation.Classes.Where(c => c.ClassKind == CppClassKind.Struct && c.IsDefinition == true);
@@ -165,7 +215,7 @@ namespace WebGPUGen
             using (StreamWriter file = File.CreateText(Path.Combine(outputPath, "Enums.cs")))
             {
                 file.WriteLine("using System;\n");
-                file.WriteLine("namespace WaveEngine.Bindings.WebGPU");
+                file.WriteLine("namespace Evergine.Bindings.WebGPU");
                 file.WriteLine("{");
 
                 foreach (var cppEnum in compilation.Enums)
