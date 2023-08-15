@@ -36,11 +36,40 @@ namespace WebGPUGen
             //               && ((CppPointerType)t.ElementType).ElementType.TypeKind != CppTypeKind.Function)
             //        .Select(t => t.Name).ToList();
 
+            GenerateConstants(compilation, outputPath);
             GenerateDelegates(compilation, outputPath);
             GenerateEnums(compilation, outputPath);
             GenerateStructs(compilation, outputPath);
             GenerateCommmands(compilation, outputPath);
             GeneratedHandles(compilation, outputPath);
+        }
+
+        private void GenerateConstants(CppCompilation compilation, string outputPath)
+        {
+            Debug.WriteLine("Generating Constants...");
+            using (StreamWriter file = File.CreateText(Path.Combine(outputPath, "Constants.cs")))
+            {
+                file.WriteLine("namespace Evergine.Bindings.WebGPU");
+                file.WriteLine("{");
+                file.WriteLine("\tpublic static partial class WebGPUNative");
+                file.WriteLine("\t{");
+
+                foreach (var constant in compilation.Macros)
+                {
+                    string constantValue = Helpers.NormalizeConstantValue(constant.Value);
+
+                    if(Helpers.SkipConstant(constant)) 
+                        continue;
+
+                    if(constant.Name == "WGPU_WHOLE_MAP_SIZE")
+                        file.WriteLine($"\t\tpublic static readonly nuint WGPU_WHOLE_MAP_SIZE = nuint.MaxValue;");
+                    else
+                        file.WriteLine($"\t\tpublic const {Helpers.GetConstantType(constantValue)} {constant.Name} = {constantValue};");
+                }
+
+                file.WriteLine("\t}");
+                file.WriteLine("}");
+            }
         }
 
         private void GenerateDelegates(CppCompilation compilation, string outputPath)
@@ -230,7 +259,11 @@ namespace WebGPUGen
 
                     foreach (var member in cppEnum.Items)
                     {
-                        file.WriteLine($"\t\t{member.Name} = {member.Value},");
+                        string cleanMemberName = member.Name.Split('_')[1];
+                        if (char.IsNumber(cleanMemberName, 0))
+                            cleanMemberName = $"_{cleanMemberName}";
+
+                        file.WriteLine($"\t\t{cleanMemberName} = {member.Value},");
                     }
 
                     file.WriteLine("\t}\n");

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using CppAst;
@@ -264,6 +265,39 @@ namespace WebGPUGen
             //}
 
             return name;
+        }
+
+        public static string GetConstantType(string value)
+        {
+            string constType = "string";
+            if (value.EndsWith("UL", StringComparison.OrdinalIgnoreCase))
+                constType = "float";
+            else if (value.EndsWith("U", StringComparison.OrdinalIgnoreCase))
+                constType = "uint";
+            else if (value.EndsWith("F", StringComparison.OrdinalIgnoreCase))
+                constType = "float";
+            else if (uint.TryParse(value, out _) || value.StartsWith("0x"))
+                constType = "float";
+            return constType;
+        }
+
+        public static bool SkipConstant(CppMacro constant)
+        {
+            string[] skippingValues = new[] { "_H_", "WGPU_EXPORT", "WGPU_SHARED_LIBRARY", "WGPU_IMPLEMENTATION", "_VGPU_EXTERN", "VGPU_API", "_WIN32", "WGPU_SKIP_PROCS" };
+            if (string.IsNullOrEmpty(constant.Value)
+                || skippingValues.Contains(constant.Name))
+                return true;
+
+            return false;
+        }
+
+        public static string NormalizeConstantValue(string constantValue)
+        {
+            if(constantValue.StartsWith("(") && constantValue.EndsWith(")"))
+                constantValue = constantValue.Substring(1, constantValue.Length - 2);
+
+            return constantValue.Replace("ULL", "UL");
+
         }
     }
 }

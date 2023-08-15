@@ -8,6 +8,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Content\triangle.wgsl" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Content\triangle.wgsl">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\Evergine.Bindings.WebGPU\Evergine.Bindings.WebGPU.csproj" />
 	</ItemGroup>
 
