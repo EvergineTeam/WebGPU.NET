@@ -200,7 +200,7 @@ namespace Evergine.Bindings.WebGPU
 		public static extern WGPUBindGroupLayout wgpuDeviceCreateBindGroupLayout(WGPUDevice device, WGPUBindGroupLayoutDescriptor* descriptor);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuDeviceCreateBuffer")]
-		public static extern WGPUBuffer wgpuDeviceCreateBuffer(WGPUDevice device, ref WGPUBufferDescriptor descriptor);
+		public static extern WGPUBuffer wgpuDeviceCreateBuffer(WGPUDevice device, WGPUBufferDescriptor* descriptor);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuDeviceCreateCommandEncoder")]
 		public static extern WGPUCommandEncoder wgpuDeviceCreateCommandEncoder(WGPUDevice device, WGPUCommandEncoderDescriptor* descriptor);
@@ -221,10 +221,10 @@ namespace Evergine.Bindings.WebGPU
 		public static extern WGPURenderBundleEncoder wgpuDeviceCreateRenderBundleEncoder(WGPUDevice device, WGPURenderBundleEncoderDescriptor* descriptor);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuDeviceCreateRenderPipeline")]
-		public static extern WGPURenderPipeline wgpuDeviceCreateRenderPipeline(WGPUDevice device, ref WGPURenderPipelineDescriptor descriptor);
+		public static extern WGPURenderPipeline wgpuDeviceCreateRenderPipeline(WGPUDevice device, WGPURenderPipelineDescriptor* descriptor);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuDeviceCreateRenderPipelineAsync")]
-		public static extern void wgpuDeviceCreateRenderPipelineAsync(WGPUDevice device, ref WGPURenderPipelineDescriptor descriptor, WGPUCreateRenderPipelineAsyncCallback callback, void* userdata);
+		public static extern void wgpuDeviceCreateRenderPipelineAsync(WGPUDevice device, WGPURenderPipelineDescriptor* descriptor, WGPUCreateRenderPipelineAsyncCallback callback, void* userdata);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuDeviceCreateSampler")]
 		public static extern WGPUSampler wgpuDeviceCreateSampler(WGPUDevice device, WGPUSamplerDescriptor* descriptor);

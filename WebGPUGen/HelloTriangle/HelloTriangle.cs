@@ -1,10 +1,11 @@
 ﻿using Evergine.Bindings.WebGPU;
-using Microsoft.VisualBasic.Logging;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using static Evergine.Bindings.WebGPU.WebGPUNative;
 
 namespace HelloTriangle
 {
@@ -44,12 +45,13 @@ namespace HelloTriangle
         private void InitWindow()
         {
             window = new Form();
-            window.Text = "WGPU-Native Triangle Rasterization";
             window.Size = new System.Drawing.Size((int)WIDTH, (int)HEIGHT);
             window.FormBorderStyle = FormBorderStyle.FixedToolWindow;
             window.Show();
         }
 
+        [DllImport("kernel32", ExactSpelling = true)]
+        private static extern nint GetModuleHandleW(ushort* lpModuleName);
 
         private void InitWebGPU()
         {
@@ -57,15 +59,13 @@ namespace HelloTriangle
             {
                 nextInChain = null,
             };
-            Instance = WebGPUNative.wgpuCreateInstance(&instanceDescriptor);
-
+            Instance = wgpuCreateInstance(&instanceDescriptor);
 
             WGPUSurfaceDescriptorFromWindowsHWND windowsSurface = new WGPUSurfaceDescriptorFromWindowsHWND()
             {
-                chain = new WGPUChainedStruct() 
-                { 
-                    sType = WGPUSType.SurfaceDescriptorFromWindowsHWND, 
-                    next = null,
+                chain = new WGPUChainedStruct()
+                {
+                    sType = WGPUSType.SurfaceDescriptorFromWindowsHWND,
                 },
                 hinstance = (void*)Process.GetCurrentProcess().Handle,
                 hwnd = (void*)window.Handle,
@@ -74,20 +74,19 @@ namespace HelloTriangle
             WGPUSurfaceDescriptor surfaceDescriptor = new WGPUSurfaceDescriptor()
             {
                 nextInChain = &windowsSurface.chain,
-                label = null,
             };
 
-            Surface = WebGPUNative.wgpuInstanceCreateSurface(Instance, &surfaceDescriptor);
+            Surface = wgpuInstanceCreateSurface(Instance, &surfaceDescriptor);
 
             WGPURequestAdapterOptions options = new WGPURequestAdapterOptions()
             {
                 nextInChain = null,
-                backendType = WGPUBackendType.D3D12,
+                //backendType = WGPUBackendType.D3D12,
                 compatibleSurface = Surface,
                 powerPreference = WGPUPowerPreference.HighPerformance
             };
 
-            WebGPUNative.wgpuInstanceRequestAdapter(Instance, &options, OnAdapterRequestEnded, (void*)0);
+            wgpuInstanceRequestAdapter(Instance, &options, OnAdapterRequestEnded, (void*)0);
 
             WGPUDeviceDescriptor deviceDescriptor = new WGPUDeviceDescriptor()
             {
@@ -97,31 +96,33 @@ namespace HelloTriangle
                 requiredLimits = null,
             };
 
-            WebGPUNative.wgpuAdapterRequestDevice(Adapter, &deviceDescriptor, OnDeviceRequestEnded, (void*)0);
+            wgpuAdapterRequestDevice(Adapter, &deviceDescriptor, OnDeviceRequestEnded, (void*)0);
 
-            WebGPUNative.wgpuDeviceSetUncapturedErrorCallback(Device, HandleUncapturedErrorCallback, (void*)0);
+            wgpuDeviceSetUncapturedErrorCallback(Device, HandleUncapturedErrorCallback, (void*)0);
 
-            Queue = WebGPUNative.wgpuDeviceGetQueue(Device);
+            Queue = wgpuDeviceGetQueue(Device);
 
-            SwapChainFormat = WebGPUNative.wgpuSurfaceGetPreferredFormat(Surface, Adapter);
+            SwapChainFormat = wgpuSurfaceGetPreferredFormat(Surface, Adapter);
 
+            int width = window.ClientSize.Width;
+            int height = window.ClientSize.Height;
             WGPUSwapChainDescriptor swapchainDescriptor = new WGPUSwapChainDescriptor()
             {
                 nextInChain = null,
                 usage = WGPUTextureUsage.RenderAttachment,
                 format = SwapChainFormat,
-                width = (uint)window.Width,
-                height = (uint)window.Height,
+                width = (uint)width,
+                height = (uint)height,
                 presentMode = WGPUPresentMode.Fifo,
             };
 
-            SwapChain = WebGPUNative.wgpuDeviceCreateSwapChain(Device, Surface, &swapchainDescriptor);
+
+            SwapChain = wgpuDeviceCreateSwapChain(Device, Surface, &swapchainDescriptor);
         }
 
         private static void HandleUncapturedErrorCallback(WGPUErrorType type, char* pMessage, void* pUserData)
         {
-            string message = Helpers.GetString(pMessage);
-            Console.Write($"Uncaptured device error: type: {type} ({message})");
+            Console.WriteLine($"Uncaptured device error: type: {type} ({Helpers.GetString(pMessage)})");
         }
 
         private void OnAdapterRequestEnded(WGPURequestAdapterStatus status, WGPUAdapter candidateAdapter, char* message, void* pUserData)
@@ -130,17 +131,18 @@ namespace HelloTriangle
             {
                 Adapter = candidateAdapter;
                 WGPUAdapterProperties properties;
-                WebGPUNative.wgpuAdapterGetProperties(candidateAdapter, &properties);
+                wgpuAdapterGetProperties(candidateAdapter, &properties);
+                window.Text = $"WGPU-Native Triangle ({properties.backendType})";
 
                 WGPUSupportedLimits limits;
-                WebGPUNative.wgpuAdapterGetLimits(candidateAdapter, &limits);
+                wgpuAdapterGetLimits(candidateAdapter, &limits);
 
                 AdapterProperties = properties;
                 AdapterLimits = limits;
             }
             else
             {
-                Console.WriteLine($"Could not get WebGPU adapter: { Helpers.GetString(message) }");
+                Console.WriteLine($"Could not get WebGPU adapter: {Helpers.GetString(message)}");
             }
         }
 
@@ -152,41 +154,41 @@ namespace HelloTriangle
             }
             else
             {
-                Console.WriteLine($"Could not get WebGPU device: { Helpers.GetString(message) }");
+                Console.WriteLine($"Could not get WebGPU device: {Helpers.GetString(message)}");
             }
         }
 
         private void InitResources()
         {
-            WGPUPipelineLayoutDescriptor layoutDescription = new WGPUPipelineLayoutDescriptor()
+            WGPUPipelineLayoutDescriptor layoutDescription = new()
             {
                 nextInChain = null,
                 bindGroupLayoutCount = 0,
                 bindGroupLayouts = null,
             };
 
-            pipelineLayout = WebGPUNative.wgpuDeviceCreatePipelineLayout(Device, &layoutDescription);
+            pipelineLayout = wgpuDeviceCreatePipelineLayout(Device, &layoutDescription);
 
             string shaderSource = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Content", $"triangle.wgsl"));
 
-            WGPUShaderModuleWGSLDescriptor shaderCodeDescriptor = new WGPUShaderModuleWGSLDescriptor()
+            WGPUShaderModuleWGSLDescriptor shaderCodeDescriptor = new()
             {
                 chain = new WGPUChainedStruct()
-                { 
+                {
                     next = null,
                     sType = WGPUSType.ShaderModuleWGSLDescriptor,
                 },
                 code = shaderSource.ToPointer(),
             };
 
-            WGPUShaderModuleDescriptor moduleDescriptor = new WGPUShaderModuleDescriptor()
+            WGPUShaderModuleDescriptor moduleDescriptor = new()
             {
                 nextInChain = &shaderCodeDescriptor.chain,
                 hintCount = 0,
                 hints = null,
             };
 
-            WGPUShaderModule shaderModule = WebGPUNative.wgpuDeviceCreateShaderModule(Device, &moduleDescriptor);
+            WGPUShaderModule shaderModule = wgpuDeviceCreateShaderModule(Device, &moduleDescriptor);
 
             WGPUVertexAttribute* vertexAttributes = stackalloc WGPUVertexAttribute[2]
             {
@@ -199,7 +201,7 @@ namespace HelloTriangle
                 new WGPUVertexAttribute()
                 {
                     format = WGPUVertexFormat.Float32x4,
-                    offset = 12,
+                    offset = 16,
                     shaderLocation = 1,
                 },
             };
@@ -208,7 +210,7 @@ namespace HelloTriangle
             {
                 attributeCount = 2,
                 attributes = vertexAttributes,
-                arrayStride = (ulong)VertexPositionColor.SizeInBytes,
+                arrayStride = (ulong)sizeof(Vector4) * 2,
                 stepMode = WGPUVertexStepMode.Vertex,
             };
 
@@ -252,7 +254,7 @@ namespace HelloTriangle
                 layout = pipelineLayout,
                 vertex = new WGPUVertexState()
                 {
-                    bufferCount = 0,
+                    bufferCount = 1,
                     buffers = &vertexLayout,
 
                     module = shaderModule,
@@ -265,7 +267,7 @@ namespace HelloTriangle
                     topology = WGPUPrimitiveTopology.TriangleList,
                     stripIndexFormat = WGPUIndexFormat.Undefined,
                     frontFace = WGPUFrontFace.CCW,
-                    cullMode = WGPUCullMode.Back,
+                    cullMode = WGPUCullMode.None,
                 },
                 fragment = &fragmentState,
                 depthStencil = null,
@@ -277,29 +279,30 @@ namespace HelloTriangle
                 }
             };
 
-            pipeline = WebGPUNative.wgpuDeviceCreateRenderPipeline(Device, ref pipelineDescriptor);
+            pipeline = wgpuDeviceCreateRenderPipeline(Device, &pipelineDescriptor);
 
-            WebGPUNative.wgpuShaderModuleRelease(shaderModule);
+            wgpuShaderModuleRelease(shaderModule);
 
-            VertexPositionColor* vertexData = stackalloc VertexPositionColor[]
+            Vector4* vertexData = stackalloc Vector4[]
             {
-                // TriangleList
-                new(new Vector3(0.0f, 0.5f, 0.5f), new Vector4(1.0f, 0.0f, 0.0f, 1.0f)),
-                new(new Vector3(0.5f, -0.5f, 0.5f), new Vector4(0.0f, 1.0f, 0.0f, 1.0f)),
-                new(new Vector3(-0.5f, -0.5f, 0.5f), new Vector4(0.0f, 0.0f, 1.0f, 1.0f)),
+                new Vector4(0.0f, 0.5f, 0.5f, 1.0f),
+                new Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+                new Vector4(0.5f, -0.5f, 0.5f, 1.0f),
+                new Vector4(0.0f, 1.0f, 0.0f, 1.0f),
+                new Vector4(-0.5f, -0.5f, 0.5f, 1.0f),
+                new Vector4(0.0f, 0.0f, 1.0f, 1.0f)
             };
 
+            ulong size = (ulong)(6 * sizeof(Vector4));
             WGPUBufferDescriptor bufferDescriptor = new WGPUBufferDescriptor()
             {
                 nextInChain = null,
                 usage = WGPUBufferUsage.Vertex | WGPUBufferUsage.CopyDst,
-                size = 96,
+                size = size,
                 mappedAtCreation = false,
             };
-            vertexBuffer = WebGPUNative.wgpuDeviceCreateBuffer(Device, ref bufferDescriptor);
-
-            ulong size = (ulong)(3 * sizeof(VertexPositionColor));
-            WebGPUNative.wgpuQueueWriteBuffer(Queue, vertexBuffer, 0, vertexData, size);
+            vertexBuffer = wgpuDeviceCreateBuffer(Device, &bufferDescriptor);
+            wgpuQueueWriteBuffer(Queue, vertexBuffer, 0, vertexData, size);
         }
 
 
@@ -313,22 +316,27 @@ namespace HelloTriangle
 
             while (!isClosing)
             {
-                Application.DoEvents();
-
                 this.DrawFrame();
+
+                Application.DoEvents();
             }
         }
 
         private void DrawFrame()
         {
-            WGPUTextureView nextTexture = WebGPUNative.wgpuSwapChainGetCurrentTextureView(SwapChain);
+            WGPUTextureView nextTexture = wgpuSwapChainGetCurrentTextureView(SwapChain);
+
+            if (nextTexture.Handle == IntPtr.Zero)
+            {
+                Console.WriteLine("Cannot acquire next swap chain texture");
+                return;
+            }
 
             WGPUCommandEncoderDescriptor encoderDescriptor = new WGPUCommandEncoderDescriptor()
             {
                 nextInChain = null,
-                label = (char*)0,
             };
-            WGPUCommandEncoder encoder = WebGPUNative.wgpuDeviceCreateCommandEncoder(Device, &encoderDescriptor);
+            WGPUCommandEncoder encoder = wgpuDeviceCreateCommandEncoder(Device, &encoderDescriptor);
 
             WGPURenderPassColorAttachment renderPassColorAttachment = new WGPURenderPassColorAttachment()
             {
@@ -336,7 +344,7 @@ namespace HelloTriangle
                 resolveTarget = WGPUTextureView.Null,
                 loadOp = WGPULoadOp.Clear,
                 storeOp = WGPUStoreOp.Store,
-                clearValue = new WGPUColor() { r = 0.392156869f, g = 00.58431375f, b = 00.929411769f, a = 1.0f },
+                clearValue = new WGPUColor() { a = 1.0f },
             };
 
             WGPURenderPassDescriptor renderPassDescriptor = new WGPURenderPassDescriptor()
@@ -349,37 +357,35 @@ namespace HelloTriangle
                 timestampWrites = null,
             };
 
-            WGPURenderPassEncoder renderPass = WebGPUNative.wgpuCommandEncoderBeginRenderPass(encoder, &renderPassDescriptor);
+            WGPURenderPassEncoder renderPass = wgpuCommandEncoderBeginRenderPass(encoder, &renderPassDescriptor);
 
-            WebGPUNative.wgpuRenderPassEncoderSetPipeline(renderPass, pipeline);
-            WebGPUNative.wgpuRenderPassEncoderSetVertexBuffer(renderPass, 0, vertexBuffer, 0, (ulong)0xffffffffffffffffUL);
-            WebGPUNative.wgpuRenderPassEncoderDraw(renderPass, 3, 1, 0, 0);
-            WebGPUNative.wgpuRenderPassEncoderEnd(renderPass);
+            wgpuRenderPassEncoderSetPipeline(renderPass, pipeline);
+            wgpuRenderPassEncoderSetVertexBuffer(renderPass, 0, vertexBuffer, 0, WGPU_WHOLE_MAP_SIZE);
+            wgpuRenderPassEncoderDraw(renderPass, 3, 1, 0, 0);
+            wgpuRenderPassEncoderEnd(renderPass);
 
-            WebGPUNative.wgpuTextureViewRelease(nextTexture);
+            wgpuTextureViewRelease(nextTexture);
 
             WGPUCommandBufferDescriptor commandBufferDescriptor = new WGPUCommandBufferDescriptor()
             {
                 nextInChain = null,
-                label = (char*)0,
             };
 
-            WGPUCommandBuffer command = WebGPUNative.wgpuCommandEncoderFinish(encoder, &commandBufferDescriptor);
-            WebGPUNative.wgpuQueueSubmit(Queue, 1, &command);
+            WGPUCommandBuffer command = wgpuCommandEncoderFinish(encoder, &commandBufferDescriptor);
+            wgpuQueueSubmit(Queue, 1, &command);
 
-            WebGPUNative.wgpuCommandEncoderRelease(encoder);
+            wgpuCommandEncoderRelease(encoder);
 
-            WebGPUNative.wgpuSwapChainPresent(SwapChain);
-
+            wgpuSwapChainPresent(SwapChain);
         }
 
         private void CleanUp()
         {
-            WebGPUNative.wgpuSwapChainRelease(SwapChain);
-            WebGPUNative.wgpuDeviceDestroy(Device);
-            WebGPUNative.wgpuDeviceRelease(Device);
-            WebGPUNative.wgpuAdapterRelease(Adapter);
-            WebGPUNative.wgpuInstanceRelease(Instance);
+            wgpuSwapChainRelease(SwapChain);
+            wgpuDeviceDestroy(Device);
+            wgpuDeviceRelease(Device);
+            wgpuAdapterRelease(Adapter);
+            wgpuInstanceRelease(Instance);
 
             this.window.Dispose();
             this.window.Close();

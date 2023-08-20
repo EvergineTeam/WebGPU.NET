@@ -1,15 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
+		<OutputType>Exe</OutputType>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <None Remove="Content\triangle.wgsl" />
-	</ItemGroup>
 
 	<ItemGroup>
 	  <Content Include="Content\triangle.wgsl">

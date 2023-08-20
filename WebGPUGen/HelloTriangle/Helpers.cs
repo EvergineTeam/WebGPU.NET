@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text;
 
 namespace HelloTriangle
 {
@@ -18,7 +19,7 @@ namespace HelloTriangle
                 characters++;
             }
 
-            return System.Text.Encoding.UTF8.GetString((byte*)stringStart, characters);
+            return System.Text.Encoding.UTF8.GetString((byte*)stringStart, characters * 2);
         }
     }
 }
