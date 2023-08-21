@@ -50,9 +50,6 @@ namespace HelloTriangle
             window.Show();
         }
 
-        [DllImport("kernel32", ExactSpelling = true)]
-        private static extern nint GetModuleHandleW(ushort* lpModuleName);
-
         private void InitWebGPU()
         {
             WGPUInstanceDescriptor instanceDescriptor = new WGPUInstanceDescriptor()
@@ -81,7 +78,7 @@ namespace HelloTriangle
             WGPURequestAdapterOptions options = new WGPURequestAdapterOptions()
             {
                 nextInChain = null,
-                //backendType = WGPUBackendType.D3D12,
+                backendType = WGPUBackendType.D3D12,
                 compatibleSurface = Surface,
                 powerPreference = WGPUPowerPreference.HighPerformance
             };

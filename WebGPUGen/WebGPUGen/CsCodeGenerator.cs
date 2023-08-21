@@ -30,11 +30,6 @@ namespace WebGPUGen
         public void Generate(CppCompilation compilation, string basePath)
         {
             string outputPath = basePath;
-            //Helpers.TypedefList = compilation.Typedefs
-            //        .Where(t => t.TypeKind == CppTypeKind.Typedef
-            //               && t.ElementType is CppPointerType
-            //               && ((CppPointerType)t.ElementType).ElementType.TypeKind != CppTypeKind.Function)
-            //        .Select(t => t.Name).ToList();
 
             GenerateConstants(compilation, outputPath);
             GenerateDelegates(compilation, outputPath);
