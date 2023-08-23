@@ -12,25 +12,40 @@ namespace Evergine.Bindings.WebGPU
     {
         static WebGPUNative()
         {
+            string libraryName = GetLibraryName();
+            string libraryPath = GetLibraryPath(libraryName);
+
+            bool success = NativeLibrary.TryLoad(libraryPath, out var handle);
+            if (!success)
+            {
+                throw new ApplicationException($"Unable to load the wgpu-native library. {libraryPath}");
+            }
+        }
+
+        private static string GetLibraryName()
+        {
+            string name = string.Empty;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                LoadNativeLibrary("wgpu_native.dll");
+                name = "wgpu_native.dll";
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                LoadNativeLibrary("libwgpu_native.so");
+                name = "libwgpu_native.so";
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                LoadNativeLibrary("libwgpu_native.dylib");
+                name = "libwgpu_native.dylib";
             }
             else
             {
                 throw new PlatformNotSupportedException("Platform not supported.");
             }
+
+            return name;
         }
 
-        private static string LoadNativeLibrary(string libraryName)
+        private static string GetLibraryPath(string libraryName)
         {
             string os = GetOSPlatform();
             string architexture = GetArchitecture();
