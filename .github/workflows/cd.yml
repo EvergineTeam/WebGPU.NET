@@ -16,7 +16,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
+      - uses: actions/setup-dotnet@v1 # 7.x is needed to support pointers to managed memory
         with:
           dotnet-version: |
             6.x
