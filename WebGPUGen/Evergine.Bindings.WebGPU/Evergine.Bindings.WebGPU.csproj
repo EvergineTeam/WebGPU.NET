@@ -1,6 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Copyright>Copyright (c) Evergine 2023</Copyright>
+    <Authors>Evergine Team</Authors>
+    <Company>Plain Concepts</Company>
+    <PackageIcon>icon.png</PackageIcon>
+    <Description>Low-level bindings for WebGPU used in Evergine</Description>
+    <RepositoryUrl>https://github.com/EvergineTeam/WebGPU.NET</RepositoryUrl>
+    <PackageTags>WebGPU;Evergine;C#;Game Engine;DirectX;OpenGL;OpenGLES;Vulkan;Metal;2D;3D;AR;VR;MixedReality;Mobile;HoloLens</PackageTags>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -8,11 +19,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <Content Include="runtimes\**" PackagePath="runtimes" Pack="true" />
+    <Content Include="runtimes\**" PackagePath="runtimes" Pack="true" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Generated\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.png" Pack="true" PackagePath="\" Visible="false"/>
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" Visible="false"/>
   </ItemGroup>
 
 </Project>
