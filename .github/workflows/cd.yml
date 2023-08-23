@@ -19,10 +19,11 @@ jobs:
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: |
+            6.x
             7.x
       - uses: nuget/setup-nuget@v1
         with:
-          nuget-version: "6.x"
+          nuget-version: "7.x"
       - name: Generate Bindings
         id: build_bindings
         shell: pwsh
