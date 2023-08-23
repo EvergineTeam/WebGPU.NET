@@ -15,24 +15,30 @@ jobs:
   build_and_publish:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v3 # 7.x is needed to support pointers to managed memory
         with:
           dotnet-version: |
             6.x
+            7.x
       - uses: nuget/setup-nuget@v1
         with:
           nuget-version: "6.x"
       - name: Generate Bindings
         id: build_bindings
-        run: powershell ./Generate-Bindings.ps1
+        shell: pwsh
+        run: |
+          ./Generate-Bindings.ps1
       - name: Generate NuGet packages
         id: build_nugets
-        run: powershell ./Generate-NuGets.ps1 -revision ${{  github.run_number  }} -outputfolder ${{  env.nugetOutputPath  }}
+        shell: pwsh
+        run: |
+          ./Generate-NuGets.ps1 -revision ${{  github.run_number  }} -outputfolder ${{  env.nugetOutputPath  }}
       - name: Publish NuGet
         if: ${{ success() && github.event.inputs.publishEnabled == 'true' }}
         env:
           token: ${{secrets.EVERGINE_NUGETORG_TOKEN}}
+        shell: pwsh
         run: |
           cd ${{  env.nugetOutputPath  }}
           ls *.nupkg
