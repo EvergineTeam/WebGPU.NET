@@ -23,7 +23,7 @@ jobs:
             7.x
       - uses: nuget/setup-nuget@v1
         with:
-          nuget-version: "7.x"
+          nuget-version: "6.x"
       - name: Generate Bindings
         id: build_bindings
         shell: pwsh
