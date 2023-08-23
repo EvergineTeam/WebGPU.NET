@@ -1,28 +1,32 @@
 <#
 .SYNOPSIS
-	Wave Engine bindings NuGet Packages generator script, (c) 2020 Wave Engine
+	Evergine bindings NuGet Packages generator script, (c) 2023 Evergine Team
 .DESCRIPTION
 	This script generates NuGet packages for the low-level WebGPU bindings used in Wave Engine
 	It's meant to have the same behavior when executed locally as when it's executed in a CI pipeline.
 .EXAMPLE
-	<script> -version 3.4.22.288-local
+	<script> -revision 1
 .LINK
-	https://waveengine.net
+	https://evergine.com/
 #>
 
 param (
-    [Parameter(mandatory=$true)][string]$version,	
+    [Parameter(mandatory = $true)][string]$revision,
 	[string]$outputFolderBase = "nupkgs",
 	[string]$buildVerbosity = "normal",
-	[string]$buildConfiguration = "Release",
-	[string]$flavour = "Browser"
+	[string]$buildConfiguration = "Release"
+	# # [string]$flavour = "Browser"
 )
 
 # Set csproj path
-$bindingsCsprojPath = "WebGPUGen\WaveEngine.Bindings.WebGPU.$flavour\WaveEngine.Bindings.WebGPU.$flavour.csproj"
+# # $bindingsCsprojPath = "WebGPUGen\Evergine.Bindings.WebGPU.$flavour\Evergine.Bindings.WebGPU.$flavour.csproj"
+$bindingsCsprojPath = "WebGPUGen\Evergine.Bindings.WebGPU\Evergine.Bindings.WebGPU.csproj"
 
 # Utility functions
 function LogDebug($line) { Write-Host "##[debug] $line" -Foreground Blue -Background Black }
+
+# Compute version
+$version = "$(Get-Date -Format "yyyy.M.d").$revision"
 
 # Show variables
 LogDebug "############## VARIABLES ##############"
@@ -33,7 +37,7 @@ LogDebug "Output folder.......: $outputFolderBase"
 LogDebug "#######################################"
 
 # Create output folder
-$outputFolder = Join-Path $outputFolderBase $versionWithSuffix
+$outputFolder = Join-Path $outputFolderBase $version
 New-Item -ItemType Directory -Force -Path $outputFolder
 $absoluteOutputFolder = Resolve-Path $outputFolder
 
