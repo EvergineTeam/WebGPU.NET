@@ -33,7 +33,7 @@ jobs:
         id: build_nugets
         shell: pwsh
         run: |
-          ./Generate-NuGets.ps1 -revision ${{  github.run_number  }} -outputfolder ${{  env.nugetOutputPath  }}
+          ./Generate-NuGets.ps1 -revision ${{  github.run_number  }} -outputfolder ${{  env.nugetOutputPath  }} -debugSymbols false
       - name: Publish NuGet
         if: ${{ success() && github.event.inputs.publishEnabled == 'true' }}
         env:

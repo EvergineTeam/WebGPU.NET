@@ -14,7 +14,8 @@ param (
     [Parameter(mandatory = $true)][string]$revision,
 	[string]$outputFolderBase = "nupkgs",
 	[string]$buildVerbosity = "normal",
-	[string]$buildConfiguration = "Release"
+	[string]$buildConfiguration = "Release",
+	[string]$debugSymbols = "true"
 	# # [string]$flavour = "Browser"
 )
 
@@ -43,6 +44,6 @@ $absoluteOutputFolder = Resolve-Path $outputFolder
 
 # Generate packages
 LogDebug "START packaging process"
-& dotnet pack "$bindingsCsprojPath" -v:$buildVerbosity -p:Configuration=$buildConfiguration -p:PackageOutputPath="$absoluteOutputFolder" -p:IncludeSymbols=true -p:Version=$version
+& dotnet pack "$bindingsCsprojPath" -v:$buildVerbosity -p:Configuration=$buildConfiguration -p:PackageOutputPath="$absoluteOutputFolder" -p:IncludeSymbols=$debugSymbols -p:Version=$version
 
 LogDebug "END packaging process"
