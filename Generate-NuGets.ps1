@@ -5,13 +5,13 @@
 	This script generates NuGet packages for the low-level WebGPU bindings used in Wave Engine
 	It's meant to have the same behavior when executed locally as when it's executed in a CI pipeline.
 .EXAMPLE
-	<script> -version 2023.08.23.1-local
+	<script> -revision 1
 .LINK
 	https://evergine.com/
 #>
 
 param (
-    [Parameter(mandatory=$true)][string]$version,
+    [Parameter(mandatory = $true)][string]$revision,
 	[string]$outputFolderBase = "nupkgs",
 	[string]$buildVerbosity = "normal",
 	[string]$buildConfiguration = "Release"
@@ -24,6 +24,9 @@ $bindingsCsprojPath = "WebGPUGen\Evergine.Bindings.WebGPU\Evergine.Bindings.WebG
 
 # Utility functions
 function LogDebug($line) { Write-Host "##[debug] $line" -Foreground Blue -Background Black }
+
+# Compute version
+$version = "$(Get-Date -Format "yyyy.M.d").$revision"
 
 # Show variables
 LogDebug "############## VARIABLES ##############"
