@@ -4,6 +4,9 @@
 
 WebGPU.NET is a lightweight, low-level wrapper built on top of the `wgpu-native` library from Firefox. Our aim is to facilitate swift development of an adapter for Evergine, allowing for rapid testing across Windows, Linux, and Mac platforms using DirectX, Vulkan, and Metal.
 
+[![CD WebGPU](https://github.com/EvergineTeam/WebGPU.NET/actions/workflows/cd.yml/badge.svg)](https://github.com/EvergineTeam/WebGPU.NET/actions/workflows/cd.yml)
+[![Nuget](https://img.shields.io/nuget/v/Evergine.Bindings.WebGPU?logo=nuget)](https://www.nuget.org/packages/Evergine.Bindings.WebGPU)
+
 ## Features
 
 - **Low-level Access**: Get closer to the metal with our streamlined API that wraps `wgpu-native`.
