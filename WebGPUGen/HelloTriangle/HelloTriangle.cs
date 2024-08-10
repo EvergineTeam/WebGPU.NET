@@ -1,4 +1,5 @@
 ﻿using Evergine.Bindings.WebGPU;
+using Microsoft.VisualBasic.Logging;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -22,7 +23,6 @@ namespace HelloTriangle
         private WGPUSupportedLimits AdapterLimits;
         private WGPUDevice Device;
         private WGPUTextureFormat SwapChainFormat;
-        private WGPUSwapChain SwapChain;
         private WGPUQueue Queue;
 
         private WGPUPipelineLayout pipelineLayout;
@@ -52,9 +52,18 @@ namespace HelloTriangle
 
         private void InitWebGPU()
         {
+            WGPUInstanceExtras instanceExtras = new WGPUInstanceExtras()
+            {
+                chain = new WGPUChainedStruct()
+                {
+                    sType = (WGPUSType)WGPUNativeSType.InstanceExtras,
+                },
+                backends = WGPUInstanceBackend.Vulkan,
+            };
+
             WGPUInstanceDescriptor instanceDescriptor = new WGPUInstanceDescriptor()
             {
-                nextInChain = null,
+                nextInChain = &instanceExtras.chain,
             };
             Instance = wgpuCreateInstance(&instanceDescriptor);
 
@@ -78,7 +87,6 @@ namespace HelloTriangle
             WGPURequestAdapterOptions options = new WGPURequestAdapterOptions()
             {
                 nextInChain = null,
-                backendType = WGPUBackendType.D3D12,
                 compatibleSurface = Surface,
                 powerPreference = WGPUPowerPreference.HighPerformance
             };
@@ -103,18 +111,20 @@ namespace HelloTriangle
 
             int width = window.ClientSize.Width;
             int height = window.ClientSize.Height;
-            WGPUSwapChainDescriptor swapchainDescriptor = new WGPUSwapChainDescriptor()
+
+            WGPUTextureFormat textureFormat = SwapChainFormat;
+            WGPUSurfaceConfiguration surfaceConfiguration = new WGPUSurfaceConfiguration()
             {
                 nextInChain = null,
-                usage = WGPUTextureUsage.RenderAttachment,
+                device = Device,
                 format = SwapChainFormat,
+                usage = WGPUTextureUsage.RenderAttachment,
                 width = (uint)width,
                 height = (uint)height,
                 presentMode = WGPUPresentMode.Fifo,
             };
 
-
-            SwapChain = wgpuDeviceCreateSwapChain(Device, Surface, &swapchainDescriptor);
+            wgpuSurfaceConfigure(Surface,  &surfaceConfiguration);
         }
 
         private static void HandleUncapturedErrorCallback(WGPUErrorType type, char* pMessage, void* pUserData)
@@ -321,13 +331,24 @@ namespace HelloTriangle
 
         private void DrawFrame()
         {
-            WGPUTextureView nextTexture = wgpuSwapChainGetCurrentTextureView(SwapChain);
+            WGPUSurfaceTexture surfaceTexture = default;
+            wgpuSurfaceGetCurrentTexture(Surface, &surfaceTexture);
 
-            if (nextTexture.Handle == IntPtr.Zero)
+            // Getting the texture may fail, in particular if the window has been resized
+            // and thus the target surface changed.
+            if (surfaceTexture.status == WGPUSurfaceGetCurrentTextureStatus.Timeout)
             {
                 Console.WriteLine("Cannot acquire next swap chain texture");
                 return;
             }
+
+            if (surfaceTexture.status == WGPUSurfaceGetCurrentTextureStatus.Outdated)
+            {
+                Console.WriteLine("Surface texture is outdated, reconfigure the surface!");
+                return;
+            }
+
+            WGPUTextureView nextView = wgpuTextureCreateView(surfaceTexture.texture, null);
 
             WGPUCommandEncoderDescriptor encoderDescriptor = new WGPUCommandEncoderDescriptor()
             {
@@ -337,7 +358,7 @@ namespace HelloTriangle
 
             WGPURenderPassColorAttachment renderPassColorAttachment = new WGPURenderPassColorAttachment()
             {
-                view = nextTexture,
+                view = nextView,
                 resolveTarget = WGPUTextureView.Null,
                 loadOp = WGPULoadOp.Clear,
                 storeOp = WGPUStoreOp.Store,
@@ -350,7 +371,6 @@ namespace HelloTriangle
                 colorAttachmentCount = 1,
                 colorAttachments = &renderPassColorAttachment,
                 depthStencilAttachment = null,
-                timestampWriteCount = 0,
                 timestampWrites = null,
             };
 
@@ -361,7 +381,7 @@ namespace HelloTriangle
             wgpuRenderPassEncoderDraw(renderPass, 3, 1, 0, 0);
             wgpuRenderPassEncoderEnd(renderPass);
 
-            wgpuTextureViewRelease(nextTexture);
+            wgpuTextureViewRelease(nextView);
 
             WGPUCommandBufferDescriptor commandBufferDescriptor = new WGPUCommandBufferDescriptor()
             {
@@ -373,12 +393,12 @@ namespace HelloTriangle
 
             wgpuCommandEncoderRelease(encoder);
 
-            wgpuSwapChainPresent(SwapChain);
+            wgpuSurfacePresent(Surface);
         }
 
         private void CleanUp()
         {
-            wgpuSwapChainRelease(SwapChain);
+            wgpuSurfaceRelease(Surface);
             wgpuDeviceDestroy(Device);
             wgpuDeviceRelease(Device);
             wgpuAdapterRelease(Adapter);

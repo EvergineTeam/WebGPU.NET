@@ -33,7 +33,7 @@ namespace WebGPUGen
             }
             else
             {
-                string basePath = "..\\..\\..\\..\\Evergine.Bindings.WebGPU\\Generated";
+                string basePath = "..\\..\\..\\..\\..\\Evergine.Bindings.WebGPU\\Generated";
 
                 if (!Directory.Exists(basePath))
                 {

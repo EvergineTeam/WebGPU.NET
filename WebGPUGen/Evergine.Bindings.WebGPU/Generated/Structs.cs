@@ -42,8 +42,7 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct* nextInChain;
 		public WGPUBufferBindingType type;
-		[MarshalAs(UnmanagedType.I1)]
-		public bool hasDynamicOffset;
+		public WGPUBool hasDynamicOffset;
 		public ulong minBindingSize;
 	}
 
@@ -54,8 +53,7 @@ namespace Evergine.Bindings.WebGPU
 		public char* label;
 		public WGPUBufferUsage usage;
 		public ulong size;
-		[MarshalAs(UnmanagedType.I1)]
-		public bool mappedAtCreation;
+		public WGPUBool mappedAtCreation;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -97,11 +95,11 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUComputePassTimestampWrite
+	public unsafe struct WGPUComputePassTimestampWrites
 	{
 		public WGPUQuerySet querySet;
-		public uint queryIndex;
-		public WGPUComputePassTimestampLocation location;
+		public uint beginningOfPassWriteIndex;
+		public uint endOfPassWriteIndex;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -134,6 +132,7 @@ namespace Evergine.Bindings.WebGPU
 		public uint maxTextureDimension3D;
 		public uint maxTextureArrayLayers;
 		public uint maxBindGroups;
+		public uint maxBindGroupsPlusVertexBuffers;
 		public uint maxBindingsPerBindGroup;
 		public uint maxDynamicUniformBuffersPerPipelineLayout;
 		public uint maxDynamicStorageBuffersPerPipelineLayout;
@@ -168,8 +167,7 @@ namespace Evergine.Bindings.WebGPU
 		public WGPUChainedStruct* nextInChain;
 		public uint count;
 		public uint mask;
-		[MarshalAs(UnmanagedType.I1)]
-		public bool alphaToCoverageEnabled;
+		public WGPUBool alphaToCoverageEnabled;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -193,8 +191,7 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUPrimitiveDepthClipControl
 	{
 		public WGPUChainedStruct chain;
-		[MarshalAs(UnmanagedType.I1)]
-		public bool unclippedDepth;
+		public WGPUBool unclippedDepth;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -214,8 +211,6 @@ namespace Evergine.Bindings.WebGPU
 		public char* label;
 		public WGPUQueryType type;
 		public uint count;
-		public WGPUPipelineStatisticName* pipelineStatistics;
-		public ulong pipelineStatisticsCount;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -237,14 +232,12 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct* nextInChain;
 		public char* label;
-		public ulong colorFormatsCount;
+		public ulong colorFormatCount;
 		public WGPUTextureFormat* colorFormats;
 		public WGPUTextureFormat depthStencilFormat;
 		public uint sampleCount;
-		[MarshalAs(UnmanagedType.I1)]
-		public bool depthReadOnly;
-		[MarshalAs(UnmanagedType.I1)]
-		public bool stencilReadOnly;
+		public WGPUBool depthReadOnly;
+		public WGPUBool stencilReadOnly;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -254,13 +247,11 @@ namespace Evergine.Bindings.WebGPU
 		public WGPULoadOp depthLoadOp;
 		public WGPUStoreOp depthStoreOp;
 		public float depthClearValue;
-		[MarshalAs(UnmanagedType.I1)]
-		public bool depthReadOnly;
+		public WGPUBool depthReadOnly;
 		public WGPULoadOp stencilLoadOp;
 		public WGPUStoreOp stencilStoreOp;
 		public uint stencilClearValue;
-		[MarshalAs(UnmanagedType.I1)]
-		public bool stencilReadOnly;
+		public WGPUBool stencilReadOnly;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -271,11 +262,11 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPURenderPassTimestampWrite
+	public unsafe struct WGPURenderPassTimestampWrites
 	{
 		public WGPUQuerySet querySet;
-		public uint queryIndex;
-		public WGPURenderPassTimestampLocation location;
+		public uint beginningOfPassWriteIndex;
+		public uint endOfPassWriteIndex;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -285,8 +276,7 @@ namespace Evergine.Bindings.WebGPU
 		public WGPUSurface compatibleSurface;
 		public WGPUPowerPreference powerPreference;
 		public WGPUBackendType backendType;
-		[MarshalAs(UnmanagedType.I1)]
-		public bool forceFallbackAdapter;
+		public WGPUBool forceFallbackAdapter;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -355,6 +345,33 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUSurfaceCapabilities
+	{
+		public WGPUChainedStructOut* nextInChain;
+		public ulong formatCount;
+		public WGPUTextureFormat* formats;
+		public ulong presentModeCount;
+		public WGPUPresentMode* presentModes;
+		public ulong alphaModeCount;
+		public WGPUCompositeAlphaMode* alphaModes;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUSurfaceConfiguration
+	{
+		public WGPUChainedStruct* nextInChain;
+		public WGPUDevice device;
+		public WGPUTextureFormat format;
+		public WGPUTextureUsage usage;
+		public ulong viewFormatCount;
+		public WGPUTextureFormat* viewFormats;
+		public WGPUCompositeAlphaMode alphaMode;
+		public uint width;
+		public uint height;
+		public WGPUPresentMode presentMode;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUSurfaceDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
@@ -411,19 +428,15 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct chain;
 		public void* display;
-		public uint window;
+		public ulong window;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUSwapChainDescriptor
+	public unsafe struct WGPUSurfaceTexture
 	{
-		public WGPUChainedStruct* nextInChain;
-		public char* label;
-		public WGPUTextureUsage usage;
-		public WGPUTextureFormat format;
-		public uint width;
-		public uint height;
-		public WGPUPresentMode presentMode;
+		public WGPUTexture texture;
+		public WGPUBool suboptimal;
+		public WGPUSurfaceGetCurrentTextureStatus status;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -432,8 +445,7 @@ namespace Evergine.Bindings.WebGPU
 		public WGPUChainedStruct* nextInChain;
 		public WGPUTextureSampleType sampleType;
 		public WGPUTextureViewDimension viewDimension;
-		[MarshalAs(UnmanagedType.I1)]
-		public bool multisampled;
+		public WGPUBool multisampled;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -509,8 +521,7 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct* nextInChain;
 		public char* label;
-		public ulong timestampWriteCount;
-		public WGPUComputePassTimestampWrite* timestampWrites;
+		public WGPUComputePassTimestampWrites* timestampWrites;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -518,8 +529,7 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct* nextInChain;
 		public WGPUTextureFormat format;
-		[MarshalAs(UnmanagedType.I1)]
-		public bool depthWriteEnabled;
+		public WGPUBool depthWriteEnabled;
 		public WGPUCompareFunction depthCompare;
 		public WGPUStencilFaceState stencilFront;
 		public WGPUStencilFaceState stencilBack;
@@ -561,6 +571,7 @@ namespace Evergine.Bindings.WebGPU
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPURenderPassColorAttachment
 	{
+		public WGPUChainedStruct* nextInChain;
 		public WGPUTextureView view;
 		public WGPUTextureView resolveTarget;
 		public WGPULoadOp loadOp;
@@ -647,7 +658,7 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct* nextInChain;
 		public char* label;
-		public ulong requiredFeaturesCount;
+		public ulong requiredFeatureCount;
 		public WGPUFeatureName* requiredFeatures;
 		public WGPURequiredLimits* requiredLimits;
 		public WGPUQueueDescriptor defaultQueue;
@@ -664,8 +675,7 @@ namespace Evergine.Bindings.WebGPU
 		public WGPURenderPassColorAttachment* colorAttachments;
 		public WGPURenderPassDepthStencilAttachment* depthStencilAttachment;
 		public WGPUQuerySet occlusionQuerySet;
-		public ulong timestampWriteCount;
-		public WGPURenderPassTimestampWrite* timestampWrites;
+		public WGPURenderPassTimestampWrites* timestampWrites;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -724,7 +734,9 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct chain;
 		public WGPUInstanceBackend backends;
+		public WGPUInstance flags;
 		public WGPUDx12Compiler dx12ShaderCompiler;
+		public WGPUGles3MinorVersion gles3MinorVersion;
 		public char* dxilPath;
 		public char* dxcPath;
 	}
@@ -737,17 +749,24 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUNativeLimits
+	{
+		public uint maxPushConstantSize;
+		public uint maxNonSamplerBindings;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPURequiredLimitsExtras
 	{
 		public WGPUChainedStruct chain;
-		public uint maxPushConstantSize;
+		public WGPUNativeLimits limits;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUSupportedLimitsExtras
 	{
 		public WGPUChainedStructOut chain;
-		public uint maxPushConstantSize;
+		public WGPUNativeLimits limits;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -762,7 +781,7 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUPipelineLayoutExtras
 	{
 		public WGPUChainedStruct chain;
-		public uint pushConstantRangeCount;
+		public ulong pushConstantRangeCount;
 		public WGPUPushConstantRange* pushConstantRanges;
 	}
 
@@ -791,10 +810,11 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUStorageReport
+	public unsafe struct WGPURegistryReport
 	{
-		public ulong numOccupied;
-		public ulong numVacant;
+		public ulong numAllocated;
+		public ulong numKeptFromUser;
+		public ulong numReleasedFromUser;
 		public ulong numError;
 		public ulong elementSize;
 	}
@@ -802,53 +822,33 @@ namespace Evergine.Bindings.WebGPU
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUHubReport
 	{
-		public WGPUStorageReport adapters;
-		public WGPUStorageReport devices;
-		public WGPUStorageReport pipelineLayouts;
-		public WGPUStorageReport shaderModules;
-		public WGPUStorageReport bindGroupLayouts;
-		public WGPUStorageReport bindGroups;
-		public WGPUStorageReport commandBuffers;
-		public WGPUStorageReport renderBundles;
-		public WGPUStorageReport renderPipelines;
-		public WGPUStorageReport computePipelines;
-		public WGPUStorageReport querySets;
-		public WGPUStorageReport buffers;
-		public WGPUStorageReport textures;
-		public WGPUStorageReport textureViews;
-		public WGPUStorageReport samplers;
+		public WGPURegistryReport adapters;
+		public WGPURegistryReport devices;
+		public WGPURegistryReport queues;
+		public WGPURegistryReport pipelineLayouts;
+		public WGPURegistryReport shaderModules;
+		public WGPURegistryReport bindGroupLayouts;
+		public WGPURegistryReport bindGroups;
+		public WGPURegistryReport commandBuffers;
+		public WGPURegistryReport renderBundles;
+		public WGPURegistryReport renderPipelines;
+		public WGPURegistryReport computePipelines;
+		public WGPURegistryReport querySets;
+		public WGPURegistryReport buffers;
+		public WGPURegistryReport textures;
+		public WGPURegistryReport textureViews;
+		public WGPURegistryReport samplers;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUGlobalReport
 	{
-		public WGPUStorageReport surfaces;
+		public WGPURegistryReport surfaces;
 		public WGPUBackendType backendType;
 		public WGPUHubReport vulkan;
 		public WGPUHubReport metal;
 		public WGPUHubReport dx12;
-		public WGPUHubReport dx11;
 		public WGPUHubReport gl;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUSurfaceCapabilities
-	{
-		public ulong formatCount;
-		public WGPUTextureFormat* formats;
-		public ulong presentModeCount;
-		public WGPUPresentMode* presentModes;
-		public ulong alphaModeCount;
-		public WGPUCompositeAlphaMode* alphaModes;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUSwapChainDescriptorExtras
-	{
-		public WGPUChainedStruct chain;
-		public WGPUCompositeAlphaMode alphaMode;
-		public ulong viewFormatCount;
-		public WGPUTextureFormat* viewFormats;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -856,6 +856,40 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct* nextInChain;
 		public WGPUInstanceBackend backends;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUBindGroupEntryExtras
+	{
+		public WGPUChainedStruct chain;
+		public WGPUBuffer* buffers;
+		public ulong bufferCount;
+		public WGPUSampler* samplers;
+		public ulong samplerCount;
+		public WGPUTextureView* textureViews;
+		public ulong textureViewCount;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUBindGroupLayoutEntryExtras
+	{
+		public WGPUChainedStruct chain;
+		public uint count;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUQuerySetDescriptorExtras
+	{
+		public WGPUChainedStruct chain;
+		public WGPUPipelineStatisticName* pipelineStatistics;
+		public ulong pipelineStatisticCount;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUSurfaceConfigurationExtras
+	{
+		public WGPUChainedStruct chain;
+		public WGPUBool desiredMaximumFrameLatency;
 	}
 
 }

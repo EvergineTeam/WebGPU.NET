@@ -304,21 +304,6 @@ namespace Evergine.Bindings.WebGPU
 	public override int GetHashCode() => Handle.GetHashCode();
 	}
 
-	public partial struct WGPUSwapChain : IEquatable<WGPUSwapChain>
-	{
-	public readonly IntPtr Handle;
-	public WGPUSwapChain(IntPtr existingHandle) { Handle = existingHandle; }
-	public static WGPUSwapChain Null => new WGPUSwapChain(IntPtr.Zero);
-	public static implicit operator WGPUSwapChain(IntPtr handle) => new WGPUSwapChain(handle);
-	public static bool operator ==(WGPUSwapChain left, WGPUSwapChain right) => left.Handle == right.Handle;
-	public static bool operator !=(WGPUSwapChain left, WGPUSwapChain right) => left.Handle != right.Handle;
-	public static bool operator ==(WGPUSwapChain left, IntPtr right) => left.Handle == right;
-	public static bool operator !=(WGPUSwapChain left, IntPtr right) => left.Handle != right;
-	public bool Equals(WGPUSwapChain h) => Handle == h.Handle;
-	public override bool Equals(object o) => o is WGPUSwapChain h && Equals(h);
-	public override int GetHashCode() => Handle.GetHashCode();
-	}
-
 	public partial struct WGPUTexture : IEquatable<WGPUTexture>
 	{
 	public readonly IntPtr Handle;

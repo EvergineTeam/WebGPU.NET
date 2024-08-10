@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Copyright>Copyright (c) Evergine 2023</Copyright>
@@ -23,12 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Generated\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\..\icon.png" Pack="true" PackagePath="\" Visible="false"/>
-    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" Visible="false"/>
+    <None Include="..\..\icon.png" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 
 </Project>

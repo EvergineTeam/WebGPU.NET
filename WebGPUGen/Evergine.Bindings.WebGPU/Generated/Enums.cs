@@ -123,10 +123,13 @@ namespace Evergine.Bindings.WebGPU
 		Force32 = 2147483647,
 	}
 
-	public enum WGPUComputePassTimestampLocation
+	public enum WGPUCompositeAlphaMode
 	{
-		Beginning = 0,
-		End = 1,
+		Auto = 0,
+		Opaque = 1,
+		Premultiplied = 2,
+		Unpremultiplied = 3,
+		Inherit = 4,
 		Force32 = 2147483647,
 	}
 
@@ -181,15 +184,14 @@ namespace Evergine.Bindings.WebGPU
 		DepthClipControl = 1,
 		Depth32FloatStencil8 = 2,
 		TimestampQuery = 3,
-		PipelineStatisticsQuery = 4,
-		TextureCompressionBC = 5,
-		TextureCompressionETC2 = 6,
-		TextureCompressionASTC = 7,
-		IndirectFirstInstance = 8,
-		ShaderF16 = 9,
-		RG11B10UfloatRenderable = 10,
-		BGRA8UnormStorage = 11,
-		Float32Filterable = 12,
+		TextureCompressionBC = 4,
+		TextureCompressionETC2 = 5,
+		TextureCompressionASTC = 6,
+		IndirectFirstInstance = 7,
+		ShaderF16 = 8,
+		RG11B10UfloatRenderable = 9,
+		BGRA8UnormStorage = 10,
+		Float32Filterable = 11,
 		Force32 = 2147483647,
 	}
 
@@ -230,16 +232,6 @@ namespace Evergine.Bindings.WebGPU
 		Force32 = 2147483647,
 	}
 
-	public enum WGPUPipelineStatisticName
-	{
-		VertexShaderInvocations = 0,
-		ClipperInvocations = 1,
-		ClipperPrimitivesOut = 2,
-		FragmentShaderInvocations = 3,
-		ComputeShaderInvocations = 4,
-		Force32 = 2147483647,
-	}
-
 	public enum WGPUPowerPreference
 	{
 		Undefined = 0,
@@ -250,9 +242,10 @@ namespace Evergine.Bindings.WebGPU
 
 	public enum WGPUPresentMode
 	{
-		Immediate = 0,
-		Mailbox = 1,
-		Fifo = 2,
+		Fifo = 0,
+		FifoRelaxed = 1,
+		Immediate = 2,
+		Mailbox = 3,
 		Force32 = 2147483647,
 	}
 
@@ -269,8 +262,7 @@ namespace Evergine.Bindings.WebGPU
 	public enum WGPUQueryType
 	{
 		Occlusion = 0,
-		PipelineStatistics = 1,
-		Timestamp = 2,
+		Timestamp = 1,
 		Force32 = 2147483647,
 	}
 
@@ -280,13 +272,6 @@ namespace Evergine.Bindings.WebGPU
 		Error = 1,
 		Unknown = 2,
 		DeviceLost = 3,
-		Force32 = 2147483647,
-	}
-
-	public enum WGPURenderPassTimestampLocation
-	{
-		Beginning = 0,
-		End = 1,
 		Force32 = 2147483647,
 	}
 
@@ -350,6 +335,8 @@ namespace Evergine.Bindings.WebGPU
 	{
 		Undefined = 0,
 		WriteOnly = 1,
+		ReadOnly = 2,
+		ReadWrite = 3,
 		Force32 = 2147483647,
 	}
 
@@ -358,6 +345,17 @@ namespace Evergine.Bindings.WebGPU
 		Undefined = 0,
 		Store = 1,
 		Discard = 2,
+		Force32 = 2147483647,
+	}
+
+	public enum WGPUSurfaceGetCurrentTextureStatus
+	{
+		Success = 0,
+		Timeout = 1,
+		Outdated = 2,
+		Lost = 3,
+		OutOfMemory = 4,
+		DeviceLost = 5,
 		Force32 = 2147483647,
 	}
 
@@ -404,76 +402,77 @@ namespace Evergine.Bindings.WebGPU
 		RGBA8Sint = 22,
 		BGRA8Unorm = 23,
 		BGRA8UnormSrgb = 24,
-		RGB10A2Unorm = 25,
-		RG11B10Ufloat = 26,
-		RGB9E5Ufloat = 27,
-		RG32Float = 28,
-		RG32Uint = 29,
-		RG32Sint = 30,
-		RGBA16Uint = 31,
-		RGBA16Sint = 32,
-		RGBA16Float = 33,
-		RGBA32Float = 34,
-		RGBA32Uint = 35,
-		RGBA32Sint = 36,
-		Stencil8 = 37,
-		Depth16Unorm = 38,
-		Depth24Plus = 39,
-		Depth24PlusStencil8 = 40,
-		Depth32Float = 41,
-		Depth32FloatStencil8 = 42,
-		BC1RGBAUnorm = 43,
-		BC1RGBAUnormSrgb = 44,
-		BC2RGBAUnorm = 45,
-		BC2RGBAUnormSrgb = 46,
-		BC3RGBAUnorm = 47,
-		BC3RGBAUnormSrgb = 48,
-		BC4RUnorm = 49,
-		BC4RSnorm = 50,
-		BC5RGUnorm = 51,
-		BC5RGSnorm = 52,
-		BC6HRGBUfloat = 53,
-		BC6HRGBFloat = 54,
-		BC7RGBAUnorm = 55,
-		BC7RGBAUnormSrgb = 56,
-		ETC2RGB8Unorm = 57,
-		ETC2RGB8UnormSrgb = 58,
-		ETC2RGB8A1Unorm = 59,
-		ETC2RGB8A1UnormSrgb = 60,
-		ETC2RGBA8Unorm = 61,
-		ETC2RGBA8UnormSrgb = 62,
-		EACR11Unorm = 63,
-		EACR11Snorm = 64,
-		EACRG11Unorm = 65,
-		EACRG11Snorm = 66,
-		ASTC4x4Unorm = 67,
-		ASTC4x4UnormSrgb = 68,
-		ASTC5x4Unorm = 69,
-		ASTC5x4UnormSrgb = 70,
-		ASTC5x5Unorm = 71,
-		ASTC5x5UnormSrgb = 72,
-		ASTC6x5Unorm = 73,
-		ASTC6x5UnormSrgb = 74,
-		ASTC6x6Unorm = 75,
-		ASTC6x6UnormSrgb = 76,
-		ASTC8x5Unorm = 77,
-		ASTC8x5UnormSrgb = 78,
-		ASTC8x6Unorm = 79,
-		ASTC8x6UnormSrgb = 80,
-		ASTC8x8Unorm = 81,
-		ASTC8x8UnormSrgb = 82,
-		ASTC10x5Unorm = 83,
-		ASTC10x5UnormSrgb = 84,
-		ASTC10x6Unorm = 85,
-		ASTC10x6UnormSrgb = 86,
-		ASTC10x8Unorm = 87,
-		ASTC10x8UnormSrgb = 88,
-		ASTC10x10Unorm = 89,
-		ASTC10x10UnormSrgb = 90,
-		ASTC12x10Unorm = 91,
-		ASTC12x10UnormSrgb = 92,
-		ASTC12x12Unorm = 93,
-		ASTC12x12UnormSrgb = 94,
+		RGB10A2Uint = 25,
+		RGB10A2Unorm = 26,
+		RG11B10Ufloat = 27,
+		RGB9E5Ufloat = 28,
+		RG32Float = 29,
+		RG32Uint = 30,
+		RG32Sint = 31,
+		RGBA16Uint = 32,
+		RGBA16Sint = 33,
+		RGBA16Float = 34,
+		RGBA32Float = 35,
+		RGBA32Uint = 36,
+		RGBA32Sint = 37,
+		Stencil8 = 38,
+		Depth16Unorm = 39,
+		Depth24Plus = 40,
+		Depth24PlusStencil8 = 41,
+		Depth32Float = 42,
+		Depth32FloatStencil8 = 43,
+		BC1RGBAUnorm = 44,
+		BC1RGBAUnormSrgb = 45,
+		BC2RGBAUnorm = 46,
+		BC2RGBAUnormSrgb = 47,
+		BC3RGBAUnorm = 48,
+		BC3RGBAUnormSrgb = 49,
+		BC4RUnorm = 50,
+		BC4RSnorm = 51,
+		BC5RGUnorm = 52,
+		BC5RGSnorm = 53,
+		BC6HRGBUfloat = 54,
+		BC6HRGBFloat = 55,
+		BC7RGBAUnorm = 56,
+		BC7RGBAUnormSrgb = 57,
+		ETC2RGB8Unorm = 58,
+		ETC2RGB8UnormSrgb = 59,
+		ETC2RGB8A1Unorm = 60,
+		ETC2RGB8A1UnormSrgb = 61,
+		ETC2RGBA8Unorm = 62,
+		ETC2RGBA8UnormSrgb = 63,
+		EACR11Unorm = 64,
+		EACR11Snorm = 65,
+		EACRG11Unorm = 66,
+		EACRG11Snorm = 67,
+		ASTC4x4Unorm = 68,
+		ASTC4x4UnormSrgb = 69,
+		ASTC5x4Unorm = 70,
+		ASTC5x4UnormSrgb = 71,
+		ASTC5x5Unorm = 72,
+		ASTC5x5UnormSrgb = 73,
+		ASTC6x5Unorm = 74,
+		ASTC6x5UnormSrgb = 75,
+		ASTC6x6Unorm = 76,
+		ASTC6x6UnormSrgb = 77,
+		ASTC8x5Unorm = 78,
+		ASTC8x5UnormSrgb = 79,
+		ASTC8x6Unorm = 80,
+		ASTC8x6UnormSrgb = 81,
+		ASTC8x8Unorm = 82,
+		ASTC8x8UnormSrgb = 83,
+		ASTC10x5Unorm = 84,
+		ASTC10x5UnormSrgb = 85,
+		ASTC10x6Unorm = 86,
+		ASTC10x6UnormSrgb = 87,
+		ASTC10x8Unorm = 88,
+		ASTC10x8UnormSrgb = 89,
+		ASTC10x10Unorm = 90,
+		ASTC10x10UnormSrgb = 91,
+		ASTC12x10Unorm = 92,
+		ASTC12x10UnormSrgb = 93,
+		ASTC12x12Unorm = 94,
+		ASTC12x12UnormSrgb = 95,
 		Force32 = 2147483647,
 	}
 
@@ -606,24 +605,31 @@ namespace Evergine.Bindings.WebGPU
 
 	public enum WGPUNativeSType
 	{
-		DeviceExtras = 1610612737,
-		AdapterExtras = 1610612738,
-		RequiredLimitsExtras = 1610612739,
-		PipelineLayoutExtras = 1610612740,
-		ShaderModuleGLSLDescriptor = 1610612741,
-		SupportedLimitsExtras = 1610612739,
-		InstanceExtras = 1610612742,
-		SwapChainDescriptorExtras = 1610612743,
+		DeviceExtras = 196609,
+		RequiredLimitsExtras = 196610,
+		PipelineLayoutExtras = 196611,
+		ShaderModuleGLSLDescriptor = 196612,
+		SupportedLimitsExtras = 196613,
+		InstanceExtras = 196614,
+		BindGroupEntryExtras = 196615,
+		BindGroupLayoutEntryExtras = 196616,
+		QuerySetDescriptorExtras = 196617,
+		SurfaceConfigurationExtras = 196618,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUNativeFeature
 	{
-		PushConstants = 1610612737,
-		TextureAdapterSpecificFormatFeatures = 1610612738,
-		MultiDrawIndirect = 1610612739,
-		MultiDrawIndirectCount = 1610612740,
-		VertexWritableStorage = 1610612741,
+		PushConstants = 196609,
+		TextureAdapterSpecificFormatFeatures = 196610,
+		MultiDrawIndirect = 196611,
+		MultiDrawIndirectCount = 196612,
+		VertexWritableStorage = 196613,
+		TextureBindingArray = 196614,
+		SampledTextureAndStorageBufferArrayNonUniformIndexing = 196615,
+		PipelineStatisticsQuery = 196616,
+		StorageResourceBindingArray = 196617,
+		PartiallyBoundBindingArray = 196618,
 		Force32 = 2147483647,
 	}
 
@@ -641,15 +647,24 @@ namespace Evergine.Bindings.WebGPU
 	[Flags]
 	public enum WGPUInstanceBackend
 	{
-		Vulkan = 2,
-		GL = 32,
+		All = 0,
+		Vulkan = 1,
+		GL = 2,
 		Metal = 4,
 		DX12 = 8,
 		DX11 = 16,
-		BrowserWebGPU = 64,
-		Primary = 78,
-		Secondary = 48,
-		None = 0,
+		BrowserWebGPU = 32,
+		Primary = 45,
+		Secondary = 18,
+		Force32 = 2147483647,
+	}
+
+	public enum WGPUInstanceFlag
+	{
+		Default = 0,
+		Debug = 1,
+		Validation = 2,
+		DiscardHalLabels = 4,
 		Force32 = 2147483647,
 	}
 
@@ -661,13 +676,28 @@ namespace Evergine.Bindings.WebGPU
 		Force32 = 2147483647,
 	}
 
-	public enum WGPUCompositeAlphaMode
+	public enum WGPUGles3MinorVersion
 	{
-		Auto = 0,
-		Opaque = 1,
-		PreMultiplied = 2,
-		PostMultiplied = 3,
-		Inherit = 4,
+		Automatic = 0,
+		Version0 = 1,
+		Version1 = 2,
+		Version2 = 3,
+		Force32 = 2147483647,
+	}
+
+	public enum WGPUPipelineStatisticName
+	{
+		VertexShaderInvocations = 0,
+		ClipperInvocations = 1,
+		ClipperPrimitivesOut = 2,
+		FragmentShaderInvocations = 3,
+		ComputeShaderInvocations = 4,
+		Force32 = 2147483647,
+	}
+
+	public enum WGPUNativeQueryType
+	{
+		PipelineStatistics = 196608,
 		Force32 = 2147483647,
 	}
 

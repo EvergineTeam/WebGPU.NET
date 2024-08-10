@@ -1,28 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<OutputType>Exe</OutputType>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' AND '$(PackAsTool)' != 'true'">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Headers\stdbool.h" />
-    <None Remove="Headers\stddef.h" />
-    <None Remove="Headers\stdint.h" />
-    <None Remove="Headers\wgpu.h" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Headers\stdbool.h" />
+		<None Remove="Headers\stddef.h" />
+		<None Remove="Headers\stdint.h" />
+		<None Remove="Headers\wgpu.h" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="Headers\webgpu.h">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Headers\wgpu.h">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Headers\webgpu.h">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Headers\wgpu.h">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CppAst" Version="0.7.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="CppAst" Version="0.20.1" />
+	</ItemGroup>
 
 </Project>
