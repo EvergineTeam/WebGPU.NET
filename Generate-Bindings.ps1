@@ -44,7 +44,7 @@ else
 
 # Run generator
 LogDebug "START binding generator process"
-pushd .\WebGPUGen\WebGPUGen\bin\Release\net6.0\
+pushd .\WebGPUGen\WebGPUGen\bin\Release\net8.0\win-x64
 .\publish\WebGPUGen.exe
 if($?)
 {

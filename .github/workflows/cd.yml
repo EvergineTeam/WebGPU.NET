@@ -20,7 +20,7 @@ jobs:
         with:
           dotnet-version: |
             6.x
-            7.x
+            8.x
       - uses: nuget/setup-nuget@v1
         with:
           nuget-version: "6.x"
