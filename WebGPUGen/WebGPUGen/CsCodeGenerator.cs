@@ -116,8 +116,6 @@ namespace WebGPUGen
         {
             Debug.WriteLine("Generating Commands...");
 
-            string dllName = "libWebGPU";
-
             using (StreamWriter file = File.CreateText(Path.Combine(outputPath, "Commands.cs")))
             {
                 file.WriteLine("using System;");
