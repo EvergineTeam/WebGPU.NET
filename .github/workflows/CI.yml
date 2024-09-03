@@ -1,0 +1,47 @@
+name: CI
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  nugetOutputPath: ${{  'nupkgs'  }}
+
+jobs:
+  build_and_publish:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.x
+      - uses: nuget/setup-nuget@v2
+        with:
+          nuget-version: "6.x"
+      - name: Generate Bindings
+        id: build_bindings
+        shell: pwsh
+        run: |
+          ./Generate-Bindings.ps1
+      - name: Generate NuGet packages
+        id: build_nugets
+        shell: pwsh
+        run: |
+          ./Generate-NuGets.ps1 -revision ${{  github.run_number  }} -outputfolder ${{  env.nugetOutputPath  }}
+      - name: SendGrid Mail Action
+        if: ${{ failure() }}
+        uses: mmichailidis/sendgrid-mail-action@v1.1
+        with:
+          # The token for sendgrid
+          sendgrid-token: ${{ secrets.WAVE_SENDGRID_TOKEN }}
+          # List of emails separated by comma that the email will go
+          mail: ${{ secrets.EVERGINE_EMAILREPORT_LIST }}
+          # The email that will be shown as sender
+          from: ${{ secrets.EVERGINE_EMAIL }}
+          # The subject of the email
+          subject: WebGPU.Net CD build has failed
+          # Defines if it should be one email with multiple address or multiple emails with a single address
+          individual: false
+          # The body of the mail. The placeholders that can be used are $EVENT$, $ISSUE$, $ACTION$
+          text: something went wrong when building WebGPU.Net
