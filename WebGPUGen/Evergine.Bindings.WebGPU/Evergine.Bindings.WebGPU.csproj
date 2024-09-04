@@ -4,11 +4,11 @@
     <Copyright>Copyright (c) Evergine 2024</Copyright>
     <Authors>Evergine Team</Authors>
     <Company>Plain Concepts</Company>
-    <PackageIcon>icon.png</PackageIcon>
     <Description>Low-level bindings for WebGPU used in Evergine</Description>
     <RepositoryUrl>https://github.com/EvergineTeam/WebGPU.NET</RepositoryUrl>
     <PackageTags>WebGPU;Evergine;C#;DirectX;OpenGL;OpenGLES;Vulkan;Metal;2D;3D;AR;VR;MixedReality;Mobile</PackageTags>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageIcon>icon.png</PackageIcon>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -23,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\icon.png" Pack="true" PackagePath="\" Visible="false" />
-    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" Visible="false" />
+	  <None Include="..\..\icon.png" Pack="true" PackagePath="\" Visible="false" />
+	  <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 
 </Project>
