@@ -662,7 +662,7 @@ namespace Evergine.Bindings.WebGPU
 		public WGPUFeatureName* requiredFeatures;
 		public WGPURequiredLimits* requiredLimits;
 		public WGPUQueueDescriptor defaultQueue;
-		public WGPUDeviceLostCallback deviceLostCallback;
+		public void* deviceLostCallback;
 		public void* deviceLostUserdata;
 	}
 

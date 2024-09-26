@@ -28,6 +28,8 @@ namespace WebGPUGen
             { "DWORD", "uint" },
 
             { "WGPUSubmissionIndex", "ulong" },
+
+            { "WGPUDeviceLostCallback", "void*" },
         };
 
         public static string ConvertToCSharpType(CppType type, bool isPointer = false)
