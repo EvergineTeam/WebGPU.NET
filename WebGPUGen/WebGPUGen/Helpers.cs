@@ -10,8 +10,6 @@ namespace WebGPUGen
 {
     public static class Helpers
     {
-        //public static List<string> TypedefList;
-
         private static readonly Dictionary<string, string> s_csNameMappings = new Dictionary<string, string>()
         {
             { "uint8_t", "byte" },
@@ -28,7 +26,6 @@ namespace WebGPUGen
             { "DWORD", "uint" },
 
             { "WGPUSubmissionIndex", "ulong" },
-
             { "WGPUDeviceLostCallback", "void*" },
         };
 
@@ -260,11 +257,6 @@ namespace WebGPUGen
             {
                 return name.Remove(name.Count() - 5);
             }
-
-            //if (TypedefList.Contains(name))
-            //{
-            //    return "IntPtr";
-            //}
 
             return name;
         }
