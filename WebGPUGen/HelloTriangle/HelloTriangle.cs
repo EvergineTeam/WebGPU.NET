@@ -93,11 +93,17 @@ namespace HelloTriangle
 
             wgpuInstanceRequestAdapter(Instance, &options, OnAdapterRequestEnded, (void*)0);
 
+            var requiredFeatureCount = WebGPUNative.wgpuAdapterEnumerateFeatures(this.Adapter, null);
+            var requiredFeatures = stackalloc WGPUFeatureName[(int)requiredFeatureCount];
+
+            WebGPUNative.wgpuAdapterEnumerateFeatures(this.Adapter, requiredFeatures);
+
             WGPUDeviceDescriptor deviceDescriptor = new WGPUDeviceDescriptor()
             {
                 nextInChain = null,
                 label = null,
-                requiredFeatures = (WGPUFeatureName*)0,
+                requiredFeatures = requiredFeatures,
+                requiredFeatureCount = requiredFeatureCount,
                 requiredLimits = null,
             };
 
