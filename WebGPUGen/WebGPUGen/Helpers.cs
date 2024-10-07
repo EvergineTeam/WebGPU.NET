@@ -26,7 +26,7 @@ namespace WebGPUGen
             { "DWORD", "uint" },
 
             { "WGPUSubmissionIndex", "ulong" },
-            { "WGPUDeviceLostCallback", "void*" },  // Hack: WGPUDeviceDescriptor use this delegate inside the struct.
+            { "WGPUErrorCallback", "delegate* unmanaged<WGPUErrorType, char*, void*, void>" },
         };
 
         public static string ConvertToCSharpType(CppType type, bool isPointer = false)

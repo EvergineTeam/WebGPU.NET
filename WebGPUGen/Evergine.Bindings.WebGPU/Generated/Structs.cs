@@ -4,17 +4,17 @@ using System.Runtime.InteropServices;
 namespace Evergine.Bindings.WebGPU
 {
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUAdapterProperties
+	public unsafe struct WGPUAdapterInfo
 	{
 		public WGPUChainedStructOut* nextInChain;
-		public uint vendorID;
-		public char* vendorName;
+		public char* vendor;
 		public char* architecture;
-		public uint deviceID;
-		public char* name;
-		public char* driverDescription;
-		public WGPUAdapterType adapterType;
+		public char* device;
+		public char* description;
 		public WGPUBackendType backendType;
+		public WGPUAdapterType adapterType;
+		public uint vendorID;
+		public uint deviceID;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -348,6 +348,7 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUSurfaceCapabilities
 	{
 		public WGPUChainedStructOut* nextInChain;
+		public WGPUTextureUsage usages;
 		public ulong formatCount;
 		public WGPUTextureFormat* formats;
 		public ulong presentModeCount;
@@ -472,6 +473,14 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUUncapturedErrorCallbackInfo
+	{
+		public WGPUChainedStruct* nextInChain;
+		public delegate* unmanaged<WGPUErrorType, char*, void*, void> callback;
+		public void* userdata;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUVertexAttribute
 	{
 		public WGPUVertexFormat format;
@@ -573,6 +582,7 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct* nextInChain;
 		public WGPUTextureView view;
+		public uint depthSlice;
 		public WGPUTextureView resolveTarget;
 		public WGPULoadOp loadOp;
 		public WGPUStoreOp storeOp;
@@ -662,8 +672,9 @@ namespace Evergine.Bindings.WebGPU
 		public WGPUFeatureName* requiredFeatures;
 		public WGPURequiredLimits* requiredLimits;
 		public WGPUQueueDescriptor defaultQueue;
-		public void* deviceLostCallback;
+		public WGPUDeviceLostCallback deviceLostCallback;
 		public void* deviceLostUserdata;
+		public WGPUUncapturedErrorCallbackInfo uncapturedErrorCallbackInfo;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -889,7 +900,7 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUSurfaceConfigurationExtras
 	{
 		public WGPUChainedStruct chain;
-		public WGPUBool desiredMaximumFrameLatency;
+		public uint desiredMaximumFrameLatency;
 	}
 
 }

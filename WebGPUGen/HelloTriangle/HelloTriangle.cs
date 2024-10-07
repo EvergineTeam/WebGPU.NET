@@ -19,7 +19,7 @@ namespace HelloTriangle
         private WGPUInstance Instance;
         private WGPUSurface Surface;
         private WGPUAdapter Adapter;
-        private WGPUAdapterProperties AdapterProperties;
+        private WGPUAdapterInfo AdapterInfo;
         private WGPUSupportedLimits AdapterLimits;
         private WGPUDevice Device;
         private WGPUTextureFormat SwapChainFormat;
@@ -93,27 +93,28 @@ namespace HelloTriangle
 
             wgpuInstanceRequestAdapter(Instance, &options, OnAdapterRequestEnded, (void*)0);
 
-            var requiredFeatureCount = WebGPUNative.wgpuAdapterEnumerateFeatures(this.Adapter, null);
-            var requiredFeatures = stackalloc WGPUFeatureName[(int)requiredFeatureCount];
-
-            WebGPUNative.wgpuAdapterEnumerateFeatures(this.Adapter, requiredFeatures);
-
             WGPUDeviceDescriptor deviceDescriptor = new WGPUDeviceDescriptor()
             {
                 nextInChain = null,
                 label = null,
-                requiredFeatures = requiredFeatures,
-                requiredFeatureCount = requiredFeatureCount,
+                requiredFeatures = null,
+                requiredFeatureCount = 0,
                 requiredLimits = null,
+                uncapturedErrorCallbackInfo = new WGPUUncapturedErrorCallbackInfo()
+                {
+                    callback = &HandleUncapturedErrorCallback
+                }
             };
 
-            wgpuAdapterRequestDevice(Adapter, &deviceDescriptor, OnDeviceRequestEnded, (void*)0);
-
-            wgpuDeviceSetUncapturedErrorCallback(Device, HandleUncapturedErrorCallback, (void*)0);
+            WGPUDevice device = WGPUDevice.Null;
+            wgpuAdapterRequestDevice(Adapter, &deviceDescriptor, OnDeviceRequestEnded, &device);
+            Device = device;
 
             Queue = wgpuDeviceGetQueue(Device);
 
-            SwapChainFormat = wgpuSurfaceGetPreferredFormat(Surface, Adapter);
+            WGPUSurfaceCapabilities capabilities;
+            wgpuSurfaceGetCapabilities(Surface, Adapter, &capabilities);
+            SwapChainFormat = capabilities.formats[0];
 
             int width = window.ClientSize.Width;
             int height = window.ClientSize.Height;
@@ -133,6 +134,7 @@ namespace HelloTriangle
             wgpuSurfaceConfigure(Surface,  &surfaceConfiguration);
         }
 
+        [UnmanagedCallersOnly]
         private static void HandleUncapturedErrorCallback(WGPUErrorType type, char* pMessage, void* pUserData)
         {
             Console.WriteLine($"Uncaptured device error: type: {type} ({Helpers.GetString(pMessage)})");
@@ -143,14 +145,14 @@ namespace HelloTriangle
             if (status == WGPURequestAdapterStatus.Success)
             {
                 Adapter = candidateAdapter;
-                WGPUAdapterProperties properties;
-                wgpuAdapterGetProperties(candidateAdapter, &properties);
+                WGPUAdapterInfo properties;
+                wgpuAdapterGetInfo(candidateAdapter, &properties);
                 window.Text = $"WGPU-Native Triangle ({properties.backendType})";
 
                 WGPUSupportedLimits limits;
                 wgpuAdapterGetLimits(candidateAdapter, &limits);
 
-                AdapterProperties = properties;
+                AdapterInfo = properties;
                 AdapterLimits = limits;
             }
             else
@@ -159,11 +161,11 @@ namespace HelloTriangle
             }
         }
 
-        private void OnDeviceRequestEnded(WGPURequestDeviceStatus status, WGPUDevice device, char* message, void* pUserData)
+        private static void OnDeviceRequestEnded(WGPURequestDeviceStatus status, WGPUDevice device, char* message, void* pUserData)
         {
             if (status == WGPURequestDeviceStatus.Success)
             {
-                Device = device;
+                *(WGPUDevice*)pUserData = device;
             }
             else
             {
@@ -386,6 +388,7 @@ namespace HelloTriangle
             wgpuRenderPassEncoderSetVertexBuffer(renderPass, 0, vertexBuffer, 0, WGPU_WHOLE_MAP_SIZE);
             wgpuRenderPassEncoderDraw(renderPass, 3, 1, 0, 0);
             wgpuRenderPassEncoderEnd(renderPass);
+            wgpuRenderPassEncoderRelease(renderPass);
 
             wgpuTextureViewRelease(nextView);
 

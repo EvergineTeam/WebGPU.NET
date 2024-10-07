@@ -1,7 +1,8 @@
 {
   "profiles": {
     "HelloTriangle": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "nativeDebugging": false
     }
   }
 }

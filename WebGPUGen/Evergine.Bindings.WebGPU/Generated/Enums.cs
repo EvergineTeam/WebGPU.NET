@@ -154,8 +154,8 @@ namespace Evergine.Bindings.WebGPU
 
 	public enum WGPUDeviceLostReason
 	{
-		Undefined = 0,
-		Destroyed = 1,
+		Unknown = 1,
+		Destroyed = 2,
 		Force32 = 2147483647,
 	}
 
@@ -543,6 +543,16 @@ namespace Evergine.Bindings.WebGPU
 		Force32 = 2147483647,
 	}
 
+	public enum WGPUWGSLFeatureName
+	{
+		Undefined = 0,
+		ReadonlyAndReadwriteStorageTextures = 1,
+		Packed4x8IntegerDotProduct = 2,
+		UnrestrictedPointerParameters = 3,
+		PointerCompositeAccess = 4,
+		Force32 = 2147483647,
+	}
+
 	[Flags]
 	public enum WGPUBufferUsage
 	{
@@ -630,6 +640,19 @@ namespace Evergine.Bindings.WebGPU
 		PipelineStatisticsQuery = 196616,
 		StorageResourceBindingArray = 196617,
 		PartiallyBoundBindingArray = 196618,
+		TextureFormat16bitNorm = 196619,
+		TextureCompressionAstcHdr = 196620,
+		MappablePrimaryBuffers = 196622,
+		BufferBindingArray = 196623,
+		UniformBufferAndStorageTextureArrayNonUniformIndexing = 196624,
+		VertexAttribute64bit = 196633,
+		TextureFormatNv12 = 196634,
+		RayTracingAccelerationStructure = 196635,
+		RayQuery = 196636,
+		ShaderF64 = 196637,
+		ShaderI16 = 196638,
+		ShaderPrimitiveIndex = 196639,
+		ShaderEarlyDepthTest = 196640,
 		Force32 = 2147483647,
 	}
 
@@ -699,6 +722,17 @@ namespace Evergine.Bindings.WebGPU
 	{
 		PipelineStatistics = 196608,
 		Force32 = 2147483647,
+	}
+
+	public enum WGPUNativeTextureFormat
+	{
+		R16Unorm = 196609,
+		R16Snorm = 196610,
+		Rg16Unorm = 196611,
+		Rg16Snorm = 196612,
+		Rgba16Unorm = 196613,
+		Rgba16Snorm = 196614,
+		NV12 = 196615,
 	}
 
 }
