@@ -91,7 +91,19 @@ namespace HelloTriangle
                 powerPreference = WGPUPowerPreference.HighPerformance
             };
 
-            wgpuInstanceRequestAdapter(Instance, &options, OnAdapterRequestEnded, (void*)0);
+            WGPUAdapter adapter = WGPUAdapter.Null;
+            wgpuInstanceRequestAdapter(Instance, &options, &OnAdapterRequestEnded, &adapter);
+            WGPUAdapterInfo properties;
+            wgpuAdapterGetInfo(adapter, &properties);
+            window.Text = $"WGPU-Native Triangle ({properties.backendType})";
+
+            WGPUSupportedLimits limits;
+            wgpuAdapterGetLimits(adapter, &limits);
+            this.Adapter = adapter;
+
+            AdapterInfo = properties;
+            AdapterLimits = limits;
+
 
             WGPUDeviceDescriptor deviceDescriptor = new WGPUDeviceDescriptor()
             {
@@ -107,7 +119,7 @@ namespace HelloTriangle
             };
 
             WGPUDevice device = WGPUDevice.Null;
-            wgpuAdapterRequestDevice(Adapter, &deviceDescriptor, OnDeviceRequestEnded, &device);
+            wgpuAdapterRequestDevice(Adapter, &deviceDescriptor, &OnDeviceRequestEnded, &device);
             Device = device;
 
             Queue = wgpuDeviceGetQueue(Device);
@@ -140,20 +152,12 @@ namespace HelloTriangle
             Console.WriteLine($"Uncaptured device error: type: {type} ({Helpers.GetString(pMessage)})");
         }
 
-        private void OnAdapterRequestEnded(WGPURequestAdapterStatus status, WGPUAdapter candidateAdapter, char* message, void* pUserData)
+        [UnmanagedCallersOnly]
+        private static void OnAdapterRequestEnded(WGPURequestAdapterStatus status, WGPUAdapter candidateAdapter, char* message, void* pUserData)
         {
             if (status == WGPURequestAdapterStatus.Success)
             {
-                Adapter = candidateAdapter;
-                WGPUAdapterInfo properties;
-                wgpuAdapterGetInfo(candidateAdapter, &properties);
-                window.Text = $"WGPU-Native Triangle ({properties.backendType})";
-
-                WGPUSupportedLimits limits;
-                wgpuAdapterGetLimits(candidateAdapter, &limits);
-
-                AdapterInfo = properties;
-                AdapterLimits = limits;
+                *(WGPUAdapter*)pUserData = candidateAdapter;
             }
             else
             {
@@ -161,6 +165,7 @@ namespace HelloTriangle
             }
         }
 
+        [UnmanagedCallersOnly]
         private static void OnDeviceRequestEnded(WGPURequestDeviceStatus status, WGPUDevice device, char* message, void* pUserData)
         {
             if (status == WGPURequestDeviceStatus.Success)

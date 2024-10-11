@@ -31,6 +31,12 @@ namespace WebGPUGen
         {
             string outputPath = basePath;
 
+            Helpers.delegates = compilation.Typedefs
+                .Where(t => t.TypeKind == CppTypeKind.Typedef
+                       && t.ElementType is CppPointerType
+                       && ((CppPointerType)t.ElementType).ElementType.TypeKind == CppTypeKind.Function)
+                .ToList();
+
             GenerateConstants(compilation, outputPath);
             GenerateDelegates(compilation, outputPath);
             GenerateEnums(compilation, outputPath);

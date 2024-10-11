@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using CppAst;
@@ -10,6 +11,8 @@ namespace WebGPUGen
 {
     public static class Helpers
     {
+        public static List<CppTypedef> delegates;
+
         private static readonly Dictionary<string, string> s_csNameMappings = new Dictionary<string, string>()
         {
             { "uint8_t", "byte" },
@@ -26,7 +29,6 @@ namespace WebGPUGen
             { "DWORD", "uint" },
 
             { "WGPUSubmissionIndex", "ulong" },
-            { "WGPUErrorCallback", "delegate* unmanaged<WGPUErrorType, char*, void*, void>" },
         };
 
         public static string ConvertToCSharpType(CppType type, bool isPointer = false)
@@ -243,14 +245,15 @@ namespace WebGPUGen
 
         private static string GetCsCleanName(string name)
         {
+            var typedef = delegates.Find(d => d.Name == name);
+            if (typedef != null)
+            {
+                return GetDelegatePointer(typedef);
+            }
+
             if (s_csNameMappings.TryGetValue(name, out string mappedName))
             {
                 return GetCsCleanName(mappedName);
-            }
-            
-            if (name.StartsWith("PFN"))
-            {
-                return "IntPtr";
             }
 
             if (name.Contains("Flags"))
@@ -265,7 +268,7 @@ namespace WebGPUGen
         {
             string constType = "string";
             if (value.EndsWith("UL", StringComparison.OrdinalIgnoreCase))
-                constType = "float";
+                constType = "ulong";
             else if (value.EndsWith("U", StringComparison.OrdinalIgnoreCase))
                 constType = "uint";
             else if (value.EndsWith("F", StringComparison.OrdinalIgnoreCase))
@@ -292,6 +295,21 @@ namespace WebGPUGen
 
             return constantValue.Replace("ULL", "UL");
 
+        }
+
+        private static string GetDelegatePointer(CppTypedef type)
+        {
+            CppFunctionType pointerType = ((CppPointerType)type.ElementType).ElementType as CppFunctionType;
+            StringBuilder result = new StringBuilder();
+
+            result.Append("delegate* unmanaged<");
+            for (int i = 0; i < pointerType.Parameters.Count; i++)
+            {
+                result.Append(ConvertToCSharpType(pointerType.Parameters[i].Type) + ", ");
+            }
+            result.Append(ConvertToCSharpType(pointerType.ReturnType) + ">");
+
+            return result.ToString();
         }
     }
 }
