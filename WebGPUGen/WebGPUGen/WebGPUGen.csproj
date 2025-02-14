@@ -4,6 +4,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<OutputType>Exe</OutputType>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<!-- Workaround for issue https://github.com/microsoft/ClangSharp/issues/129 -->
 		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' AND '$(PackAsTool)' != 'true'">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
 	</PropertyGroup>
 
@@ -24,7 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CppAst" Version="0.20.1" />
+		<PackageReference Include="CppAst" Version="0.21.1" />
 	</ItemGroup>
 
 </Project>
