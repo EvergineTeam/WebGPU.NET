@@ -8,6 +8,9 @@ WebGPU.NET is a lightweight, low-level wrapper built on top of the `wgpu-native`
 [![CD WebGPU](https://github.com/EvergineTeam/WebGPU.NET/actions/workflows/cd.yml/badge.svg)](https://github.com/EvergineTeam/WebGPU.NET/actions/workflows/cd.yml)
 [![Nuget](https://img.shields.io/nuget/v/Evergine.Bindings.WebGPU?logo=nuget)](https://www.nuget.org/packages/Evergine.Bindings.WebGPU)
 
+## Headers and dlls from
+[https://github.com/webgpu-native/webgpu-headers/blob/main/webgpu.h](https://github.com/gfx-rs/wgpu-native/releases/tag/v22.1.0.5)
+
 ## Features
 
 - **Low-level Access**: Get closer to the metal with our streamlined API that wraps `wgpu-native`.
