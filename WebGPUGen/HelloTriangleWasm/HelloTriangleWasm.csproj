@@ -18,4 +18,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.16" PrivateAssets="all" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Evergine.Bindings.WebGPU\Evergine.Bindings.WebGPU.csproj" />
+  </ItemGroup>
+
 </Project>

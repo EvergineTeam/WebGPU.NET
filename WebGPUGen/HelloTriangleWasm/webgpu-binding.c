@@ -5,3 +5,7 @@
 WGPUDevice webgpu_binding_emscripten_webgpu_get_device() {
     return emscripten_webgpu_get_device();
 }
+
+WGPUQueue webgpu_binding_wgpuDeviceGetQueue(WGPUDevice device) {
+    return wgpuDeviceGetQueue(device);
+}
