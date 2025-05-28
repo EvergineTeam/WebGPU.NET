@@ -7,10 +7,11 @@
 	<EmccFlags>-s USE_WEBGPU</EmccFlags>
 	<!-- Required in order to take EmccFlags into account -->
 	<WasmBuildNative>true</WasmBuildNative>
+	<WasmAllowUndefinedSymbols>true</WasmAllowUndefinedSymbols>
   </PropertyGroup>
 
   <ItemGroup>
-    <NativeFileReference Include="webgpu-binding.c" />
+    <NativeFileReference Include="wgpu_native.c" />
   </ItemGroup>
 
   <ItemGroup>
