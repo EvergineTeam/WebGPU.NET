@@ -1,5 +1,4 @@
 ﻿using Evergine.Bindings.WebGPU;
-using Microsoft.VisualBasic.Logging;
 using System;
 using System.Diagnostics;
 using System.IO;
