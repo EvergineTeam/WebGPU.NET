@@ -206,6 +206,7 @@ fn fs_main(@location(0) vCol : vec3<f32>) -> @location(0) vec4<f32> {
                 0, 1, 2,
                 0, 2, 3,
             };
+            // TODO fix TypeError: Cannot mix BigInt and other types, use explicit conversions
             //var vbuffer = create_buffer(vertex_data, 5 * 4 * sizeof(float), WGPUBufferUsage.Vertex, device, queue);
             //var ibuffer = create_buffer(index_data, 3 * 2 * sizeof(float), WGPUBufferUsage.Index, device, queue);
             //// create the uniform bind group
