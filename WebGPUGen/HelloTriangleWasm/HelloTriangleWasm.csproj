@@ -8,7 +8,7 @@
 	<!-- Required in order to take EmccFlags into account -->
 	<WasmBuildNative>true</WasmBuildNative>
 	<WasmAllowUndefinedSymbols>true</WasmAllowUndefinedSymbols>
-	<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
