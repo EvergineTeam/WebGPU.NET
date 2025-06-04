@@ -14,7 +14,7 @@ namespace Evergine.Bindings.WebGPU
 		public static extern delegate* unmanaged<void> wgpuGetProcAddress(WGPUDevice device, char* procName);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuAdapterEnumerateFeatures")]
-		public static extern ulong wgpuAdapterEnumerateFeatures(WGPUAdapter adapter, WGPUFeatureName* features);
+		public static extern uint wgpuAdapterEnumerateFeatures(WGPUAdapter adapter, WGPUFeatureName* features);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuAdapterGetLimits")]
 		public static extern bool wgpuAdapterGetLimits(WGPUAdapter adapter, WGPUSupportedLimits* limits);
@@ -56,10 +56,10 @@ namespace Evergine.Bindings.WebGPU
 		public static extern void wgpuBufferDestroy(WGPUBuffer buffer);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuBufferGetConstMappedRange")]
-		public static extern void* wgpuBufferGetConstMappedRange(WGPUBuffer buffer, ulong offset, ulong size);
+		public static extern void* wgpuBufferGetConstMappedRange(WGPUBuffer buffer, uint offset, uint size);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuBufferGetMappedRange")]
-		public static extern void* wgpuBufferGetMappedRange(WGPUBuffer buffer, ulong offset, ulong size);
+		public static extern void* wgpuBufferGetMappedRange(WGPUBuffer buffer, uint offset, uint size);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuBufferGetSize")]
 		public static extern ulong wgpuBufferGetSize(WGPUBuffer buffer);
@@ -68,7 +68,7 @@ namespace Evergine.Bindings.WebGPU
 		public static extern WGPUBufferUsage wgpuBufferGetUsage(WGPUBuffer buffer);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuBufferMapAsync")]
-		public static extern void wgpuBufferMapAsync(WGPUBuffer buffer, WGPUMapMode mode, ulong offset, ulong size, delegate* unmanaged<WGPUBufferMapAsyncStatus, void*, void> callback, void* userdata);
+		public static extern void wgpuBufferMapAsync(WGPUBuffer buffer, WGPUMapMode mode, uint offset, uint size, delegate* unmanaged<WGPUBufferMapAsyncStatus, void*, void> callback, void* userdata);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuBufferSetLabel")]
 		public static extern void wgpuBufferSetLabel(WGPUBuffer buffer, char* label);
@@ -242,7 +242,7 @@ namespace Evergine.Bindings.WebGPU
 		public static extern void wgpuDeviceDestroy(WGPUDevice device);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuDeviceEnumerateFeatures")]
-		public static extern ulong wgpuDeviceEnumerateFeatures(WGPUDevice device, WGPUFeatureName* features);
+		public static extern uint wgpuDeviceEnumerateFeatures(WGPUDevice device, WGPUFeatureName* features);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuDeviceGetLimits")]
 		public static extern bool wgpuDeviceGetLimits(WGPUDevice device, WGPUSupportedLimits* limits);
@@ -317,10 +317,10 @@ namespace Evergine.Bindings.WebGPU
 		public static extern void wgpuQueueSubmit(WGPUQueue queue, uint commandCount, WGPUCommandBuffer* commands);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuQueueWriteBuffer")]
-		public static extern void wgpuQueueWriteBuffer(WGPUQueue queue, WGPUBuffer buffer, ulong bufferOffset, void* data, ulong size);
+		public static extern void wgpuQueueWriteBuffer(WGPUQueue queue, WGPUBuffer buffer, ulong bufferOffset, void* data, uint size);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuQueueWriteTexture")]
-		public static extern void wgpuQueueWriteTexture(WGPUQueue queue, WGPUImageCopyTexture* destination, void* data, ulong dataSize, WGPUTextureDataLayout* dataLayout, WGPUExtent3D* writeSize);
+		public static extern void wgpuQueueWriteTexture(WGPUQueue queue, WGPUImageCopyTexture* destination, void* data, uint dataSize, WGPUTextureDataLayout* dataLayout, WGPUExtent3D* writeSize);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuQueueReference")]
 		public static extern void wgpuQueueReference(WGPUQueue queue);

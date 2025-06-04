@@ -189,7 +189,6 @@ fn fs_main(@location(0) vCol : vec3<f32>) -> @location(0) vec4<f32> {
                 depthStencil = null,
             };
             var pipeline = wgpuDeviceCreateRenderPipeline(device, &renderPipelineDescriptor);
-            wgpuBindGroupLayoutRelease(bindgroup_layout);
             wgpuPipelineLayoutRelease(pipeline_layout);
             wgpuShaderModuleRelease(shader_triangle);
             // create the vertex buffer (x, y, r, g, b) and index buffer
@@ -206,40 +205,41 @@ fn fs_main(@location(0) vCol : vec3<f32>) -> @location(0) vec4<f32> {
                 0, 1, 2,
                 0, 2, 3,
             };
-            // TODO fix TypeError: Cannot mix BigInt and other types, use explicit conversions
-            //var vbuffer = create_buffer(vertex_data, 5 * 4 * sizeof(float), WGPUBufferUsage.Vertex, device, queue);
-            //var ibuffer = create_buffer(index_data, 3 * 2 * sizeof(float), WGPUBufferUsage.Index, device, queue);
-            //// create the uniform bind group
-            //float rot;
-            //var ubuffer = create_buffer(&rot, 1, WGPUBufferUsage.Uniform, device, queue);
-            //var bindGroupEntry = new WGPUBindGroupEntry()
-            //{
-            //    binding = 0,
-            //    offset = 0,
-            //    buffer = ubuffer,
-            //    size = 1,
-            //};
-            //var bindGroupDescriptor = new WGPUBindGroupDescriptor()
-            //{
-            //    layout = wgpuRenderPipelineGetBindGroupLayout(pipeline, 0),
-            //    entryCount = 1,
-            //    // bind group entry
-            //    entries = &bindGroupEntry,
-            //};
-            //var bindgroup = wgpuDeviceCreateBindGroup(device, &bindGroupDescriptor);
-            draw(swapChain, device, queue);
+            var vbuffer = create_buffer(vertex_data, 5 * 4 * sizeof(float), WGPUBufferUsage.Vertex, device, queue);
+            var ibuffer = create_buffer(index_data, 3 * 2 * sizeof(ushort), WGPUBufferUsage.Index, device, queue);
+            // create the uniform bind group
+            float rot = 45;
+            var ubuffer = create_buffer(&rot, sizeof(float), WGPUBufferUsage.Uniform, device, queue);
+            var bindGroupEntry = new WGPUBindGroupEntry()
+            {
+                binding = 0,
+                offset = 0,
+                buffer = ubuffer,
+                size = sizeof(float),
+            };
+            var bindGroupDescriptor = new WGPUBindGroupDescriptor()
+            {
+                // We reuse the layout created earlier because wgpuRenderPipelineGetBindGroupLayout(pipeline, 0) does not work
+                layout = bindgroup_layout,
+                entryCount = 1,
+                // bind group entry
+                entries = &bindGroupEntry,
+            };
+            var bindgroup = wgpuDeviceCreateBindGroup(device, &bindGroupDescriptor);
+            wgpuBindGroupLayoutRelease(bindgroup_layout);
+            draw(swapChain, device, queue, pipeline, bindgroup, vbuffer, ibuffer);
         }
 
-        private unsafe WGPUBuffer create_buffer(void* data, ulong size, WGPUBufferUsage usage, WGPUDevice device, WGPUQueue queue)
+        private unsafe WGPUBuffer create_buffer(void* data, uint size, WGPUBufferUsage usage, WGPUDevice device, WGPUQueue queue)
         {
             var bufferDescriptor = new WGPUBufferDescriptor()
             {
-                usage = WGPUBufferUsage.CopyDst,
+                usage = WGPUBufferUsage.CopyDst | usage,
                 size = size,
             };
             WGPUBuffer buffer = wgpuDeviceCreateBuffer(device, &bufferDescriptor);
             wgpuQueueWriteBuffer(queue, buffer, 0u, data, size);
-            
+
             return buffer;
         }
 
@@ -263,7 +263,14 @@ fn fs_main(@location(0) vCol : vec3<f32>) -> @location(0) vec4<f32> {
             return shaderModule;
         }
 
-        private unsafe void draw(WGPUSwapChain swapchain, WGPUDevice device, WGPUQueue queue)
+        private unsafe void draw(
+            WGPUSwapChain swapchain,
+            WGPUDevice device,
+            WGPUQueue queue,
+            WGPURenderPipeline pipeline,
+            WGPUBindGroup bindgroup,
+            WGPUBuffer vbuffer,
+            WGPUBuffer ibuffer)
         {
             // create texture view
             WGPUTextureView back_buffer = wgpuSwapChainGetCurrentTextureView(swapchain);
@@ -279,9 +286,9 @@ fn fs_main(@location(0) vCol : vec3<f32>) -> @location(0) vec4<f32> {
                 storeOp = WGPUStoreOp.Store,
                 clearValue = new WGPUColor()
                 { 
-                    r = 1.0f, 
-                    g = 0.0f, 
-                    b = 1.0f, 
+                    r = 0.2f, 
+                    g = 0.2f, 
+                    b = 0.3f, 
                     a = 1.0f,
                 },
             };
@@ -292,6 +299,13 @@ fn fs_main(@location(0) vCol : vec3<f32>) -> @location(0) vec4<f32> {
                 colorAttachments = &colorAttachment,
             };
             WGPURenderPassEncoder render_pass = wgpuCommandEncoderBeginRenderPass(cmd_encoder, &renderPassDescriptor);
+
+            // draw quad (comment these five lines to simply clear the screen)
+            wgpuRenderPassEncoderSetPipeline(render_pass, pipeline);
+            wgpuRenderPassEncoderSetBindGroup(render_pass, 0, bindgroup, 0, (uint*)0);
+            wgpuRenderPassEncoderSetVertexBuffer(render_pass, 0, vbuffer, 0, WGPU_WHOLE_SIZE);
+            wgpuRenderPassEncoderSetIndexBuffer(render_pass, ibuffer, WGPUIndexFormat.Uint16, 0, WGPU_WHOLE_SIZE);
+            wgpuRenderPassEncoderDrawIndexed(render_pass, 6, 1, 0, 0, 0);
 
             // end render pass
             wgpuRenderPassEncoderEnd(render_pass);
