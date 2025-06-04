@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <NativeFileReference Include="wgpu_native.c" />
+    <NativeFileReference Include="..\Evergine.Bindings.WebGPU\runtimes\browser-wasm\wgpu_native.c" />
   </ItemGroup>
 
   <ItemGroup>
