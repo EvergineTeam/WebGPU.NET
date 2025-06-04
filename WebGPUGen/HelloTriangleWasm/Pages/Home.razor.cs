@@ -8,6 +8,8 @@ namespace HelloTriangleWasm.Pages
     {
         public unsafe void Run()
         {
+            // Based on: https://github.com/seyhajin/webgpu-wasm-c/blob/f8d718cf44d9ab3f19319efb27c87c645c46fc15/main.c
+            // The main difference is instead of having a static state, we have added local variables on demand
             var device = webgpu_native_emscripten_webgpu_get_device();
             var queue = wgpuDeviceGetQueue(device);
             double width, height;
