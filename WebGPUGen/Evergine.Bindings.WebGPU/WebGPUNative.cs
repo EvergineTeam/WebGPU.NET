@@ -9,5 +9,8 @@ namespace Evergine.Bindings.WebGPU
 
         [DllImport("wgpu_native")]
         public static extern WGPUDevice emscripten_webgpu_get_device();
+
+        [DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void wgpuBufferMapAsyncWithoutCallback(WGPUBuffer buffer, WGPUMapMode mode, uint offset, uint size, void* userdata);
     }
 }
