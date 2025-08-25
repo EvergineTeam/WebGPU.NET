@@ -1,0 +1,8 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup Condition="$(RuntimeIdentifier) == 'browser-wasm'">
+		<EmccFlags>-s USE_WEBGPU $(ExtraEmccFlags)</EmccFlags>
+	</PropertyGroup>
+	<ItemGroup>
+		<NativeFileReference Include="$(MSBuildThisFileDirectory)..\runtimes\browser-wasm\wgpu_native.c" ScanForPInvokes="true" />
+	</ItemGroup>
+</Project>
