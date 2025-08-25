@@ -19,7 +19,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="runtimes\**" PackagePath="runtimes" Pack="true" />
+	  <Content Include="buildtransitive\**" PackagePath="build" Visible="true" />
+	  <Content Include="runtimes\**" PackagePath="runtimes" Pack="true" />
   </ItemGroup>
 
   <ItemGroup>

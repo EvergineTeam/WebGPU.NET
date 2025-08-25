@@ -2,47 +2,24 @@
 
 ## Introduction
 
-WebGPU.NET is a lightweight, low-level wrapper built on top of the `wgpu-native` library from Firefox. Our aim is to facilitate swift development of an adapter for Evergine, allowing for rapid testing across Windows, Linux, and Mac platforms using DirectX, Vulkan, and Metal.
+WebGPU.NET is a lightweight, low-level wrapper built on top of the Emscripten's [WebGPU header](https://github.com/emscripten-core/emscripten/blob/main/system/include/webgpu/webgpu.h). Our aim is to facilitate swift development of an adapter for Evergine, allowing for rapid testing across different browsers.
+
+**NOTE:** On June 30th, 2025, we removed support for platforms different from browser, mainly because .NET SDK is highly coupled with a specific version of Emscripten (3.34 for .NET 8, for example). We would really like to bring them back in a future; however, we have not found an approach to support everything simultaneously.
 
 [![CI](https://github.com/EvergineTeam/WebGPU.NET/actions/workflows/CI.yml/badge.svg)](https://github.com/EvergineTeam/WebGPU.NET/actions/workflows/CI.yml)
 [![CD WebGPU](https://github.com/EvergineTeam/WebGPU.NET/actions/workflows/cd.yml/badge.svg)](https://github.com/EvergineTeam/WebGPU.NET/actions/workflows/cd.yml)
 [![Nuget](https://img.shields.io/nuget/v/Evergine.Bindings.WebGPU?logo=nuget)](https://www.nuget.org/packages/Evergine.Bindings.WebGPU)
 
-## Headers and dlls from
-[https://github.com/webgpu-native/webgpu-headers/blob/main/webgpu.h](https://github.com/gfx-rs/wgpu-native/releases/tag/v22.1.0.5)
-
-## Features
-
-- **Low-level Access**: Get closer to the metal with our streamlined API that wraps `wgpu-native`.
-  
-- **Cross-Platform Support**: Test and deploy your applications seamlessly on Windows, Linux, and Mac.
-
-- **Multiple Graphics API Compatibility**: Designed with DirectX, Vulkan, and Metal in mind.
-
-## Prerequisites
-
-List any dependencies, required libraries, or external factors here.
-
 ## Installation
-
-1. Clone the repository: `git clone https://github.com/EvergineTeam/WebGPU.NET.git`
-2. Navigate to the project directory.
-3. Run the HelloTriangle test project.
-
-### Usage
 
 To include `Evergine.Bindings.WebGPU` in your project, install the NuGet package:
 
-Install-Package Evergine.Bindings.WebGPU
+`Install-Package Evergine.Bindings.WebGPU`
 
 Or if you use the .NET CLI:
 
-dotnet add package Evergine.Bindings.WebGPU
+`dotnet add package Evergine.Bindings.WebGPU`
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](link_to_license.md) file for details.
-
-## Acknowledgments
-
-- Thanks to the Firefox team for the `wgpu-native` library. Check out the original library on [gfx-rs/wgpu-native](https://github.com/gfx-rs/wgpu-native).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

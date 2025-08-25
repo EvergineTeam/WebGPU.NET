@@ -25,7 +25,7 @@ namespace WebGPUGen
             { "int64_t", "long" },
             { "int64_t*", "long*" },
             { "char", "byte" },
-            { "size_t", "ulong" },
+            { "size_t", "uint" },
             { "DWORD", "uint" },
 
             { "WGPUSubmissionIndex", "ulong" },

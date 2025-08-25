@@ -1,6 +1,5 @@
 ﻿using CppAst;
 using System;
-using System.Diagnostics;
 using System.IO;
 
 namespace WebGPUGen
@@ -9,7 +8,7 @@ namespace WebGPUGen
     {
         static void Main(string[] args)
         {
-            var headerFile = Path.Combine(AppContext.BaseDirectory, "Headers", "wgpu.h");
+            var headerFile = Path.Combine(AppContext.BaseDirectory, "Headers", "webgpu.h");
             var options = new CppParserOptions
             {
                 ParseMacros = true,
