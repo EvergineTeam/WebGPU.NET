@@ -11,7 +11,7 @@ namespace Evergine.Bindings.WebGPU
 		public static extern WGPUInstance wgpuCreateInstance(WGPUInstanceDescriptor* descriptor);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuGetProcAddress")]
-		public static extern delegate* unmanaged<void> wgpuGetProcAddress(WGPUDevice device, char* procName);
+		public static extern IntPtr wgpuGetProcAddress(WGPUDevice device, char* procName);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuAdapterEnumerateFeatures")]
 		public static extern uint wgpuAdapterEnumerateFeatures(WGPUAdapter adapter, WGPUFeatureName* features);
@@ -26,7 +26,7 @@ namespace Evergine.Bindings.WebGPU
 		public static extern bool wgpuAdapterHasFeature(WGPUAdapter adapter, WGPUFeatureName feature);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuAdapterRequestDevice")]
-		public static extern void wgpuAdapterRequestDevice(WGPUAdapter adapter, WGPUDeviceDescriptor* descriptor, delegate* unmanaged<WGPURequestDeviceStatus, WGPUDevice, char*, void*, void> callback, void* userdata);
+		public static extern void wgpuAdapterRequestDevice(WGPUAdapter adapter, WGPUDeviceDescriptor* descriptor, IntPtr callback, void* userdata);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuAdapterReference")]
 		public static extern void wgpuAdapterReference(WGPUAdapter adapter);
@@ -68,7 +68,7 @@ namespace Evergine.Bindings.WebGPU
 		public static extern WGPUBufferUsage wgpuBufferGetUsage(WGPUBuffer buffer);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuBufferMapAsync")]
-		public static extern void wgpuBufferMapAsync(WGPUBuffer buffer, WGPUMapMode mode, uint offset, uint size, delegate* unmanaged<WGPUBufferMapAsyncStatus, void*, void> callback, void* userdata);
+		public static extern void wgpuBufferMapAsync(WGPUBuffer buffer, WGPUMapMode mode, uint offset, uint size, IntPtr callback, void* userdata);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuBufferSetLabel")]
 		public static extern void wgpuBufferSetLabel(WGPUBuffer buffer, char* label);
@@ -209,7 +209,7 @@ namespace Evergine.Bindings.WebGPU
 		public static extern WGPUComputePipeline wgpuDeviceCreateComputePipeline(WGPUDevice device, WGPUComputePipelineDescriptor* descriptor);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuDeviceCreateComputePipelineAsync")]
-		public static extern void wgpuDeviceCreateComputePipelineAsync(WGPUDevice device, WGPUComputePipelineDescriptor* descriptor, delegate* unmanaged<WGPUCreatePipelineAsyncStatus, WGPUComputePipeline, char*, void*, void> callback, void* userdata);
+		public static extern void wgpuDeviceCreateComputePipelineAsync(WGPUDevice device, WGPUComputePipelineDescriptor* descriptor, IntPtr callback, void* userdata);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuDeviceCreatePipelineLayout")]
 		public static extern WGPUPipelineLayout wgpuDeviceCreatePipelineLayout(WGPUDevice device, WGPUPipelineLayoutDescriptor* descriptor);
@@ -224,7 +224,7 @@ namespace Evergine.Bindings.WebGPU
 		public static extern WGPURenderPipeline wgpuDeviceCreateRenderPipeline(WGPUDevice device, WGPURenderPipelineDescriptor* descriptor);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuDeviceCreateRenderPipelineAsync")]
-		public static extern void wgpuDeviceCreateRenderPipelineAsync(WGPUDevice device, WGPURenderPipelineDescriptor* descriptor, delegate* unmanaged<WGPUCreatePipelineAsyncStatus, WGPURenderPipeline, char*, void*, void> callback, void* userdata);
+		public static extern void wgpuDeviceCreateRenderPipelineAsync(WGPUDevice device, WGPURenderPipelineDescriptor* descriptor, IntPtr callback, void* userdata);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuDeviceCreateSampler")]
 		public static extern WGPUSampler wgpuDeviceCreateSampler(WGPUDevice device, WGPUSamplerDescriptor* descriptor);
@@ -257,7 +257,7 @@ namespace Evergine.Bindings.WebGPU
 		public static extern void wgpuDeviceSetLabel(WGPUDevice device, char* label);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuDeviceSetUncapturedErrorCallback")]
-		public static extern void wgpuDeviceSetUncapturedErrorCallback(WGPUDevice device, delegate* unmanaged<WGPUErrorType, char*, void*, void> callback, void* userdata);
+		public static extern void wgpuDeviceSetUncapturedErrorCallback(WGPUDevice device, IntPtr callback, void* userdata);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuDeviceReference")]
 		public static extern void wgpuDeviceReference(WGPUDevice device);
@@ -272,7 +272,7 @@ namespace Evergine.Bindings.WebGPU
 		public static extern void wgpuInstanceProcessEvents(WGPUInstance instance);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuInstanceRequestAdapter")]
-		public static extern void wgpuInstanceRequestAdapter(WGPUInstance instance, WGPURequestAdapterOptions* options, delegate* unmanaged<WGPURequestAdapterStatus, WGPUAdapter, char*, void*, void> callback, void* userdata);
+		public static extern void wgpuInstanceRequestAdapter(WGPUInstance instance, WGPURequestAdapterOptions* options, IntPtr callback, void* userdata);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuInstanceReference")]
 		public static extern void wgpuInstanceReference(WGPUInstance instance);
@@ -308,7 +308,7 @@ namespace Evergine.Bindings.WebGPU
 		public static extern void wgpuQuerySetRelease(WGPUQuerySet querySet);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuQueueOnSubmittedWorkDone")]
-		public static extern void wgpuQueueOnSubmittedWorkDone(WGPUQueue queue, ulong signalValue, delegate* unmanaged<WGPUQueueWorkDoneStatus, void*, void> callback, void* userdata);
+		public static extern void wgpuQueueOnSubmittedWorkDone(WGPUQueue queue, ulong signalValue, IntPtr callback, void* userdata);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuQueueSetLabel")]
 		public static extern void wgpuQueueSetLabel(WGPUQueue queue, char* label);
@@ -470,7 +470,7 @@ namespace Evergine.Bindings.WebGPU
 		public static extern void wgpuSamplerRelease(WGPUSampler sampler);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuShaderModuleGetCompilationInfo")]
-		public static extern void wgpuShaderModuleGetCompilationInfo(WGPUShaderModule shaderModule, delegate* unmanaged<WGPUCompilationInfoRequestStatus, WGPUCompilationInfo*, void*, void> callback, void* userdata);
+		public static extern void wgpuShaderModuleGetCompilationInfo(WGPUShaderModule shaderModule, IntPtr callback, void* userdata);
 
 		[DllImport("wgpu_native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wgpuShaderModuleSetLabel")]
 		public static extern void wgpuShaderModuleSetLabel(WGPUShaderModule shaderModule, char* label);

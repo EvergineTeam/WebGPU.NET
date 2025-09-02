@@ -299,15 +299,18 @@ namespace WebGPUGen
 
         private static string GetDelegatePointer(CppTypedef type)
         {
-            CppFunctionType pointerType = ((CppPointerType)type.ElementType).ElementType as CppFunctionType;
             StringBuilder result = new StringBuilder();
 
-            result.Append("delegate* unmanaged<");
-            for (int i = 0; i < pointerType.Parameters.Count; i++)
-            {
-                result.Append(ConvertToCSharpType(pointerType.Parameters[i].Type) + ", ");
-            }
-            result.Append(ConvertToCSharpType(pointerType.ReturnType) + ">");
+            // WASM doesn't support function pointers yet :( ...
+            ////CppFunctionType pointerType = ((CppPointerType)type.ElementType).ElementType as CppFunctionType;
+            ////result.Append("delegate* unmanaged<");
+            ////for (int i = 0; i < pointerType.Parameters.Count; i++)
+            ////{
+            ////    result.Append(ConvertToCSharpType(pointerType.Parameters[i].Type) + ", ");
+            ////}
+            ////result.Append(ConvertToCSharpType(pointerType.ReturnType) + ">");
+
+            result.Append("IntPtr");
 
             return result.ToString();
         }
