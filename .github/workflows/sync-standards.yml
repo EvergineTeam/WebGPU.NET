@@ -41,6 +41,7 @@ on:
   
 jobs:
   sync:
+    if: github.event_name != 'schedule' || github.ref == 'refs/heads/master'
     permissions:
       contents: write  # allow push commits
       pull-requests: write
