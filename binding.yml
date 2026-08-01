@@ -1,0 +1,38 @@
+# Binding manifest — see https://github.com/EvergineTeam/Evergine.Bindings
+# Schema: https://github.com/EvergineTeam/Evergine.Bindings/blob/main/binding.schema.json
+toolbox: 1.0.0
+
+package:
+  id: Evergine.Bindings.WebGPU
+  project: WebGPUGen/Evergine.Bindings.WebGPU/Evergine.Bindings.WebGPU.csproj
+  target-framework: net10.0
+  runtime-identifier: win-x64
+
+upstream:
+  kind: git-tree
+  language: c
+  project: https://github.com/emscripten-core/emscripten
+  version-from: git-release
+  sources:
+    - repo: emscripten-core/emscripten
+      ref: "3.1.56"
+      remote-path: system/include/webgpu/webgpu.h
+      path: WebGPUGen/WebGPUGen/Headers/webgpu.h
+      format: c-header
+
+generator:
+  project: WebGPUGen/WebGPUGen/WebGPUGen.csproj
+  name: WebGPU
+  output:
+    - WebGPUGen/Evergine.Bindings.WebGPU/Generated
+
+# NOTE — do not let an agent bump `ref` here without a human deciding.
+#
+# Since June 2025 this binding targets browsers only, because the .NET SDK is pinned to
+# a specific Emscripten version (the README cites 3.1.36 for .NET 10). The header ref
+# above is 3.1.56, which does not match that number. Whether that is intentional, stale
+# documentation, or a real mismatch needs a person to resolve -- it is exactly the kind
+# of question the manifest is meant to surface rather than answer.
+#
+# Until it is resolved, treat `ref` as frozen: binding-updater may report that a newer
+# Emscripten exists, but must not propose the bump.
