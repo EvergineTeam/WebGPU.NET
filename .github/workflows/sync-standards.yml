@@ -16,8 +16,8 @@ on:
         default: "v2"
         required: false
       target_branch:
-        description: "Target branch to apply changes"
-        default: "main"
+        description: "Target branch to apply changes (defaults to the repository default branch)"
+        default: ""
         required: false
       script_path:
         description: "Path where to download the sync script"
