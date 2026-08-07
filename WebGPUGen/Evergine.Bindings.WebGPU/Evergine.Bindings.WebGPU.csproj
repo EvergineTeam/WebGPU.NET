@@ -8,6 +8,7 @@
     <RepositoryUrl>https://github.com/EvergineTeam/WebGPU.NET</RepositoryUrl>
     <PackageTags>WebGPU;Evergine;C#;DirectX;OpenGL;OpenGLES;Vulkan;Metal;2D;3D;AR;VR;MixedReality;Mobile</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
